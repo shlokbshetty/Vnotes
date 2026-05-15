@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.recording-pulse {
+  box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+  animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+  0% { 
+    transform: scale(0.95); 
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); 
+  }
+  70% { 
+    transform: scale(1); 
+    box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); 
+  }
+  100% { 
+    transform: scale(0.95); 
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); 
+  }
+}
+
+.waveform-bar {
+  animation: waveform-grow 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes waveform-grow {
+  from { height: 8px; }
+  to { height: 48px; }
+}
+
+.waveform-bar:nth-child(2n) { animation-delay: 0.1s; }
+.waveform-bar:nth-child(3n) { animation-delay: 0.2s; }
+.waveform-bar:nth-child(4n) { animation-delay: 0.3s; }
+
+.note-card-shadow {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
