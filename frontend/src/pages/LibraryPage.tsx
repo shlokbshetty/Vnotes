@@ -1,46 +1,54 @@
+import { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import RecordingCard from '../components/RecordingCard';
 import { Recording } from '../types';
 
 const LibraryPage = () => {
-  const recordings: Recording[] = [
-    {
-      id: '1',
-      title: 'Weekly Sync - Product & Engineering',
-      date: 'Oct 24, 2023',
-      duration: '45:12',
-      category: 'Sync',
-      transcript: '...the primary focus for this sprint will be the refactoring of the notification service to improve latency issues observed last week...',
-      icon: 'audio_file'
-    },
-    {
-      id: '2',
-      title: 'Product Design Review: Q4 Roadmap',
-      date: 'Oct 23, 2023',
-      duration: '28:05',
-      category: 'Design',
-      transcript: '...user feedback suggests we need more emphasis on the accessibility of the dashboard widgets, particularly the color contrast for dark mode...',
-      icon: 'brush'
-    },
-    {
-      id: '3',
-      title: 'Marketing Strategy Brainstorm',
-      date: 'Oct 22, 2023',
-      duration: '52:40',
-      category: 'Marketing',
-      transcript: '...exploring influencer partnerships for the holiday season to target the Gen Z demographic through short-form video content...',
-      icon: 'campaign'
-    },
-    {
-      id: '4',
-      title: '1-on-1: Alex & Sarah',
-      date: 'Oct 21, 2023',
-      duration: '15:00',
-      category: 'Personal',
-      transcript: '...discussion regarding professional development goals for the upcoming quarter and potential internal certification programs...',
-      icon: 'person'
+  const [recordings, setRecordings] = useState<Recording[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchRecordings();
+  }, []);
+
+  const fetchRecordings = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const response = await fetch('http://localhost:3001/api/recordings');
+      if (!response.ok) {
+        throw new Error('Failed to fetch recordings');
+      }
+      
+      const data = await response.json();
+      setRecordings(data);
+    } catch (error) {
+      console.error('Error fetching recordings:', error);
+      setError('Failed to load recordings. Please try again.');
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  const handleDeleteRecording = async (id: string) => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/recordings/${id}`, {
+        method: 'DELETE'
+      });
+      
+      if (response.ok) {
+        // Refresh the recordings list
+        fetchRecordings();
+      } else {
+        throw new Error('Failed to delete recording');
+      }
+    } catch (error) {
+      console.error('Error deleting recording:', error);
+      alert('Failed to delete recording. Please try again.');
+    }
+  };
 
   return (
     <>
@@ -52,19 +60,18 @@ const LibraryPage = () => {
           <section className="grid grid-cols-1 md:grid-cols-12 gap-gutter">
             <div className="md:col-span-8 bg-surface p-6 rounded-xl border border-outline-variant note-card-shadow flex items-center justify-between">
               <div>
-                <p className="font-label-sm text-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">Total Storage</p>
+                <p className="font-label-sm text-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">Total Recordings</p>
                 <h3 className="font-headline-lg text-headline-lg text-primary">
-                  12.4 GB <span className="text-body-md font-normal text-on-surface-variant">/ 50 GB</span>
+                  {recordings.length} <span className="text-body-md font-normal text-on-surface-variant">recordings</span>
                 </h3>
               </div>
               <div className="flex items-center gap-4">
-                <button className="px-4 py-2 border border-outline-variant rounded-lg font-label-sm text-label-sm text-on-surface flex items-center gap-2 hover:bg-surface-container transition-all">
-                  <span className="material-symbols-outlined text-[20px]">filter_list</span>
-                  Filter
-                </button>
-                <button className="px-4 py-2 border border-outline-variant rounded-lg font-label-sm text-label-sm text-on-surface flex items-center gap-2 hover:bg-surface-container transition-all">
-                  <span className="material-symbols-outlined text-[20px]">sort</span>
-                  Newest First
+                <button 
+                  onClick={fetchRecordings}
+                  className="px-4 py-2 border border-outline-variant rounded-lg font-label-sm text-label-sm text-on-surface flex items-center gap-2 hover:bg-surface-container transition-all"
+                >
+                  <span className="material-symbols-outlined text-[20px]">refresh</span>
+                  Refresh
                 </button>
               </div>
             </div>
@@ -80,26 +87,37 @@ const LibraryPage = () => {
 
           {/* Recordings Grid */}
           <section className="grid grid-cols-1 gap-8">
-            {recordings.map(recording => (
-              <RecordingCard key={recording.id} recording={recording} />
-            ))}
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="inline-block w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
+                <p className="text-on-surface-variant">Loading recordings...</p>
+              </div>
+            ) : error ? (
+              <div className="text-center py-12">
+                <p className="text-error mb-4">{error}</p>
+                <button 
+                  onClick={fetchRecordings}
+                  className="px-4 py-2 bg-primary text-on-primary rounded-lg hover:opacity-90 transition-all"
+                >
+                  Try Again
+                </button>
+              </div>
+            ) : recordings.length === 0 ? (
+              <div className="text-center py-12">
+                <span className="material-symbols-outlined text-6xl text-on-surface-variant mb-4 block">mic_off</span>
+                <p className="text-on-surface-variant text-lg mb-2">No recordings yet</p>
+                <p className="text-on-surface-variant">Start recording to see your audio files here</p>
+              </div>
+            ) : (
+              recordings.map(recording => (
+                <RecordingCard 
+                  key={recording.id} 
+                  recording={recording} 
+                  onDelete={handleDeleteRecording}
+                />
+              ))
+            )}
           </section>
-
-          {/* Pagination */}
-          <footer className="flex items-center justify-between pt-stack-lg">
-            <p className="font-label-sm text-label-sm text-on-surface-variant">Showing 4 of 42 recordings</p>
-            <div className="flex items-center gap-2">
-              <button className="p-2 border border-outline-variant rounded-lg hover:bg-surface-container transition-all disabled:opacity-20 text-on-surface" disabled>
-                <span className="material-symbols-outlined">chevron_left</span>
-              </button>
-              <button className="w-10 h-10 bg-primary text-on-primary rounded-lg font-bold flex items-center justify-center">1</button>
-              <button className="w-10 h-10 border border-outline-variant rounded-lg font-bold flex items-center justify-center hover:bg-surface-container transition-all text-on-surface">2</button>
-              <button className="w-10 h-10 border border-outline-variant rounded-lg font-bold flex items-center justify-center hover:bg-surface-container transition-all text-on-surface">3</button>
-              <button className="p-2 border border-outline-variant rounded-lg hover:bg-surface-container transition-all text-on-surface">
-                <span className="material-symbols-outlined">chevron_right</span>
-              </button>
-            </div>
-          </footer>
         </div>
       </main>
 

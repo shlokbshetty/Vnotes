@@ -1,9 +1,7 @@
 export interface Recording {
   id: string;
-  title: string;
-  date: string;
-  duration: string;
-  category: string;
-  transcript: string;
-  icon: string;
+  filename: string;
+  originalName: string;
+  duration: number;
+  createdAt: string;
 }

@@ -4,9 +4,10 @@ interface RecordingControlsProps {
   isRecording: boolean;
   onToggleRecording: () => void;
   time: number;
+  isUploading?: boolean;
 }
 
-const RecordingControls = ({ isRecording, onToggleRecording, time }: RecordingControlsProps) => {
+const RecordingControls = ({ isRecording, onToggleRecording, time, isUploading = false }: RecordingControlsProps) => {
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -55,16 +56,19 @@ const RecordingControls = ({ isRecording, onToggleRecording, time }: RecordingCo
         <button 
           onClick={onToggleRecording}
           className="flex flex-col items-center gap-2 group"
+          disabled={isUploading}
         >
-          <div className="w-24 h-24 rounded-full bg-error shadow-xl flex items-center justify-center hover:scale-105 transition-all">
-            {isRecording ? (
+          <div className={`w-24 h-24 rounded-full bg-error shadow-xl flex items-center justify-center hover:scale-105 transition-all ${isUploading ? 'opacity-50' : ''}`}>
+            {isUploading ? (
+              <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            ) : isRecording ? (
               <div className="w-8 h-8 bg-white rounded-sm"></div>
             ) : (
               <span className="material-symbols-outlined text-4xl text-white">mic</span>
             )}
           </div>
           <span className="font-label-sm text-label-sm text-on-surface font-bold">
-            {isRecording ? 'Stop & Save' : 'Start Recording'}
+            {isUploading ? 'Saving...' : isRecording ? 'Stop & Save' : 'Start Recording'}
           </span>
         </button>
 

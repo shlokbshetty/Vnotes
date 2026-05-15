@@ -1,11 +1,19 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
+import recordingRoutes from './routes/recordingRoutes';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
+
+// Static file serving for uploads
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+// Routes
+app.use('/api/recordings', recordingRoutes);
 
 app.get('/', (req, res) => {
   res.json({ message: 'VNotes Backend API' });
