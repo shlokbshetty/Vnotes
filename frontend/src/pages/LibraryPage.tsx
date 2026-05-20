@@ -59,7 +59,7 @@ const LibraryPage = () => {
     <>
       <Sidebar />
       
-      <main className="flex-grow flex flex-col min-w-0">
+      <main className="flex-grow flex flex-col min-w-0 overflow-y-auto">
         <div className="p-margin-desktop space-y-stack-lg max-w-container-max mx-auto w-full pb-32">
           {/* Filters & Stats Bento Grid */}
           <section className="grid grid-cols-1 md:grid-cols-12 gap-gutter">
