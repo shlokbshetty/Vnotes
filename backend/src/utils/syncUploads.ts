@@ -35,6 +35,11 @@ export const syncUploadsWithMetadata = () => {
 
     // Add missing files to recordings
     files.forEach(filename => {
+      // Skip .gitkeep and hidden files
+      if (filename === '.gitkeep' || filename.startsWith('.')) {
+        return;
+      }
+
       if (!existingFilenames.includes(filename)) {
         const filePath = path.join(UPLOADS_DIR, filename);
         const stats = fs.statSync(filePath);
