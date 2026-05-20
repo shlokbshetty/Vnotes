@@ -43,10 +43,17 @@ const Sidebar = () => {
           <span className="font-body-md">History</span>
         </Link>
         
-        <a className="text-on-surface-variant px-4 py-3 flex items-center gap-3 hover:bg-surface-container-high rounded-xl transition-all" href="#">
+        <Link 
+          to="/settings" 
+          className={`px-4 py-3 flex items-center gap-3 rounded-xl transition-all ${
+            location.pathname === '/settings' 
+              ? 'bg-primary text-background scale-95 duration-200' 
+              : 'text-on-surface-variant hover:bg-surface-container-high'
+          }`}
+        >
           <span className="material-symbols-outlined">settings</span>
           <span className="font-body-md">Settings</span>
-        </a>
+        </Link>
         
         <button className="mt-4 mx-4 bg-primary text-background font-bold py-3 px-6 rounded-full shadow-lg flex items-center justify-center gap-2 hover:opacity-90 transition-all">
           <span className="material-symbols-outlined">add</span>
@@ -55,10 +62,17 @@ const Sidebar = () => {
       </nav>
 
       <div className="border-t border-outline-variant pt-4 flex flex-col gap-1">
-        <a className="text-on-surface-variant px-4 py-3 flex items-center gap-3 hover:bg-surface-container-high rounded-xl transition-all" href="#">
+        <Link 
+          to="/help" 
+          className={`px-4 py-3 flex items-center gap-3 rounded-xl transition-all ${
+            location.pathname === '/help' 
+              ? 'bg-primary text-background scale-95 duration-200' 
+              : 'text-on-surface-variant hover:bg-surface-container-high'
+          }`}
+        >
           <span className="material-symbols-outlined">help</span>
           <span className="font-body-md">Help</span>
-        </a>
+        </Link>
         <a className="text-on-surface-variant px-4 py-3 flex items-center gap-3 hover:bg-surface-container-high rounded-xl transition-all" href="#">
           <span className="material-symbols-outlined">logout</span>
           <span className="font-body-md">Logout</span>

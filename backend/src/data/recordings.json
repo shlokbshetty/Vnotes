@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "id": "1234567890",
+    "filename": "1234567890-test-recording.wav",
+    "originalName": "test-recording.wav",
+    "duration": 0,
+    "size": 12,
+    "type": "audio/wav",
+    "createdAt": "2024-01-15T10:30:00.000Z"
+  }
+]
