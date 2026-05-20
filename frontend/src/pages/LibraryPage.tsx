@@ -1,15 +1,20 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import RecordingCard from '../components/RecordingCard';
 import { Recording } from '../types';
 
 const LibraryPage = () => {
+  const navigate = useNavigate();
   const [recordings, setRecordings] = useState<Recording[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchRecordings();
+    // Auto-refresh every 3 seconds to show new recordings
+    const interval = setInterval(fetchRecordings, 3000);
+    return () => clearInterval(interval);
   }, []);
 
   const fetchRecordings = async () => {
@@ -122,7 +127,10 @@ const LibraryPage = () => {
       </main>
 
       {/* Floating Action Button */}
-      <button className="fixed bottom-8 right-8 w-16 h-16 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-[60] hover:bg-primary-container">
+      <button 
+        onClick={() => navigate('/')}
+        className="fixed bottom-8 right-8 w-16 h-16 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-[60] hover:bg-primary-container"
+      >
         <span className="material-symbols-outlined">add</span>
       </button>
     </>
