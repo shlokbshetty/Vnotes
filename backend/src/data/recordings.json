@@ -7,5 +7,25 @@
     "size": 12,
     "type": "audio/wav",
     "createdAt": "2024-01-15T10:30:00.000Z"
+  },
+  {
+    "id": "17792895255690.696536961474812",
+    "filename": ".gitkeep",
+    "originalName": ".gitkeep",
+    "duration": 0,
+    "size": 0,
+    "type": "application/octet-stream",
+    "isVideo": false,
+    "createdAt": "2026-05-15T14:10:21.692Z"
+  },
+  {
+    "id": "17792895255720.21200361971628",
+    "filename": "harvard.wav",
+    "originalName": "harvard.wav",
+    "duration": 0,
+    "size": 3249924,
+    "type": "audio/wav",
+    "isVideo": false,
+    "createdAt": "2026-05-20T14:30:08.063Z"
   }
 ]

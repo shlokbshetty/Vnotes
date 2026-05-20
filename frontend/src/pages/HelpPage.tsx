@@ -41,7 +41,7 @@ const HelpPage = () => {
     <>
       <Sidebar />
       
-      <main className="flex-grow flex flex-col min-w-0">
+      <main className="flex-grow flex flex-col min-w-0 overflow-y-auto">
         <div className="p-margin-desktop space-y-stack-lg max-w-container-max mx-auto w-full pb-32">
           {/* Page Header */}
           <section className="space-y-2">

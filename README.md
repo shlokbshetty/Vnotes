@@ -111,15 +111,15 @@ npx ts-node tests/api.test.ts
 
 ### What Gets Tested
 
-- ✅ Health check endpoint
-- ✅ Get all recordings
-- ✅ Upload audio/video files
-- ✅ Get single recording
-- ✅ Delete recording
-- ✅ Serve static files
-- ✅ Invalid file rejection
-- ✅ 404 error handling
-- ✅ CORS headers
+-  Health check endpoint
+-  Get all recordings
+-  Upload audio/video files
+-  Get single recording
+-  Delete recording
+-  Serve static files
+-  Invalid file rejection
+-  404 error handling
+-  CORS headers
 
 ### Test Output
 
