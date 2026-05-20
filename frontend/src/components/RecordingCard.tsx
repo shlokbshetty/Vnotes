@@ -21,6 +21,26 @@ const RecordingCard = ({ recording, onDelete }: RecordingCardProps) => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const formatBytes = (bytes: number) => {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  };
+
+  const extractFileType = (mimeType: string) => {
+    const type = mimeType.split('/')[1]?.toUpperCase() || 'UNKNOWN';
+    return type;
+  };
+
+  const getMediaIcon = () => {
+    if (recording.isVideo) {
+      return 'video_file';
+    }
+    return 'audio_file';
+  };
+
   const handleDelete = () => {
     if (onDelete && confirm('Are you sure you want to delete this recording?')) {
       onDelete(recording.id);
@@ -30,9 +50,16 @@ const RecordingCard = ({ recording, onDelete }: RecordingCardProps) => {
   return (
     <div className="bg-surface border border-outline-variant p-6 rounded-xl flex flex-col md:flex-row gap-6 note-card-shadow transition-all hover:border-primary cursor-pointer group">
       <div className="flex-shrink-0 w-full md:w-48 h-32 bg-surface-container-high rounded-lg flex items-center justify-center border border-outline-variant overflow-hidden">
-        <span className="material-symbols-outlined text-4xl text-on-surface-variant group-hover:text-primary transition-colors">
-          audio_file
-        </span>
+        {recording.isVideo ? (
+          <video 
+            src={`http://localhost:3001/uploads/${recording.filename}`}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <span className="material-symbols-outlined text-4xl text-on-surface-variant group-hover:text-primary transition-colors">
+            {getMediaIcon()}
+          </span>
+        )}
       </div>
       
       <div className="flex-grow min-w-0">
@@ -40,7 +67,7 @@ const RecordingCard = ({ recording, onDelete }: RecordingCardProps) => {
           <h3 className="font-headline-lg-mobile text-on-surface truncate">{recording.originalName}</h3>
           <div className="flex items-center gap-2">
             <span className="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-xs font-bold">
-              Audio
+              {recording.isVideo ? 'Video' : 'Audio'}
             </span>
             {onDelete && (
               <button
@@ -63,17 +90,35 @@ const RecordingCard = ({ recording, onDelete }: RecordingCardProps) => {
             <span className="material-symbols-outlined text-[18px]">timer</span>
             {formatDuration(recording.duration)}
           </div>
+          <div className="flex items-center gap-1 text-on-surface-variant font-label-sm">
+            <span className="material-symbols-outlined text-[18px]">storage</span>
+            {formatBytes(recording.size)}
+          </div>
+          <div className="flex items-center gap-1 text-on-surface-variant font-label-sm">
+            <span className="material-symbols-outlined text-[18px]">{getMediaIcon()}</span>
+            {extractFileType(recording.type)}
+          </div>
         </div>
         
-        {/* Audio Player */}
+        {/* Media Player */}
         <div className="mb-3">
-          <audio 
-            controls 
-            src={`http://localhost:3001/uploads/${recording.filename}`}
-            className="w-full max-w-md"
-          >
-            Your browser does not support the audio element.
-          </audio>
+          {recording.isVideo ? (
+            <video 
+              controls 
+              src={`http://localhost:3001/uploads/${recording.filename}`}
+              className="w-full max-w-md rounded-lg"
+            >
+              Your browser does not support the video element.
+            </video>
+          ) : (
+            <audio 
+              controls 
+              src={`http://localhost:3001/uploads/${recording.filename}`}
+              className="w-full max-w-md"
+            >
+              Your browser does not support the audio element.
+            </audio>
+          )}
         </div>
         
         <p className="text-on-surface-variant font-body-md text-sm">
