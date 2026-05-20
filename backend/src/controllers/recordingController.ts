@@ -9,6 +9,9 @@ interface Recording {
   filename: string;
   originalName: string;
   duration: number;
+  size: number;
+  type: string;
+  isVideo: boolean;
   createdAt: string;
 }
 
@@ -32,11 +35,16 @@ export const uploadRecording = (req: Request, res: Response) => {
     }
 
     const recordings = readRecordings();
+    const isVideo = req.file.mimetype.startsWith('video/');
+    
     const newRecording: Recording = {
       id: Date.now().toString(),
       filename: req.file.filename,
       originalName: req.file.originalname,
-      duration: 0, // Will be calculated on frontend
+      duration: 0,
+      size: req.file.size,
+      type: req.file.mimetype,
+      isVideo: isVideo,
       createdAt: new Date().toISOString()
     };
 
