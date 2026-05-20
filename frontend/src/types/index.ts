@@ -3,5 +3,8 @@ export interface Recording {
   filename: string;
   originalName: string;
   duration: number;
+  size: number;
+  type: string;
+  isVideo: boolean;
   createdAt: string;
 }
