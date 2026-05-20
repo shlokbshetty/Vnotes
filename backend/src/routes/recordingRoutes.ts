@@ -20,15 +20,22 @@ const storage = multer.diskStorage({
 const upload = multer({ 
   storage,
   fileFilter: (req, file, cb) => {
-    // Accept audio files
-    if (file.mimetype.startsWith('audio/')) {
+    // Accept audio and video files
+    const allowedMimes = [
+      'audio/wav', 'audio/mpeg', 'audio/mp3',
+      'video/mp4', 'video/x-matroska', 'video/mkv'
+    ];
+    
+    if (allowedMimes.includes(file.mimetype) || 
+        file.mimetype.startsWith('audio/') || 
+        file.mimetype.startsWith('video/')) {
       cb(null, true);
     } else {
-      cb(new Error('Only audio files are allowed'));
+      cb(new Error('Only audio and video files are allowed'));
     }
   },
   limits: {
-    fileSize: 50 * 1024 * 1024 // 50MB limit
+    fileSize: 500 * 1024 * 1024 // 500MB limit for videos
   }
 });
 
