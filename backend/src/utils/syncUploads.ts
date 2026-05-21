@@ -1,37 +1,39 @@
+/**
+ * Sync Uploads with Metadata
+ * Ensures all files in uploads folder are tracked in recordings.json
+ */
+
 import fs from 'fs';
 import path from 'path';
+import { logger } from './logger';
+import { getMimeType, isVideoFile } from './fileUtils';
+import { recordingService, Recording } from '../services/recordingService';
 
 const UPLOADS_DIR = path.join(__dirname, '../../uploads');
 const RECORDINGS_FILE = path.join(__dirname, '../data/recordings.json');
 
-interface Recording {
-  id: string;
-  filename: string;
-  originalName: string;
-  duration: number;
-  size: number;
-  type: string;
-  isVideo: boolean;
-  createdAt: string;
-}
-
 export const syncUploadsWithMetadata = () => {
   try {
-    // Read existing recordings
-    let recordings: Recording[] = [];
-    if (fs.existsSync(RECORDINGS_FILE)) {
-      const data = fs.readFileSync(RECORDINGS_FILE, 'utf8');
-      recordings = JSON.parse(data);
-    }
+    logger.info('Starting uploads sync...');
 
-    // Get all files in uploads folder
+    // Ensure uploads directory exists
     if (!fs.existsSync(UPLOADS_DIR)) {
       fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+      logger.info('Created uploads directory');
       return;
     }
 
-    const files = fs.readdirSync(UPLOADS_DIR);
+    // Ensure recordings.json exists
+    if (!fs.existsSync(RECORDINGS_FILE)) {
+      fs.writeFileSync(RECORDINGS_FILE, JSON.stringify([], null, 2));
+      logger.info('Created recordings.json');
+    }
+
+    const recordings = recordingService.getAllRecordings();
     const existingFilenames = recordings.map(r => r.filename);
+    const files = fs.readdirSync(UPLOADS_DIR);
+
+    let addedCount = 0;
 
     // Add missing files to recordings
     files.forEach(filename => {
@@ -43,39 +45,27 @@ export const syncUploadsWithMetadata = () => {
       if (!existingFilenames.includes(filename)) {
         const filePath = path.join(UPLOADS_DIR, filename);
         const stats = fs.statSync(filePath);
-        
-        // Determine MIME type from extension
-        const ext = path.extname(filename).toLowerCase();
-        let mimeType = 'application/octet-stream';
-        let isVideo = false;
-
-        if (['.mp4', '.mkv', '.webm', '.avi', '.mov'].includes(ext)) {
-          isVideo = true;
-          mimeType = `video/${ext.slice(1)}`;
-        } else if (['.wav', '.mp3', '.m4a', '.aac', '.flac'].includes(ext)) {
-          mimeType = `audio/${ext.slice(1)}`;
-        }
+        const mimeType = getMimeType(filename);
 
         const newRecording: Recording = {
-          id: Date.now().toString() + Math.random(),
+          id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
           filename: filename,
           originalName: filename,
           duration: 0,
           size: stats.size,
           type: mimeType,
-          isVideo: isVideo,
+          isVideo: isVideoFile(mimeType),
           createdAt: new Date(stats.birthtime).toISOString()
         };
 
-        recordings.push(newRecording);
-        console.log(`Added missing file to metadata: ${filename}`);
+        recordingService.addRecording(newRecording);
+        addedCount++;
+        logger.info('Added missing file to metadata', { filename });
       }
     });
 
-    // Write updated recordings
-    fs.writeFileSync(RECORDINGS_FILE, JSON.stringify(recordings, null, 2));
-    console.log('Uploads synced with metadata');
+    logger.info('Uploads sync completed', { addedCount, totalFiles: files.length });
   } catch (error) {
-    console.error('Error syncing uploads:', error);
+    logger.error('Error syncing uploads', error);
   }
 };

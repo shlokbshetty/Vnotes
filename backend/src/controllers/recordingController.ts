@@ -1,113 +1,87 @@
+/**
+ * Recording Controller
+ * Handles HTTP request/response for recording endpoints
+ */
+
 import { Request, Response } from 'express';
-import fs from 'fs';
+import { recordingService } from '../services/recordingService';
+import { logger } from '../utils/logger';
+import { createErrorResponse, createSuccessResponse } from '../utils/errorHandler';
 import path from 'path';
-
-const RECORDINGS_FILE = path.join(__dirname, '../data/recordings.json');
-
-interface Recording {
-  id: string;
-  filename: string;
-  originalName: string;
-  duration: number;
-  size: number;
-  type: string;
-  isVideo: boolean;
-  createdAt: string;
-}
-
-const readRecordings = (): Recording[] => {
-  try {
-    const data = fs.readFileSync(RECORDINGS_FILE, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    return [];
-  }
-};
-
-const writeRecordings = (recordings: Recording[]): void => {
-  fs.writeFileSync(RECORDINGS_FILE, JSON.stringify(recordings, null, 2));
-};
 
 export const uploadRecording = (req: Request, res: Response) => {
   try {
     if (!req.file) {
-      return res.status(400).json({ error: 'No file uploaded' });
+      logger.warn('Upload attempted without file');
+      return res.status(400).json(createErrorResponse('No file uploaded', 'NO_FILE'));
     }
 
-    const recordings = readRecordings();
-    const isVideo = req.file.mimetype.startsWith('video/');
-    
-    const newRecording: Recording = {
-      id: Date.now().toString(),
-      filename: req.file.filename,
-      originalName: req.file.originalname,
-      duration: 0,
-      size: req.file.size,
-      type: req.file.mimetype,
-      isVideo: isVideo,
-      createdAt: new Date().toISOString()
-    };
+    logger.info('Recording upload started', { filename: req.file.filename, size: req.file.size });
 
-    recordings.push(newRecording);
-    writeRecordings(recordings);
+    const recording = recordingService.createRecording(
+      req.file.filename,
+      req.file.originalname,
+      req.file.size,
+      req.file.mimetype
+    );
 
-    res.json(newRecording);
+    const savedRecording = recordingService.addRecording(recording);
+    logger.info('Recording uploaded successfully', { id: savedRecording.id });
+
+    res.status(201).json(createSuccessResponse(savedRecording));
   } catch (error) {
-    console.error('Upload error:', error);
-    res.status(500).json({ error: 'Upload failed' });
+    logger.error('Upload error', error);
+    res.status(500).json(createErrorResponse('Upload failed', 'UPLOAD_ERROR'));
   }
 };
 
 export const getRecordings = (req: Request, res: Response) => {
   try {
-    const recordings = readRecordings();
-    res.json(recordings);
+    logger.info('Fetching all recordings');
+    const recordings = recordingService.getAllRecordings();
+    res.json(createSuccessResponse(recordings));
   } catch (error) {
-    console.error('Get recordings error:', error);
-    res.status(500).json({ error: 'Failed to fetch recordings' });
+    logger.error('Get recordings error', error);
+    res.status(500).json(createErrorResponse('Failed to fetch recordings', 'FETCH_ERROR'));
   }
 };
 
 export const getRecording = (req: Request, res: Response) => {
   try {
-    const recordings = readRecordings();
-    const recording = recordings.find(r => r.id === req.params.id);
-    
+    const { id } = req.params;
+    logger.info('Fetching recording', { id });
+
+    const recording = recordingService.getRecordingById(id);
+
     if (!recording) {
-      return res.status(404).json({ error: 'Recording not found' });
+      logger.warn('Recording not found', { id });
+      return res.status(404).json(createErrorResponse('Recording not found', 'NOT_FOUND'));
     }
 
-    res.json(recording);
+    res.json(createSuccessResponse(recording));
   } catch (error) {
-    console.error('Get recording error:', error);
-    res.status(500).json({ error: 'Failed to fetch recording' });
+    logger.error('Get recording error', error);
+    res.status(500).json(createErrorResponse('Failed to fetch recording', 'FETCH_ERROR'));
   }
 };
 
 export const deleteRecording = (req: Request, res: Response) => {
   try {
-    const recordings = readRecordings();
-    const recordingIndex = recordings.findIndex(r => r.id === req.params.id);
-    
-    if (recordingIndex === -1) {
-      return res.status(404).json({ error: 'Recording not found' });
+    const { id } = req.params;
+    logger.info('Deleting recording', { id });
+
+    const uploadsDir = path.join(__dirname, '../../uploads');
+    const deleted = recordingService.deleteRecording(id, uploadsDir);
+
+    if (!deleted) {
+      logger.warn('Recording not found for deletion', { id });
+      return res.status(404).json(createErrorResponse('Recording not found', 'NOT_FOUND'));
     }
 
-    const recording = recordings[recordingIndex];
-    
-    // Delete file from uploads folder
-    const filePath = path.join(__dirname, '../../uploads', recording.filename);
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-    }
-
-    // Remove from recordings array
-    recordings.splice(recordingIndex, 1);
-    writeRecordings(recordings);
-
-    res.json({ message: 'Recording deleted successfully' });
+    logger.info('Recording deleted successfully', { id });
+    res.json(createSuccessResponse({ message: 'Recording deleted successfully' }));
   } catch (error) {
-    console.error('Delete recording error:', error);
-    res.status(500).json({ error: 'Failed to delete recording' });
+    logger.error('Delete recording error', error);
+    res.status(500).json(createErrorResponse('Failed to delete recording', 'DELETE_ERROR'));
   }
 };
