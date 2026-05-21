@@ -1,57 +1,39 @@
+/**
+ * Library Page
+ * Displays all recordings with playback and management
+ */
+
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import RecordingCard from '../components/RecordingCard';
-import { Recording } from '../types';
+import { useRecordings } from '../hooks/useRecordings';
+import { getUserFriendlyMessage } from '../utils/errorHandler';
 
 const LibraryPage = () => {
   const navigate = useNavigate();
-  const [recordings, setRecordings] = useState<Recording[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { recordings, loading, error, fetchRecordings, deleteRecording, setError } = useRecordings();
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     fetchRecordings();
     // Auto-refresh every 3 seconds to show new recordings
     const interval = setInterval(fetchRecordings, 3000);
     return () => clearInterval(interval);
-  }, []);
-
-  const fetchRecordings = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      const response = await fetch('http://localhost:3001/api/recordings');
-      if (!response.ok) {
-        throw new Error('Failed to fetch recordings');
-      }
-      
-      const data = await response.json();
-      setRecordings(data);
-    } catch (error) {
-      console.error('Error fetching recordings:', error);
-      setError('Failed to load recordings. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [fetchRecordings]);
 
   const handleDeleteRecording = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this recording?')) {
+      return;
+    }
+
     try {
-      const response = await fetch(`http://localhost:3001/api/recordings/${id}`, {
-        method: 'DELETE'
-      });
-      
-      if (response.ok) {
-        // Refresh the recordings list
-        fetchRecordings();
-      } else {
-        throw new Error('Failed to delete recording');
-      }
-    } catch (error) {
-      console.error('Error deleting recording:', error);
-      alert('Failed to delete recording. Please try again.');
+      setIsDeleting(true);
+      await deleteRecording(id);
+    } catch (err) {
+      // Error is already handled in the hook
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -73,7 +55,8 @@ const LibraryPage = () => {
               <div className="flex items-center gap-4">
                 <button 
                   onClick={fetchRecordings}
-                  className="px-4 py-2 border border-outline-variant rounded-lg font-label-sm text-label-sm text-on-surface flex items-center gap-2 hover:bg-surface-container transition-all"
+                  disabled={loading}
+                  className="px-4 py-2 border border-outline-variant rounded-lg font-label-sm text-label-sm text-on-surface flex items-center gap-2 hover:bg-surface-container transition-all disabled:opacity-50"
                 >
                   <span className="material-symbols-outlined text-[20px]">refresh</span>
                   Refresh
@@ -90,22 +73,25 @@ const LibraryPage = () => {
             </div>
           </section>
 
+          {/* Error Message */}
+          {error && (
+            <div className="p-4 bg-error-container text-on-error-container rounded-lg flex items-center justify-between">
+              <span>{getUserFriendlyMessage(error)}</span>
+              <button 
+                onClick={() => setError(null)}
+                className="text-on-error-container hover:opacity-70"
+              >
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+          )}
+
           {/* Recordings Grid */}
           <section className="grid grid-cols-1 gap-8">
-            {loading ? (
+            {loading && recordings.length === 0 ? (
               <div className="text-center py-12">
                 <div className="inline-block w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
                 <p className="text-on-surface-variant">Loading recordings...</p>
-              </div>
-            ) : error ? (
-              <div className="text-center py-12">
-                <p className="text-error mb-4">{error}</p>
-                <button 
-                  onClick={fetchRecordings}
-                  className="px-4 py-2 bg-primary text-on-primary rounded-lg hover:opacity-90 transition-all"
-                >
-                  Try Again
-                </button>
               </div>
             ) : recordings.length === 0 ? (
               <div className="text-center py-12">
@@ -119,6 +105,7 @@ const LibraryPage = () => {
                   key={recording.id} 
                   recording={recording} 
                   onDelete={handleDeleteRecording}
+                  isDeleting={isDeleting}
                 />
               ))
             )}

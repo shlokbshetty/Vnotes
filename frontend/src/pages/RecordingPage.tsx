@@ -1,107 +1,43 @@
-import { useState, useEffect, useRef } from 'react';
+/**
+ * Recording Page
+ * Main page for recording audio
+ */
+
+import { useCallback } from 'react';
 import Sidebar from '../components/Sidebar';
 import RecordingControls from '../components/RecordingControls';
 import TranscriptPanel from '../components/TranscriptPanel';
+import { useRecording } from '../hooks/useRecording';
+import { getUserFriendlyMessage } from '../utils/errorHandler';
 
 const RecordingPage = () => {
-  const [isRecording, setIsRecording] = useState(false);
-  const [time, setTime] = useState(0);
-  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
-  const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
-  const [isUploading, setIsUploading] = useState(false);
+  const {
+    isRecording,
+    time,
+    isUploading,
+    error,
+    startRecording,
+    stopRecording,
+    uploadRecording,
+    resetRecording,
+    setError
+  } = useRecording();
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    
+  const handleToggleRecording = useCallback(async () => {
     if (isRecording) {
-      interval = setInterval(() => {
-        setTime(prevTime => prevTime + 1);
-      }, 1000);
-    }
-    
-    return () => {
-      if (interval) {
-        clearInterval(interval);
-      }
-    };
-  }, [isRecording]);
-
-  const startRecording = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const recorder = new MediaRecorder(stream);
-      const chunks: Blob[] = [];
-
-      recorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          chunks.push(event.data);
+      const audioBlob = stopRecording();
+      if (audioBlob) {
+        try {
+          await uploadRecording(audioBlob);
+          resetRecording();
+        } catch (err) {
+          // Error is already handled in the hook
         }
-      };
-
-      recorder.onstop = async () => {
-        const audioBlob = new Blob(chunks, { type: 'audio/wav' });
-        await uploadRecording(audioBlob);
-        
-        // Stop all tracks to release microphone
-        stream.getTracks().forEach(track => track.stop());
-      };
-
-      recorder.start();
-      setMediaRecorder(recorder);
-      setAudioChunks(chunks);
-      setIsRecording(true);
-      setTime(0);
-    } catch (error) {
-      console.error('Error starting recording:', error);
-      alert('Could not access microphone. Please check permissions.');
-    }
-  };
-
-  const stopRecording = () => {
-    if (mediaRecorder && mediaRecorder.state === 'recording') {
-      mediaRecorder.stop();
-      setIsRecording(false);
-    }
-  };
-
-  const uploadRecording = async (audioBlob: Blob) => {
-    try {
-      setIsUploading(true);
-      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-      const filename = `recording-${timestamp}.wav`;
-      
-      const audioFile = new File([audioBlob], filename, { type: 'audio/wav' });
-      
-      const formData = new FormData();
-      formData.append('file', audioFile);
-
-      const response = await fetch('http://localhost:3001/api/recordings/upload', {
-        method: 'POST',
-        body: formData
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        console.log('Recording uploaded successfully:', result);
-        alert('Recording saved successfully!');
-      } else {
-        throw new Error('Upload failed');
       }
-    } catch (error) {
-      console.error('Upload error:', error);
-      alert('Failed to save recording. Please try again.');
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
-  const handleToggleRecording = () => {
-    if (isRecording) {
-      stopRecording();
     } else {
-      startRecording();
+      await startRecording();
     }
-  };
+  }, [isRecording, stopRecording, uploadRecording, resetRecording, startRecording]);
 
   return (
     <>
@@ -114,6 +50,8 @@ const RecordingPage = () => {
             onToggleRecording={handleToggleRecording}
             time={time}
             isUploading={isUploading}
+            error={error}
+            onDismissError={() => setError(null)}
           />
           <TranscriptPanel />
         </div>
