@@ -4,7 +4,10 @@
   "description": "VNotes - Voice Notes Application",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\""
+    "predev": "node scripts/preflightCheck.js",
+    "dev": "npm run predev && concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\"",
+    "build": "concurrently \"cd backend && npm run build\" \"cd frontend && npm run build\"",
+    "start": "node backend/dist/server.js"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
