@@ -103,6 +103,12 @@ class ApiService {
     });
   }
 
+  async transcribeRecording(id: string): Promise<Recording> {
+    return this.request<Recording>(`/recordings/${id}/transcribe`, {
+      method: 'POST'
+    });
+  }
+
   async checkHealth(): Promise<{ status: string }> {
     try {
       const response = await fetch(`${API_BASE_URL.replace('/api', '')}/health`);

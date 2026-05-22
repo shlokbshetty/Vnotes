@@ -6,7 +6,7 @@
 import express from 'express';
 import multer from 'multer';
 import path from 'path';
-import { uploadRecording, getRecordings, getRecording, deleteRecording, addKeyMoment, removeKeyMoment, generateSummary } from '../controllers/recordingController';
+import { uploadRecording, getRecordings, getRecording, deleteRecording, addKeyMoment, removeKeyMoment, generateSummary, transcribeRecording } from '../controllers/recordingController';
 import { config } from '../config/env';
 import { logger } from '../utils/logger';
 
@@ -56,5 +56,6 @@ router.delete('/:id', deleteRecording);
 router.post('/:id/key-moments', addKeyMoment);
 router.delete('/:id/key-moments', removeKeyMoment);
 router.post('/:id/summary', generateSummary);
+router.post('/:id/transcribe', transcribeRecording);
 
 export default router;
