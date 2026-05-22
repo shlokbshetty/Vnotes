@@ -1,6 +1,6 @@
 /**
  * Recording Service
- * Business logic for recording operations
+ * Business logic for recording operations including AI features
  */
 
 import fs from 'fs';
@@ -9,6 +9,11 @@ import { logger } from '../utils/logger';
 import { isVideoFile } from '../utils/fileUtils';
 
 const RECORDINGS_FILE = path.join(__dirname, '../data/recordings.json');
+
+export interface KeyMoment {
+  time: string;
+  label: string;
+}
 
 export interface Recording {
   id: string;
@@ -19,6 +24,10 @@ export interface Recording {
   type: string;
   isVideo: boolean;
   transcription?: string;
+  summary?: string;
+  keyPoints?: string[];
+  actionItems?: string[];
+  keyMoments?: KeyMoment[];
   createdAt: string;
 }
 
@@ -79,9 +88,20 @@ class RecordingService {
     }
   }
 
-  getAllRecordings(): Recording[] {
+  getAllRecordings(searchQuery?: string): Recording[] {
     try {
-      return this.readRecordings();
+      let recordings = this.readRecordings();
+      
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        recordings = recordings.filter(r => 
+          r.originalName.toLowerCase().includes(query) ||
+          r.transcription?.toLowerCase().includes(query) ||
+          r.summary?.toLowerCase().includes(query)
+        );
+      }
+      
+      return recordings;
     } catch (error) {
       logger.error('Failed to get all recordings', error);
       return [];
@@ -112,13 +132,11 @@ class RecordingService {
       const recording = recordings[recordingIndex];
       const filePath = path.join(uploadsDir, recording.filename);
 
-      // Delete file from disk
       if (fs.existsSync(filePath)) {
         fs.unlinkSync(filePath);
         logger.info('Recording file deleted', { filename: recording.filename });
       }
 
-      // Remove from metadata
       recordings.splice(recordingIndex, 1);
       this.writeRecordings(recordings);
       logger.info('Recording deleted from metadata', { id });
@@ -147,6 +165,79 @@ class RecordingService {
       return recording;
     } catch (error) {
       logger.error('Failed to update recording transcription', { id, error });
+      throw error;
+    }
+  }
+
+  updateRecordingSummary(
+    id: string,
+    summary: string,
+    keyPoints: string[] = [],
+    actionItems: string[] = []
+  ): Recording | null {
+    try {
+      const recordings = this.readRecordings();
+      const recording = recordings.find(r => r.id === id);
+
+      if (!recording) {
+        logger.warn('Recording not found for summary update', { id });
+        return null;
+      }
+
+      recording.summary = summary;
+      recording.keyPoints = keyPoints;
+      recording.actionItems = actionItems;
+      this.writeRecordings(recordings);
+      logger.info('Recording summary updated', { id });
+
+      return recording;
+    } catch (error) {
+      logger.error('Failed to update recording summary', { id, error });
+      throw error;
+    }
+  }
+
+  addKeyMoment(id: string, time: string, label: string): Recording | null {
+    try {
+      const recordings = this.readRecordings();
+      const recording = recordings.find(r => r.id === id);
+
+      if (!recording) {
+        logger.warn('Recording not found for key moment', { id });
+        return null;
+      }
+
+      if (!recording.keyMoments) {
+        recording.keyMoments = [];
+      }
+
+      recording.keyMoments.push({ time, label });
+      this.writeRecordings(recordings);
+      logger.info('Key moment added', { id, time });
+
+      return recording;
+    } catch (error) {
+      logger.error('Failed to add key moment', { id, error });
+      throw error;
+    }
+  }
+
+  removeKeyMoment(id: string, time: string): Recording | null {
+    try {
+      const recordings = this.readRecordings();
+      const recording = recordings.find(r => r.id === id);
+
+      if (!recording || !recording.keyMoments) {
+        return null;
+      }
+
+      recording.keyMoments = recording.keyMoments.filter(km => km.time !== time);
+      this.writeRecordings(recordings);
+      logger.info('Key moment removed', { id, time });
+
+      return recording;
+    } catch (error) {
+      logger.error('Failed to remove key moment', { id, error });
       throw error;
     }
   }

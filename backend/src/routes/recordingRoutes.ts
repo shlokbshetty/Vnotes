@@ -6,7 +6,7 @@
 import express from 'express';
 import multer from 'multer';
 import path from 'path';
-import { uploadRecording, getRecordings, getRecording, deleteRecording } from '../controllers/recordingController';
+import { uploadRecording, getRecordings, getRecording, deleteRecording, addKeyMoment, removeKeyMoment, generateSummary } from '../controllers/recordingController';
 import { config } from '../config/env';
 import { logger } from '../utils/logger';
 
@@ -51,5 +51,10 @@ router.post('/upload', upload.single('file'), uploadRecording);
 router.get('/', getRecordings);
 router.get('/:id', getRecording);
 router.delete('/:id', deleteRecording);
+
+// AI Features
+router.post('/:id/key-moments', addKeyMoment);
+router.delete('/:id/key-moments', removeKeyMoment);
+router.post('/:id/summary', generateSummary);
 
 export default router;

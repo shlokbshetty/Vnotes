@@ -1,7 +1,7 @@
-/**
- * Type Definitions
- * Shared types across the application
- */
+export interface KeyMoment {
+  time: string;
+  label: string;
+}
 
 export interface Recording {
   id: string;
@@ -12,6 +12,10 @@ export interface Recording {
   type: string;
   isVideo: boolean;
   transcription?: string;
+  summary?: string;
+  keyPoints?: string[];
+  actionItems?: string[];
+  keyMoments?: KeyMoment[];
   createdAt: string;
 }
 
