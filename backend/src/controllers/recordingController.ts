@@ -6,6 +6,7 @@
 import { Request, Response } from 'express';
 import { recordingService } from '../services/recordingService';
 import { summaryService } from '../services/summaryService';
+import { transcriptionService } from '../services/transcriptionService';
 import { logger } from '../utils/logger';
 import { createErrorResponse, createSuccessResponse } from '../utils/errorHandler';
 import path from 'path';
@@ -163,5 +164,35 @@ export const generateSummary = async (req: Request, res: Response) => {
   } catch (error) {
     logger.error('Generate summary error', error);
     res.status(500).json(createErrorResponse('Failed to generate summary', 'ERROR'));
+  }
+};
+
+
+export const transcribeRecording = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    logger.info('Transcribing recording', { id });
+
+    const recording = recordingService.getRecordingById(id);
+
+    if (!recording) {
+      return res.status(404).json(createErrorResponse('Recording not found', 'NOT_FOUND'));
+    }
+
+    // Get file path
+    const uploadsDir = path.join(__dirname, '../../uploads');
+    const filePath = path.join(uploadsDir, recording.filename);
+
+    // Transcribe audio
+    const transcriptionResult = await transcriptionService.transcribeAudio(filePath);
+    
+    // Update recording with transcription
+    const updated = recordingService.updateRecordingTranscription(id, transcriptionResult.text);
+
+    logger.info('Recording transcribed successfully', { id });
+    res.json(createSuccessResponse(updated));
+  } catch (error) {
+    logger.error('Transcription error', error);
+    res.status(500).json(createErrorResponse('Failed to transcribe recording', 'ERROR'));
   }
 };

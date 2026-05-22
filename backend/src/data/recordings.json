@@ -27,5 +27,16 @@
     "type": "audio/wav",
     "isVideo": false,
     "createdAt": "2026-05-20T14:30:08.063Z"
+  },
+  {
+    "id": "1779449424091nftqdy9wq",
+    "filename": "1779449424039-gp68pgd8g-harvard.wav",
+    "originalName": "harvard.wav",
+    "duration": 0,
+    "size": 3249924,
+    "type": "audio/wav",
+    "isVideo": false,
+    "createdAt": "2026-05-22T11:30:24.091Z",
+    "transcription": "[Transcription pending for C:\\GitHub\\Vnotes\\backend\\uploads\\1779449424039-gp68pgd8g-harvard.wav (3.10MB)]\n\nNote: To enable automatic transcription, please configure your ElevenLabs API key in the .env file:\nELEVENLABS_API_KEY=your_api_key_here\n\nOnce configured, re-upload the audio file to generate a full transcription."
   }
 ]
