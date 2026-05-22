@@ -25,7 +25,7 @@ class TranscriptionService {
     try {
       if (!this.ELEVENLABS_API_KEY) {
         logger.warn('ElevenLabs API key not configured, using fallback');
-        return this.fallbackTranscription(filePath);
+        return this.fallbackTranscription(filePath, 'API key not configured');
       }
 
       logger.info('Starting transcription with ElevenLabs', { filePath });
@@ -62,14 +62,17 @@ class TranscriptionService {
         confidence: response.data.confidence
       };
     } catch (error: any) {
+      const status = error.response?.status;
+      const errorDetail = error.response?.data?.detail?.message || error.message;
+
       logger.error('ElevenLabs transcription failed', {
-        error: error.message,
-        status: error.response?.status
+        error: errorDetail,
+        status
       });
 
       // Fallback to simple transcription
       logger.info('Falling back to placeholder transcription');
-      return this.fallbackTranscription(filePath);
+      return this.fallbackTranscription(filePath, errorDetail);
     }
   }
 
@@ -77,15 +80,26 @@ class TranscriptionService {
    * Fallback transcription when API fails
    * Returns a placeholder message
    */
-  private fallbackTranscription(filePath: string): TranscriptionResult {
+  private fallbackTranscription(filePath: string, errorReason?: string): TranscriptionResult {
     try {
       const fileName = filePath.split('/').pop() || 'recording';
       const fileSize = fs.statSync(filePath).size;
       const fileSizeMB = (fileSize / 1024 / 1024).toFixed(2);
 
-      const placeholderText = `[Transcription pending for ${fileName} (${fileSizeMB}MB)]\n\nNote: To enable automatic transcription, please configure your ElevenLabs API key in the .env file:\nELEVENLABS_API_KEY=your_api_key_here\n\nOnce configured, re-upload the audio file to generate a full transcription.`;
+      let placeholderText = `[Transcription pending for ${fileName} (${fileSizeMB}MB)]\n\n`;
+      
+      if (errorReason) {
+        placeholderText += `Reason: ${errorReason}\n\n`;
+      }
 
-      logger.info('Using fallback transcription', { fileName });
+      placeholderText += `To enable automatic transcription:\n`;
+      placeholderText += `1. Get an ElevenLabs API key from https://elevenlabs.io\n`;
+      placeholderText += `2. Ensure the key has speech-to-text permissions\n`;
+      placeholderText += `3. Add to .env file: ELEVENLABS_API_KEY=your_api_key_here\n`;
+      placeholderText += `4. Restart the backend server\n`;
+      placeholderText += `5. Re-upload the audio file to generate a full transcription`;
+
+      logger.info('Using fallback transcription', { fileName, reason: errorReason });
 
       return {
         text: placeholderText,
