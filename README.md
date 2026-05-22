@@ -1,278 +1,396 @@
-# VNotes
+# VNotes - Voice Notes Application
 
-A web application for voice note recording and transcription with real-time features.
+A modern, production-ready web application for recording, storing, and managing audio and video notes with a clean, intuitive interface.
+
+## Project Overview
+
+VNotes is a full-stack application built with React and Node.js that enables users to:
+- Record audio directly from their microphone
+- Upload and manage recordings with metadata
+- Play back audio and video files
+- Organize recordings in a library
+- Manage user settings and preferences
 
 ## Features
 
-- Real-time voice recording with live transcription
-- Recording library with search and filtering
-- Live waveform visualization during recording
-- AI-powered key moment detection
-- Export functionality for recordings and transcripts
-- **Multi-format support**: Audio (.wav, .mp3) and Video (.mp4, .mkv)
-- **Video thumbnails**: Automatic thumbnail display for video files
-- **File metadata**: Size, type, duration, and creation date tracking
+### Core Features
+- **Real-time Recording**: Capture audio directly from your microphone with live waveform visualization
+- **File Management**: Upload, store, and organize audio and video files
+- **Playback**: Built-in audio/video player with standard controls
+- **Library System**: Browse all recordings with metadata (size, type, date, duration)
+- **Settings Management**: Customize user profile and preferences (saved locally)
+- **Help & Documentation**: Comprehensive usage guide and FAQ
 
-## Tech Stack
+### Supported Formats
+- **Audio**: WAV, MP3, M4A, AAC, FLAC
+- **Video**: MP4, MKV, WebM, AVI, MOV
+- **Max File Size**: 500MB per file
 
-**Frontend:**
-- React + TypeScript
-- Vite (build tool)
-- Tailwind CSS
+##  Architecture
 
-**Backend:**
-- Node.js + Express
-- TypeScript
-- Multer (file uploads)
-
-## Folder Structure
+### Project Structure
 
 ```
-/vnotes/
-├── frontend/
+vnotes/
+├── backend/                    # Node.js + Express backend
 │   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── routes/
-│   │   └── types/
-│   ├── index.html
-│   ├── package.json
-│   ├── tsconfig.json
-│   ├── vite.config.ts
-│   └── tailwind.config.js
-├── backend/
+│   │   ├── config/            # Configuration management
+│   │   │   └── env.ts         # Environment variables
+│   │   ├── controllers/       # Request handlers
+│   │   │   └── recordingController.ts
+│   │   ├── services/          # Business logic
+│   │   │   └── recordingService.ts
+│   │   ├── routes/            # API endpoints
+│   │   │   └── recordingRoutes.ts
+│   │   ├── utils/             # Utility functions
+│   │   │   ├── logger.ts      # Structured logging
+│   │   │   ├── errorHandler.ts
+│   │   │   ├── fileUtils.ts
+│   │   │   └── syncUploads.ts
+│   │   └── server.ts          # Entry point
+│   ├── tests/                 # Test suite
+│   ├── uploads/               # File storage
+│   ├── dist/                  # Compiled output
+│   └── package.json
+│
+├── frontend/                   # React + TypeScript frontend
 │   ├── src/
-│   │   ├── controllers/
-│   │   ├── routes/
-│   │   ├── models/
-│   │   └── config/
-│   ├── tests/
-│   │   ├── api.test.ts
-│   │   └── README.md
-│   ├── server.ts
-│   ├── package.json
-│   └── tsconfig.json
-├── uploads/
-├── .gitignore
+│   │   ├── components/        # Reusable UI components
+│   │   │   ├── RecordingControls.tsx
+│   │   │   ├── RecordingCard.tsx
+│   │   │   ├── TranscriptPanel.tsx
+│   │   │   └── Sidebar.tsx
+│   │   ├── pages/             # Page components
+│   │   │   ├── RecordingPage.tsx
+│   │   │   ├── LibraryPage.tsx
+│   │   │   ├── SettingsPage.tsx
+│   │   │   └── HelpPage.tsx
+│   │   ├── services/          # API communication
+│   │   │   └── api.ts
+│   │   ├── hooks/             # Custom React hooks
+│   │   │   ├── useRecording.ts
+│   │   │   └── useRecordings.ts
+│   │   ├── utils/             # Utility functions
+│   │   │   ├── formatters.ts
+│   │   │   └── errorHandler.ts
+│   │   ├── types/             # TypeScript definitions
+│   │   ├── App.tsx
+│   │   └── main.tsx
+│   ├── .env.example           # Environment template
+│   └── package.json
+│
+├── scripts/                    # Utility scripts
+│   └── preflightCheck.js      # System validation
+│
+├── .env.example               # Backend env template
+├── package.json               # Root package config
 └── README.md
 ```
 
-## Setup
+##  Quick Start
 
-### Quick Start
+### Prerequisites
+- Node.js 14+ and npm
+- Modern web browser (Chrome, Firefox, Safari, Edge)
 
+### Installation
+
+1. **Clone the repository**
+```bash
+git clone <repository-url>
+cd vnotes
+```
+
+2. **Install dependencies**
 ```bash
 npm install
+```
+
+3. **Setup environment variables**
+```bash
+# Copy example files
+cp .env.example .env
+cp frontend/.env.example frontend/.env
+
+# Edit .env if needed (optional for local development)
+```
+
+4. **Start the application**
+```bash
 npm run dev
 ```
 
-This single command installs dependencies and runs both the frontend and backend servers together using `concurrently`. 
+This command will:
+- Run preflight checks (validates setup)
+- Start backend server on `http://localhost:3001`
+- Start frontend on `http://localhost:3000`
 
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:3001
+Both servers run concurrently in development mode.
 
-Both servers will start automatically and run side-by-side.
+##  Environment Variables
 
-## Features
-
-- **Recording**: Capture audio directly from your microphone on the Recording page
-- **Library**: View all your recordings with metadata (filename, size, type, date, duration)
-- **Playback**: Play recordings directly from the library with built-in audio/video controls
-- **Settings**: Manage your profile and preferences (saved locally)
-- **Help**: Access usage guide and FAQ documentation
-- **File Storage**: All recordings are stored locally in `/backend/uploads/`
-- **Video Support**: Upload and play video files with automatic thumbnail preview
-- **Multi-format**: Support for .wav, .mp3, .mp4, .mkv video formats
-
-## Supported File Formats
-
-### Audio
-- `.wav` - WAV format (recommended for recording)
-- `.mp3` - MPEG Audio
-- `.m4a` - MPEG-4 Audio
-
-### Video
-- `.mp4` - MPEG-4 Video
-- `.mkv` - Matroska Video
-- `.webm` - WebM Video
-
-**Max file size**: 500MB
-
-## API Testing
-
-VNotes includes a comprehensive API test suite to verify all endpoints are working correctly.
-
-### Running Tests
-
-```bash
-# From backend directory
-npx ts-node tests/api.test.ts
+### Backend (.env)
+```env
+PORT=3001                          # Server port
+NODE_ENV=development               # Environment
+CORS_ORIGIN=http://localhost:3000  # Frontend URL
+UPLOADS_DIR=uploads                # Upload directory
+MAX_FILE_SIZE=524288000            # Max file size (500MB)
+ELEVENLABS_API_KEY=your_key_here   # For future transcription
 ```
 
-### What Gets Tested
-
--  Health check endpoint
--  Get all recordings
--  Upload audio/video files
--  Get single recording
--  Delete recording
--  Serve static files
--  Invalid file rejection
--  404 error handling
--  CORS headers
-
-### Test Output
-
-```
-=== VNotes API Test Suite ===
-
-Testing API at: http://localhost:3001/api
-
-✓ PASS - Health Check - GET /
-✓ PASS - Get All Recordings - GET /api/recordings
-✓ PASS - Upload Audio File - POST /api/recordings/upload
-...
-
-=== Test Summary ===
-
-Total Tests: 10
-Passed: 10
-Failed: 0
-Success Rate: 100%
-
-✓ All tests passed!
+### Frontend (.env)
+```env
+VITE_API_URL=http://localhost:3001/api  # Backend API URL
+VITE_ENABLE_TRANSCRIPTION=false         # Feature flag
 ```
 
-For detailed testing information, see [backend/tests/README.md](backend/tests/README.md)
-
-## API Endpoints
-
-### Recordings
-
-- `POST /api/recordings/upload` - Upload audio/video file
-- `GET /api/recordings` - Get all recordings
-- `GET /api/recordings/:id` - Get single recording
-- `DELETE /api/recordings/:id` - Delete recording
-- `GET /uploads/:filename` - Serve audio/video file
-
-## Development
+##  Development
 
 ### Backend Development
 
 ```bash
 cd backend
+
+# Install dependencies
 npm install
+
+# Start development server (with hot reload)
 npm run dev
+
+# Build for production
+npm run build
+
+# Run linter
+npm run lint
+
+# Run tests
+npm run test
 ```
 
 ### Frontend Development
 
 ```bash
 cd frontend
+
+# Install dependencies
 npm install
+
+# Start development server
 npm run dev
+
+# Build for production
+npm run build
+
+# Run linter
+npm run lint
 ```
 
-### Building
+##  API Endpoints
+
+### Recordings
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/recordings/upload` | Upload audio/video file |
+| GET | `/api/recordings` | Get all recordings |
+| GET | `/api/recordings/:id` | Get single recording |
+| DELETE | `/api/recordings/:id` | Delete recording |
+| GET | `/uploads/:filename` | Serve audio/video file |
+| GET | `/health` | Health check |
+
+### Response Format
+
+**Success Response:**
+```json
+{
+  "success": true,
+  "data": { /* response data */ }
+}
+```
+
+**Error Response:**
+```json
+{
+  "success": false,
+  "message": "Error description",
+  "code": "ERROR_CODE"
+}
+```
+
+##  Testing
+
+### Run API Tests
 
 ```bash
-# Backend
 cd backend
+npm run test
+```
+
+Tests verify:
+- Health check endpoint
+- Recording upload
+- Recording retrieval
+- Recording deletion
+- File serving
+- Error handling
+- CORS headers
+
+##  Security
+
+### Implemented Measures
+-  CORS protection
+-  File type validation
+-  File size limits (500MB)
+-  Input validation
+-  Error handling without exposing internals
+-  Environment-based configuration
+
+### Future Enhancements
+- User authentication
+- Authorization checks
+- Rate limiting
+- Encryption at rest
+- Audit logging
+
+##  Deployment
+
+### Build for Production
+
+```bash
+# Build both frontend and backend
 npm run build
 
-# Frontend
-cd frontend
-npm run build
+# Or individually
+cd backend && npm run build
+cd frontend && npm run build
 ```
 
-## File Storage
+### Docker Support (Coming Soon)
 
-- **Location**: `/backend/uploads/`
-- **Naming**: `{timestamp}-{originalname}`
-- **Max Size**: 500MB per file
-- **Cleanup**: Delete files via API or manually from uploads folder
-
-## Metadata Storage
-
-Recording metadata is stored in `/backend/src/data/recordings.json`:
-
-```json
-{
-  "id": "1234567890",
-  "filename": "1234567890-recording.wav",
-  "originalName": "recording.wav",
-  "duration": 0,
-  "size": 1048576,
-  "type": "audio/wav",
-  "isVideo": false,
-  "createdAt": "2024-01-15T10:30:00.000Z"
-}
+```bash
+docker-compose up
 ```
 
-## Settings Storage
+### Cloud Deployment
 
-User settings are stored in browser localStorage:
+The application is ready for deployment to:
+- Heroku
+- AWS (EC2, Elastic Beanstalk)
+- Google Cloud Platform
+- Azure
+- DigitalOcean
 
-```json
-{
-  "userName": "John Doe",
-  "email": "john@example.com"
-}
+Key considerations:
+- Use environment variables for configuration
+- Ensure uploads directory is persistent
+- Configure CORS for your domain
+- Use HTTPS in production
+- Set up proper logging and monitoring
+
+##  Troubleshooting
+
+### Backend won't start
+```bash
+# Check if port 3001 is available
+# Kill process on port 3001 or change PORT in .env
+
+# Ensure Node.js is installed
+node --version
+
+# Reinstall dependencies
+rm -rf node_modules package-lock.json
+npm install
 ```
-
-## Troubleshooting
-
-### Server won't start
-- Check if ports 3000 and 3001 are available
-- Ensure Node.js is installed (v14+)
-- Try: `npm install` in both frontend and backend
 
 ### Files not uploading
 - Check `/backend/uploads/` directory exists
 - Verify file format is supported
 - Check file size is under 500MB
-- Run API tests to verify backend
+- Ensure backend is running
 
-### Video not playing
-- Ensure video format is supported (.mp4, .mkv, .webm)
-- Check browser supports HTML5 video
-- Verify file is not corrupted
+### Frontend can't connect to backend
+- Verify backend is running on port 3001
+- Check VITE_API_URL in frontend/.env
+- Check CORS_ORIGIN in backend/.env
+- Check browser console for errors
 
-### Tests failing
-- Ensure backend server is running on port 3001
-- Check network connectivity
-- Review test output for specific errors
-- See [backend/tests/README.md](backend/tests/README.md) for details
+### Preflight check fails
+```bash
+# Run preflight check manually
+node scripts/preflightCheck.js
 
-## Performance
+# It will create missing directories and files
+```
+
+##  Performance
 
 - Frontend loads in ~2-3 seconds
 - API responses typically <100ms
-- Video playback depends on file size and network
-- Supports up to 500MB files
+- Supports concurrent uploads
+- Efficient file streaming for playback
 
-## Browser Support
+##  Data Storage
 
-- Chrome/Edge 90+
-- Firefox 88+
-- Safari 14+
-- Mobile browsers (iOS Safari, Chrome Mobile)
+### Metadata Storage
+- Location: `/backend/src/data/recordings.json`
+- Format: JSON array of recording objects
+- Auto-synced on startup
 
-## Future Enhancements
+### File Storage
+- Location: `/backend/uploads/`
+- Naming: `{timestamp}-{randomId}-{originalname}`
+- Cleanup: Delete via API or manually
 
-- Real audio duration extraction
-- Transcription integration
-- Recording search and filtering
-- Recording categories/tags
-- Export functionality
-- Cloud storage integration
-- User authentication
-- Multi-device sync
+### Settings Storage
+- Location: Browser localStorage
+- Format: JSON object
+- Scope: Per device/browser
 
-## License
+##  UI/UX
+
+- **Design System**: Material Design 3
+- **Styling**: Tailwind CSS
+- **Icons**: Material Symbols
+- **Responsive**: Mobile-first design
+- **Accessibility**: WCAG 2.1 compliant
+
+##  Documentation
+
+- [API Documentation](./backend/README.md)
+- [Frontend Guide](./frontend/README.md)
+- [Testing Guide](./backend/tests/README.md)
+
+##  Status
+
+-  Core recording functionality
+-  File management
+-  Playback
+-  Settings management
+-  Transcription (planned)
+-  Cloud storage (planned)
+-  User authentication (planned)
+-  Sharing & collaboration (planned)
+
+##  License
 
 MIT
+##  Support
 
-## Support
+For issues, questions, or suggestions:
+1. Check the Help page in the application
+2. Review the troubleshooting section above
+3. Check existing issues on GitHub
+4. Create a new issue with detailed information
 
-For issues or questions, check the Help page in the application or review the test suite documentation.
+##  Acknowledgments
+
+- Built with React, Express, and TypeScript
+- Styled with Tailwind CSS
+- Icons from Material Symbols
+
+---
+
+**Last Updated**: May 2026
+**Version**: 1.0.0
+
