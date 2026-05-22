@@ -1,9 +1,9 @@
 /**
  * API Service
- * Centralized API communication layer
+ * Centralized API communication layer with AI features
  */
 
-import { Recording } from '../types';
+import { Recording, KeyMoment } from '../types';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -67,8 +67,9 @@ class ApiService {
     }
   }
 
-  async getRecordings(): Promise<Recording[]> {
-    return this.request<Recording[]>('/recordings');
+  async getRecordings(searchQuery?: string): Promise<Recording[]> {
+    const query = searchQuery ? `?q=${encodeURIComponent(searchQuery)}` : '';
+    return this.request<Recording[]>(`/recordings${query}`);
   }
 
   async getRecording(id: string): Promise<Recording> {
@@ -78,6 +79,27 @@ class ApiService {
   async deleteRecording(id: string): Promise<{ message: string }> {
     return this.request(`/recordings/${id}`, {
       method: 'DELETE'
+    });
+  }
+
+  // AI Features
+  async addKeyMoment(id: string, time: string, label: string): Promise<Recording> {
+    return this.request<Recording>(`/recordings/${id}/key-moments`, {
+      method: 'POST',
+      body: JSON.stringify({ time, label })
+    });
+  }
+
+  async removeKeyMoment(id: string, time: string): Promise<Recording> {
+    return this.request<Recording>(`/recordings/${id}/key-moments`, {
+      method: 'DELETE',
+      body: JSON.stringify({ time })
+    });
+  }
+
+  async generateSummary(id: string): Promise<Recording> {
+    return this.request<Recording>(`/recordings/${id}/summary`, {
+      method: 'POST'
     });
   }
 

@@ -13,11 +13,11 @@ export const useRecordings = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchRecordings = useCallback(async () => {
+  const fetchRecordings = useCallback(async (searchQuery?: string) => {
     try {
       setLoading(true);
       setError(null);
-      const data = await apiService.getRecordings();
+      const data = await apiService.getRecordings(searchQuery);
       setRecordings(data);
     } catch (err) {
       const message = 'Failed to load recordings';
@@ -44,6 +44,39 @@ export const useRecordings = () => {
     setRecordings(prev => [recording, ...prev]);
   }, []);
 
+  const addKeyMoment = useCallback(async (id: string, time: string, label: string) => {
+    try {
+      const updated = await apiService.addKeyMoment(id, time, label);
+      setRecordings(prev => prev.map(r => r.id === id ? updated : r));
+      return updated;
+    } catch (err) {
+      logError('useRecordings.addKeyMoment', err);
+      throw err;
+    }
+  }, []);
+
+  const removeKeyMoment = useCallback(async (id: string, time: string) => {
+    try {
+      const updated = await apiService.removeKeyMoment(id, time);
+      setRecordings(prev => prev.map(r => r.id === id ? updated : r));
+      return updated;
+    } catch (err) {
+      logError('useRecordings.removeKeyMoment', err);
+      throw err;
+    }
+  }, []);
+
+  const generateSummary = useCallback(async (id: string) => {
+    try {
+      const updated = await apiService.generateSummary(id);
+      setRecordings(prev => prev.map(r => r.id === id ? updated : r));
+      return updated;
+    } catch (err) {
+      logError('useRecordings.generateSummary', err);
+      throw err;
+    }
+  }, []);
+
   return {
     recordings,
     loading,
@@ -51,6 +84,9 @@ export const useRecordings = () => {
     fetchRecordings,
     deleteRecording,
     addRecording,
+    addKeyMoment,
+    removeKeyMoment,
+    generateSummary,
     setError
   };
 };
