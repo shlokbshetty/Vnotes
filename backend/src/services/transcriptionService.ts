@@ -38,7 +38,8 @@ class TranscriptionService {
       // Create form data with audio file
       const formData = new FormData();
       const fileStream = fs.createReadStream(filePath);
-      formData.append('audio', fileStream);
+      formData.append('file', fileStream); // Changed from 'audio' to 'file'
+      formData.append('model_id', 'scribe_v2'); // ElevenLabs speech-to-text model
 
       // Call ElevenLabs speech-to-text API
       const response = await axios.post(
