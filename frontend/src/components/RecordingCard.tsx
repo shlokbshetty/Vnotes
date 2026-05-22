@@ -1,46 +1,18 @@
+/**
+ * Recording Card Component
+ * Displays individual recording with metadata and playback
+ */
+
 import { Recording } from '../types';
+import { formatDate, formatDuration, formatBytes, extractFileType, getMediaIcon } from '../utils/formatters';
 
 interface RecordingCardProps {
   recording: Recording;
   onDelete?: (id: string) => void;
+  isDeleting?: boolean;
 }
 
-const RecordingCard = ({ recording, onDelete }: RecordingCardProps) => {
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-  };
-
-  const formatDuration = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
-
-  const formatBytes = (bytes: number) => {
-    if (bytes === 0) return '0 B';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
-  };
-
-  const extractFileType = (mimeType: string) => {
-    const type = mimeType.split('/')[1]?.toUpperCase() || 'UNKNOWN';
-    return type;
-  };
-
-  const getMediaIcon = () => {
-    if (recording.isVideo) {
-      return 'video_file';
-    }
-    return 'audio_file';
-  };
-
+const RecordingCard = ({ recording, onDelete, isDeleting = false }: RecordingCardProps) => {
   const handleDelete = () => {
     if (onDelete && confirm('Are you sure you want to delete this recording?')) {
       onDelete(recording.id);
@@ -57,7 +29,7 @@ const RecordingCard = ({ recording, onDelete }: RecordingCardProps) => {
           />
         ) : (
           <span className="material-symbols-outlined text-4xl text-on-surface-variant group-hover:text-primary transition-colors">
-            {getMediaIcon()}
+            {getMediaIcon(recording.isVideo)}
           </span>
         )}
       </div>
@@ -72,7 +44,8 @@ const RecordingCard = ({ recording, onDelete }: RecordingCardProps) => {
             {onDelete && (
               <button
                 onClick={handleDelete}
-                className="p-2 text-error hover:bg-error-container rounded-lg transition-all"
+                disabled={isDeleting}
+                className="p-2 text-error hover:bg-error-container rounded-lg transition-all disabled:opacity-50"
                 title="Delete recording"
               >
                 <span className="material-symbols-outlined text-[18px]">delete</span>
@@ -81,7 +54,7 @@ const RecordingCard = ({ recording, onDelete }: RecordingCardProps) => {
           </div>
         </div>
         
-        <div className="flex gap-4 mb-3">
+        <div className="flex gap-4 mb-3 flex-wrap">
           <div className="flex items-center gap-1 text-on-surface-variant font-label-sm">
             <span className="material-symbols-outlined text-[18px]">calendar_today</span>
             {formatDate(recording.createdAt)}
@@ -95,7 +68,7 @@ const RecordingCard = ({ recording, onDelete }: RecordingCardProps) => {
             {formatBytes(recording.size)}
           </div>
           <div className="flex items-center gap-1 text-on-surface-variant font-label-sm">
-            <span className="material-symbols-outlined text-[18px]">{getMediaIcon()}</span>
+            <span className="material-symbols-outlined text-[18px]">{getMediaIcon(recording.isVideo)}</span>
             {extractFileType(recording.type)}
           </div>
         </div>

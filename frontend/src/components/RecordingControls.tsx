@@ -1,25 +1,45 @@
+/**
+ * Recording Controls Component
+ * Main recording interface with timer and controls
+ */
+
 import { useState, useEffect } from 'react';
+import { formatTime } from '../utils/formatters';
 
 interface RecordingControlsProps {
   isRecording: boolean;
   onToggleRecording: () => void;
   time: number;
   isUploading?: boolean;
+  error?: string | null;
+  onDismissError?: () => void;
 }
 
-const RecordingControls = ({ isRecording, onToggleRecording, time, isUploading = false }: RecordingControlsProps) => {
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
-
+const RecordingControls = ({ 
+  isRecording, 
+  onToggleRecording, 
+  time, 
+  isUploading = false,
+  error,
+  onDismissError
+}: RecordingControlsProps) => {
   return (
     <div className="flex-[2] flex flex-col items-center justify-center bg-surface-container-lowest rounded-[2rem] border-outline-variant shadow-sm relative overflow-hidden rounded-none">
       {isRecording && (
         <div className="absolute top-8 left-8 flex items-center gap-2">
           <div className="w-3 h-3 rounded-full bg-error recording-pulse"></div>
           <span className="font-label-sm text-label-sm text-error uppercase font-bold tracking-widest">Recording in Progress</span>
+        </div>
+      )}
+
+      {error && (
+        <div className="absolute top-8 right-8 bg-error-container text-on-error-container px-4 py-2 rounded-lg flex items-center gap-2 max-w-xs">
+          <span className="text-sm">{error}</span>
+          {onDismissError && (
+            <button onClick={onDismissError} className="ml-2">
+              <span className="material-symbols-outlined text-[18px]">close</span>
+            </button>
+          )}
         </div>
       )}
 
