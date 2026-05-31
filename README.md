@@ -1,396 +1,342 @@
 # VNotes - Voice Notes Application
 
-A modern, production-ready web application for recording, storing, and managing audio and video notes with a clean, intuitive interface.
+A full-stack web application for recording, storing, and managing audio and video notes with authentication and user-scoped data isolation.
 
-## Project Overview
+## Overview
 
-VNotes is a full-stack application built with React and Node.js that enables users to:
-- Record audio directly from their microphone
-- Upload and manage recordings with metadata
+VNotes is a production-ready application built with React, Express, and TypeScript that enables users to record audio, upload files, manage recordings, and access them securely with Google OAuth authentication.
+
+### Working Features
+
+Recording Management:
+- Record audio directly from microphone
+- Upload audio and video files
+- Browse and manage recordings in library
 - Play back audio and video files
-- Organize recordings in a library
-- Manage user settings and preferences
+- Delete recordings
+- View recording metadata
 
-## Features
+User Authentication:
+- Google OAuth 2.0 login
+- Session management with JWT tokens
+- User profile management
+- Session revocation on logout
+- Rate limiting on auth endpoints
 
-### Core Features
-- **Real-time Recording**: Capture audio directly from your microphone with live waveform visualization
-- **File Management**: Upload, store, and organize audio and video files
-- **Playback**: Built-in audio/video player with standard controls
-- **Library System**: Browse all recordings with metadata (size, type, date, duration)
-- **Settings Management**: Customize user profile and preferences (saved locally)
-- **Help & Documentation**: Comprehensive usage guide and FAQ
+Data Management:
+- User-scoped recording access control
+- Automatic user association with recordings
+- JSON-based metadata storage
+- Recordings indexed by user
 
 ### Supported Formats
-- **Audio**: WAV, MP3, M4A, AAC, FLAC
-- **Video**: MP4, MKV, WebM, AVI, MOV
-- **Max File Size**: 500MB per file
 
-##  Architecture
+Audio: WAV, MP3, M4A, AAC, FLAC
+Video: MP4, MKV, WebM, AVI, MOV
+Max File Size: 500MB per file
 
-### Project Structure
+## Architecture
 
-```
-vnotes/
-├── backend/                    # Node.js + Express backend
-│   ├── src/
-│   │   ├── config/            # Configuration management
-│   │   │   └── env.ts         # Environment variables
-│   │   ├── controllers/       # Request handlers
-│   │   │   └── recordingController.ts
-│   │   ├── services/          # Business logic
-│   │   │   └── recordingService.ts
-│   │   ├── routes/            # API endpoints
-│   │   │   └── recordingRoutes.ts
-│   │   ├── utils/             # Utility functions
-│   │   │   ├── logger.ts      # Structured logging
-│   │   │   ├── errorHandler.ts
-│   │   │   ├── fileUtils.ts
-│   │   │   └── syncUploads.ts
-│   │   └── server.ts          # Entry point
-│   ├── tests/                 # Test suite
-│   ├── uploads/               # File storage
-│   ├── dist/                  # Compiled output
-│   └── package.json
-│
-├── frontend/                   # React + TypeScript frontend
-│   ├── src/
-│   │   ├── components/        # Reusable UI components
-│   │   │   ├── RecordingControls.tsx
-│   │   │   ├── RecordingCard.tsx
-│   │   │   ├── TranscriptPanel.tsx
-│   │   │   └── Sidebar.tsx
-│   │   ├── pages/             # Page components
-│   │   │   ├── RecordingPage.tsx
-│   │   │   ├── LibraryPage.tsx
-│   │   │   ├── SettingsPage.tsx
-│   │   │   └── HelpPage.tsx
-│   │   ├── services/          # API communication
-│   │   │   └── api.ts
-│   │   ├── hooks/             # Custom React hooks
-│   │   │   ├── useRecording.ts
-│   │   │   └── useRecordings.ts
-│   │   ├── utils/             # Utility functions
-│   │   │   ├── formatters.ts
-│   │   │   └── errorHandler.ts
-│   │   ├── types/             # TypeScript definitions
-│   │   ├── App.tsx
-│   │   └── main.tsx
-│   ├── .env.example           # Environment template
-│   └── package.json
-│
-├── scripts/                    # Utility scripts
-│   └── preflightCheck.js      # System validation
-│
-├── .env.example               # Backend env template
-├── package.json               # Root package config
-└── README.md
-```
+### Modules
 
-##  Quick Start
+Backend (Express + TypeScript):
+- src/config/: Environment and OAuth configuration
+- src/services/: Business logic (auth, oauth, recordings, transcription)
+- src/controllers/: API request handlers
+- src/routes/: API endpoint definitions
+- src/middlewares/: Authentication and rate limiting
+- src/utils/: Utilities (logging, error handling, session store)
+- tests/: Unit, integration, and property-based tests
+
+Frontend (React + TypeScript):
+- src/pages/: Page components (Recording, Library, Login, Settings)
+- src/components/: Reusable UI components
+- src/hooks/: Custom React hooks (useRecording, useAuth)
+- src/services/: API client and HTTP communication
+- src/utils/: Utilities (formatters, error handling)
+- src/types/: TypeScript type definitions
+
+### Data Flow
+
+Recording Upload Flow:
+User uploads file -> API receives file -> Backend associates user_id -> Stores in /backend/uploads -> Metadata saved to recordings.json
+
+Authentication Flow:
+User clicks "Sign in with Google" -> Redirects to Google OAuth -> Google returns authorization code -> Frontend exchanges code for token -> Backend verifies token -> Returns session JWT -> Frontend stores token in localStorage
+
+Recording Access Flow:
+User requests recording -> Frontend sends Bearer token in Authorization header -> Backend middleware validates token -> Extracts user_id from JWT -> Filters recordings by user_id -> Returns user's recordings only
+
+### Key Components
+
+API Endpoints:
+POST /api/recordings/upload - Upload recording (requires auth)
+GET /api/recordings - Get user's recordings (requires auth)
+GET /api/recordings/:id - Get single recording (requires auth + ownership)
+DELETE /api/recordings/:id - Delete recording (requires auth + ownership)
+POST /auth/oauth - OAuth token exchange
+POST /auth/logout - Logout and revoke session
+GET /api/user/profile - Get user profile (requires auth)
+
+Database Structure:
+Recording metadata includes: id, filename, originalName, duration, size, type, userId, isVideo, createdAt
+User profile includes: id, googleId, email, name, profilePictureUrl, createdAt, lastLoginAt
+
+## Setup
 
 ### Prerequisites
-- Node.js 14+ and npm
-- Modern web browser (Chrome, Firefox, Safari, Edge)
+
+Node.js 16+ and npm
+Google Cloud OAuth credentials (for auth feature)
+Modern web browser
 
 ### Installation
 
-1. **Clone the repository**
+1. Clone and install dependencies:
 ```bash
 git clone <repository-url>
 cd vnotes
-```
-
-2. **Install dependencies**
-```bash
 npm install
 ```
 
-3. **Setup environment variables**
+2. Configure environment:
 ```bash
-# Copy example files
 cp .env.example .env
 cp frontend/.env.example frontend/.env
-
-# Edit .env if needed (optional for local development)
 ```
 
-4. **Start the application**
-```bash
-npm run dev
+3. Set up backend environment variables (.env):
+```
+PORT=3001
+NODE_ENV=development
+CORS_ORIGIN=http://localhost:3000
+GOOGLE_OAUTH_CLIENT_ID=<your-client-id>
+GOOGLE_OAUTH_CLIENT_SECRET=<your-client-secret>
+JWT_SECRET=<generate-random-secret-min-32-chars>
+JWT_EXPIRATION=86400
+UPLOADS_DIR=uploads
+MAX_FILE_SIZE=524288000
 ```
 
-This command will:
-- Run preflight checks (validates setup)
-- Start backend server on `http://localhost:3001`
-- Start frontend on `http://localhost:3000`
-
-Both servers run concurrently in development mode.
-
-##  Environment Variables
-
-### Backend (.env)
-```env
-PORT=3001                          # Server port
-NODE_ENV=development               # Environment
-CORS_ORIGIN=http://localhost:3000  # Frontend URL
-UPLOADS_DIR=uploads                # Upload directory
-MAX_FILE_SIZE=524288000            # Max file size (500MB)
-ELEVENLABS_API_KEY=your_key_here   # For future transcription
+4. Set up frontend environment variables (frontend/.env):
+```
+VITE_API_URL=http://localhost:3001/api
+VITE_GOOGLE_OAUTH_CLIENT_ID=<your-client-id>
 ```
 
-### Frontend (.env)
-```env
-VITE_API_URL=http://localhost:3001/api  # Backend API URL
-VITE_ENABLE_TRANSCRIPTION=false         # Feature flag
-```
+### Development
 
-##  Development
-
-### Backend Development
-
+Backend:
 ```bash
 cd backend
-
-# Install dependencies
 npm install
-
-# Start development server (with hot reload)
-npm run dev
-
-# Build for production
-npm run build
-
-# Run linter
-npm run lint
-
-# Run tests
-npm run test
+npm run dev      # Start with hot reload
+npm run build    # Build for production
+npm run lint     # Run linter
+npm run test     # Run tests
 ```
 
-### Frontend Development
-
+Frontend:
 ```bash
 cd frontend
-
-# Install dependencies
 npm install
-
-# Start development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Run linter
-npm run lint
+npm run dev      # Start with hot reload
+npm run build    # Build for production
+npm run lint     # Run linter
+npm run test     # Run tests
 ```
 
-##  API Endpoints
+### Production Build
 
-### Recordings
+```bash
+npm run build
+# Outputs:
+# - backend/dist/server.js
+# - frontend/dist/ (static files)
+```
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/recordings/upload` | Upload audio/video file |
-| GET | `/api/recordings` | Get all recordings |
-| GET | `/api/recordings/:id` | Get single recording |
-| DELETE | `/api/recordings/:id` | Delete recording |
-| GET | `/uploads/:filename` | Serve audio/video file |
-| GET | `/health` | Health check |
+## API Reference
 
-### Response Format
+### Recordings Endpoints
 
-**Success Response:**
-```json
+**Upload Recording**
+```
+POST /api/recordings/upload
+Authorization: Bearer <token>
+Content-Type: multipart/form-data
+
+Response:
 {
   "success": true,
-  "data": { /* response data */ }
+  "data": {
+    "id": "unique-id",
+    "filename": "timestamp-randomId-originalname",
+    "originalName": "audio.wav",
+    "size": 1048576,
+    "type": "audio/wav",
+    "duration": 30,
+    "isVideo": false,
+    "createdAt": "2024-01-15T10:30:00.000Z"
+  }
 }
 ```
 
-**Error Response:**
-```json
+**Get All Recordings**
+```
+GET /api/recordings
+Authorization: Bearer <token>
+
+Response: Array of recording objects for authenticated user
+```
+
+**Get Single Recording**
+```
+GET /api/recordings/:id
+Authorization: Bearer <token>
+
+Response: Single recording object (403 if not owner)
+```
+
+**Delete Recording**
+```
+DELETE /api/recordings/:id
+Authorization: Bearer <token>
+
+Response: { "success": true } (403 if not owner)
+```
+
+### Authentication Endpoints
+
+**OAuth Token Exchange**
+```
+POST /auth/oauth
+Content-Type: application/json
+
 {
-  "success": false,
-  "message": "Error description",
-  "code": "ERROR_CODE"
+  "code": "authorization-code-from-google",
+  "state": "csrf-protection-state"
+}
+
+Response:
+{
+  "success": true,
+  "data": {
+    "token": "jwt-session-token",
+    "user": {
+      "id": "user-uuid",
+      "email": "user@example.com",
+      "name": "User Name",
+      "profilePictureUrl": "https://..."
+    }
+  }
 }
 ```
 
-##  Testing
+**Logout**
+```
+POST /auth/logout
+Authorization: Bearer <token>
 
-### Run API Tests
+Response: { "success": true }
+```
+
+**Get User Profile**
+```
+GET /api/user/profile
+Authorization: Bearer <token>
+
+Response:
+{
+  "success": true,
+  "data": {
+    "id": "user-uuid",
+    "email": "user@example.com",
+    "name": "User Name",
+    "profilePictureUrl": "https://..."
+  }
+}
+```
+
+## Testing
+
+### Run Tests
 
 ```bash
 cd backend
 npm run test
 ```
 
-Tests verify:
-- Health check endpoint
-- Recording upload
-- Recording retrieval
-- Recording deletion
-- File serving
-- Error handling
-- CORS headers
+Tests cover:
+- JWT generation, validation, and expiration
+- OAuth token exchange and ID token verification
+- Session revocation on logout
+- Recording ownership enforcement (multi-user scenarios)
+- Protected endpoint authorization
+- Error handling (400, 401, 403, 500 responses)
+- CORS headers and security headers
+- Rate limiting on auth endpoints
 
-##  Security
+### Property-Based Testing
 
-### Implemented Measures
--  CORS protection
--  File type validation
--  File size limits (500MB)
--  Input validation
--  Error handling without exposing internals
--  Environment-based configuration
+Property tests verify core security properties:
+- Session tokens are properly structured and signed
+- Tampered tokens are rejected
+- Expired tokens are rejected
+- Users cannot access other users' recordings
+- Token revocation prevents reuse
 
-### Future Enhancements
-- User authentication
-- Authorization checks
-- Rate limiting
-- Encryption at rest
-- Audit logging
+## Deployment
 
-##  Deployment
-
-### Build for Production
-
-```bash
-# Build both frontend and backend
-npm run build
-
-# Or individually
-cd backend && npm run build
-cd frontend && npm run build
-```
-
-### Docker Support (Coming Soon)
+### Docker
 
 ```bash
 docker-compose up
 ```
 
-### Cloud Deployment
+Services:
+- Frontend on port 3000
+- Backend on port 3001
 
-The application is ready for deployment to:
-- Heroku
-- AWS (EC2, Elastic Beanstalk)
-- Google Cloud Platform
-- Azure
-- DigitalOcean
+### Cloud Platforms
 
-Key considerations:
-- Use environment variables for configuration
+Deployable to: Heroku, AWS, Google Cloud, Azure, DigitalOcean
+
+Environment requirements:
+- Use environment variables for all secrets
 - Ensure uploads directory is persistent
 - Configure CORS for your domain
 - Use HTTPS in production
-- Set up proper logging and monitoring
+- Set up proper logging
 
-##  Troubleshooting
+## Status
 
-### Backend won't start
-```bash
-# Check if port 3001 is available
-# Kill process on port 3001 or change PORT in .env
+Completed:
+- Core recording functionality
+- OAuth 2.0 authentication
+- User-scoped recording access
+- Session management
+- Error handling
+- Rate limiting
+- Comprehensive testing
 
-# Ensure Node.js is installed
-node --version
+Planned:
+- AI transcription integration
+- Cloud storage integration
+- Advanced search capabilities
+- Recording sharing features
 
-# Reinstall dependencies
-rm -rf node_modules package-lock.json
-npm install
-```
+## Support
 
-### Files not uploading
-- Check `/backend/uploads/` directory exists
-- Verify file format is supported
-- Check file size is under 500MB
-- Ensure backend is running
+For issues:
+1. Check error logs: npm run dev output
+2. Verify environment variables are set
+3. Check browser console for frontend errors
+4. Review test output: npm run test
+5. Check GitHub issues
 
-### Frontend can't connect to backend
-- Verify backend is running on port 3001
-- Check VITE_API_URL in frontend/.env
-- Check CORS_ORIGIN in backend/.env
-- Check browser console for errors
-
-### Preflight check fails
-```bash
-# Run preflight check manually
-node scripts/preflightCheck.js
-
-# It will create missing directories and files
-```
-
-##  Performance
-
-- Frontend loads in ~2-3 seconds
-- API responses typically <100ms
-- Supports concurrent uploads
-- Efficient file streaming for playback
-
-##  Data Storage
-
-### Metadata Storage
-- Location: `/backend/src/data/recordings.json`
-- Format: JSON array of recording objects
-- Auto-synced on startup
-
-### File Storage
-- Location: `/backend/uploads/`
-- Naming: `{timestamp}-{randomId}-{originalname}`
-- Cleanup: Delete via API or manually
-
-### Settings Storage
-- Location: Browser localStorage
-- Format: JSON object
-- Scope: Per device/browser
-
-##  UI/UX
-
-- **Design System**: Material Design 3
-- **Styling**: Tailwind CSS
-- **Icons**: Material Symbols
-- **Responsive**: Mobile-first design
-- **Accessibility**: WCAG 2.1 compliant
-
-##  Documentation
-
-- [API Documentation](./backend/README.md)
-- [Frontend Guide](./frontend/README.md)
-- [Testing Guide](./backend/tests/README.md)
-
-##  Status
-
--  Core recording functionality
--  File management
--  Playback
--  Settings management
--  Transcription (planned)
--  Cloud storage (planned)
--  User authentication (planned)
--  Sharing & collaboration (planned)
-
-##  License
+## License
 
 MIT
-##  Support
 
-For issues, questions, or suggestions:
-1. Check the Help page in the application
-2. Review the troubleshooting section above
-3. Check existing issues on GitHub
-4. Create a new issue with detailed information
 
-##  Acknowledgments
-
-- Built with React, Express, and TypeScript
-- Styled with Tailwind CSS
-- Icons from Material Symbols
-
----
-
-**Last Updated**: May 2026
-**Version**: 1.0.0
 

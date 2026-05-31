@@ -3,16 +3,26 @@ import RecordingPage from './pages/RecordingPage';
 import LibraryPage from './pages/LibraryPage';
 import SettingsPage from './pages/SettingsPage';
 import HelpPage from './pages/HelpPage';
+import GoogleAuthCallback from './components/GoogleAuthCallback';
+import ProtectedRoute from './components/ProtectedRoute';
+import LoginPage from './pages/LoginPage';
 
 function App() {
   return (
     <Router>
-      <div className="bg-background text-on-surface font-body-md overflow-hidden flex h-screen">
+      <div className="bg-neutral-950 text-neutral-100 font-sans overflow-hidden flex h-screen">
         <Routes>
-          <Route path="/" element={<RecordingPage />} />
-          <Route path="/library" element={<LibraryPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/help" element={<HelpPage />} />
+          {/* Public routes */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/auth/callback" element={<GoogleAuthCallback />} />
+
+          {/* Protected routes */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<RecordingPage />} />
+            <Route path="/library" element={<LibraryPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/help" element={<HelpPage />} />
+          </Route>
         </Routes>
       </div>
     </Router>

@@ -7,6 +7,8 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import recordingRoutes from './routes/recordingRoutes';
+import authRoutes from './routes/authRoutes';
+import userRoutes from './routes/userRoutes';
 import { syncUploadsWithMetadata } from './utils/syncUploads';
 import { config } from './config/env';
 import { logger } from './utils/logger';
@@ -14,10 +16,22 @@ import { logger } from './utils/logger';
 const app = express();
 
 // Middleware
+// CORS Configuration
 app.use(cors({
   origin: config.CORS_ORIGIN,
-  credentials: true
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 }));
+
+// Security Headers
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  next();
+});
+
 app.use(express.json());
 
 // Sync uploads folder with metadata on startup
@@ -33,7 +47,9 @@ app.get('/health', (req, res) => {
 });
 
 // API Routes
+app.use('/auth', authRoutes);
 app.use('/api/recordings', recordingRoutes);
+app.use('/api/user', userRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {

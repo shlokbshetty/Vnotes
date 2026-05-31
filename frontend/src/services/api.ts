@@ -3,15 +3,39 @@
  * Centralized API communication layer with AI features
  */
 
-import { Recording, KeyMoment } from '../types';
+import { Recording } from '../types';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
-interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  message?: string;
-  code?: string;
+const SESSION_TOKEN_KEY = 'vnotes_session_token';
+const USER_DATA_KEY = 'vnotes_user_data';
+const SESSION_EXPIRED_MESSAGE_KEY = 'vnotes_session_expired_message';
+
+/**
+ * Returns Authorization header object if a session token exists in localStorage.
+ * Requirements: 3.9
+ */
+function getAuthHeaders(): Record<string, string> {
+  const token = localStorage.getItem(SESSION_TOKEN_KEY);
+  if (token) {
+    return { Authorization: `Bearer ${token}` };
+  }
+  return {};
+}
+
+/**
+ * Handles a 401 Unauthorized response by clearing stored credentials,
+ * storing an expiry message for LoginPage to display, and redirecting to /login.
+ * Requirements: 3.10, 9.10
+ */
+function handleAuthError(): void {
+  localStorage.removeItem(SESSION_TOKEN_KEY);
+  localStorage.removeItem(USER_DATA_KEY);
+  localStorage.setItem(
+    SESSION_EXPIRED_MESSAGE_KEY,
+    'Your session has expired. Please sign in again.'
+  );
+  window.location.href = '/login';
 }
 
 class ApiService {
@@ -24,10 +48,16 @@ class ApiService {
       const response = await fetch(url, {
         headers: {
           'Content-Type': 'application/json',
+          ...getAuthHeaders(),
           ...options.headers
         },
         ...options
       });
+
+      if (response.status === 401) {
+        handleAuthError();
+        throw new Error('Session expired. Please sign in again.');
+      }
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -52,8 +82,16 @@ class ApiService {
     try {
       const response = await fetch(`${API_BASE_URL}/recordings/upload`, {
         method: 'POST',
+        headers: {
+          ...getAuthHeaders()
+        },
         body: formData
       });
+
+      if (response.status === 401) {
+        handleAuthError();
+        throw new Error('Session expired. Please sign in again.');
+      }
 
       if (!response.ok) {
         throw new Error('Upload failed');
@@ -121,3 +159,4 @@ class ApiService {
 }
 
 export const apiService = new ApiService();
+export { getAuthHeaders, handleAuthError };

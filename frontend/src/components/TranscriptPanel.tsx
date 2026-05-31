@@ -1,3 +1,8 @@
+/**
+ * Transcript Panel - Editorial Design
+ * Minimalist interface for transcription and AI insights
+ */
+
 import { Recording } from '../types';
 import { useState, useEffect } from 'react';
 import { apiService } from '../services/api';
@@ -11,7 +16,6 @@ const TranscriptPanel = ({ recording }: TranscriptPanelProps) => {
   const [transcriptionError, setTranscriptionError] = useState<string | null>(null);
   const [currentRecording, setCurrentRecording] = useState<Recording | null>(recording || null);
 
-  // Auto-transcribe when recording changes
   useEffect(() => {
     setCurrentRecording(recording || null);
     setTranscriptionError(null);
@@ -31,7 +35,6 @@ const TranscriptPanel = ({ recording }: TranscriptPanelProps) => {
       setCurrentRecording(updated);
     } catch (error: any) {
       setTranscriptionError(error.message || 'Failed to transcribe recording');
-      console.error('Transcription error:', error);
     } finally {
       setIsTranscribing(false);
     }
@@ -45,15 +48,15 @@ const TranscriptPanel = ({ recording }: TranscriptPanelProps) => {
 
   if (!currentRecording) {
     return (
-      <div className="flex-1 flex flex-col bg-surface-container-lowest rounded-[2rem] border-outline-variant shadow-sm overflow-hidden rounded-none border-l">
-        <div className="p-6 border-b border-outline-variant flex justify-between items-center bg-surface-container-high">
-          <h2 className="font-headline-lg text-2xl font-bold text-on-surface">Transcript & Insights</h2>
+      <div className="flex-1 flex flex-col bg-neutral-900 border-l border-neutral-800 rounded-none">
+        <div className="p-lg border-b border-neutral-800 flex justify-between items-center">
+          <h2 className="text-2xl font-display font-bold text-neutral-50">Transcript</h2>
         </div>
         
-        <div className="flex-1 flex items-center justify-center bg-surface-container-lowest">
-          <div className="text-center space-y-3">
-            <span className="material-symbols-outlined text-on-surface-variant text-5xl block">description</span>
-            <p className="text-body-md text-on-surface-variant">Select or record an audio file to view transcription</p>
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center space-y-md px-lg">
+            <span className="material-symbols-outlined text-neutral-600 text-5xl block">description</span>
+            <p className="text-neutral-400 text-sm">Select a recording to view the transcript</p>
           </div>
         </div>
       </div>
@@ -61,134 +64,130 @@ const TranscriptPanel = ({ recording }: TranscriptPanelProps) => {
   }
 
   return (
-    <div className="flex-1 flex flex-col bg-surface-container-lowest rounded-[2rem] border-outline-variant shadow-sm overflow-hidden rounded-none border-l">
-      <div className="p-6 border-b border-outline-variant flex justify-between items-center bg-surface-container-high">
-        <h2 className="font-headline-lg text-2xl font-bold text-on-surface">Transcript & Insights</h2>
-        <span className="px-2 py-1 bg-surface-container text-on-surface-variant text-[10px] font-bold rounded uppercase">
-          {currentRecording.originalName}
+    <div className="flex-1 flex flex-col bg-neutral-900 border-l border-neutral-800 rounded-none">
+      {/* Header */}
+      <div className="p-lg border-b border-neutral-800 flex justify-between items-center">
+        <h2 className="text-lg font-display font-semibold text-neutral-50">Transcript</h2>
+        <span className="px-md py-xs bg-neutral-800 text-neutral-300 text-xs font-mono rounded">
+          {currentRecording.originalName.slice(0, 20)}...
         </span>
       </div>
       
-      <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-surface-container-lowest">
-        {/* Error Message */}
+      {/* Content */}
+      <div className="flex-1 overflow-y-auto p-lg space-y-lg">
+        {/* Error */}
         {transcriptionError && (
-          <div className="p-4 rounded-xl border border-error bg-error-container">
-            <p className="text-body-sm text-on-error-container">
-              {transcriptionError}
-            </p>
+          <div className="p-md bg-error bg-opacity-10 border border-error border-opacity-30 rounded-lg">
+            <p className="text-error text-sm">{transcriptionError}</p>
           </div>
         )}
 
-        {/* Transcription Section */}
-        <section className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h3 className="font-label-lg text-label-lg text-on-surface flex items-center gap-2">
-              <span className="material-symbols-outlined">transcribe</span>
+        {/* Transcription */}
+        <section>
+          <div className="flex items-center justify-between mb-md">
+            <h3 className="font-semibold text-neutral-100 text-sm flex items-center gap-md">
+              <span className="material-symbols-outlined text-base">transcribe</span>
               Transcription
             </h3>
             {!hasTranscription && !isTranscribing && (
               <button
                 onClick={handleTranscribe}
-                className="px-3 py-1 bg-primary text-on-primary rounded-lg text-[12px] font-bold hover:opacity-90 transition-all"
+                className="px-md py-xs bg-accent-600 text-neutral-50 rounded text-xs font-medium hover:bg-accent-700 transition-smooth"
               >
                 Transcribe
               </button>
             )}
             {isTranscribing && (
-              <span className="text-[12px] text-on-surface-variant animate-pulse">Transcribing...</span>
+              <span className="text-xs text-neutral-500 animate-pulse">Transcribing...</span>
             )}
           </div>
           
           {hasTranscription ? (
-            <div className="p-4 rounded-xl border border-outline-variant bg-surface-container-high">
-              <p className="font-transcription-text text-body-md text-on-surface leading-relaxed whitespace-pre-wrap">
+            <div className="p-md bg-neutral-800 rounded-lg border border-neutral-700">
+              <p className="text-neutral-200 text-sm leading-relaxed whitespace-pre-wrap font-mono">
                 {currentRecording.transcription}
               </p>
             </div>
           ) : isTranscribing ? (
-            <div className="p-4 rounded-xl border border-outline-variant bg-surface-container-high">
-              <p className="text-body-md text-on-surface-variant italic">
-                Transcribing audio... This may take a moment.
-              </p>
+            <div className="p-md bg-neutral-800 rounded-lg border border-neutral-700">
+              <p className="text-neutral-400 text-sm italic">Transcribing... This may take a moment.</p>
             </div>
           ) : (
-            <div className="p-4 rounded-xl border border-outline-variant bg-surface-container-high">
-              <p className="text-body-md text-on-surface-variant italic">
-                No transcription available for this recording
-              </p>
+            <div className="p-md bg-neutral-800 rounded-lg border border-neutral-700">
+              <p className="text-neutral-400 text-sm italic">No transcription available</p>
             </div>
           )}
         </section>
 
-        {/* Summary Section */}
+        {/* Summary */}
         {hasSummary && (
-          <section className="space-y-3">
-            <h3 className="font-label-lg text-label-lg text-on-surface flex items-center gap-2">
-              <span className="material-symbols-outlined">summarize</span>
+          <section>
+            <h3 className="font-semibold text-neutral-100 text-sm mb-md flex items-center gap-md">
+              <span className="material-symbols-outlined text-base">summarize</span>
               Summary
             </h3>
-            <div className="p-4 rounded-xl border border-outline-variant bg-surface-container-high">
-              <p className="font-transcription-text text-body-md text-on-surface leading-relaxed">
+            <div className="p-md bg-neutral-800 rounded-lg border border-neutral-700">
+              <p className="text-neutral-200 text-sm leading-relaxed">
                 {currentRecording.summary}
               </p>
             </div>
           </section>
         )}
 
-        {/* Key Points Section */}
+        {/* Key Points */}
         {hasKeyPoints && (
-          <section className="space-y-3">
-            <h3 className="font-label-lg text-label-lg text-on-surface flex items-center gap-2">
-              <span className="material-symbols-outlined">lightbulb</span>
+          <section>
+            <h3 className="font-semibold text-neutral-100 text-sm mb-md flex items-center gap-md">
+              <span className="material-symbols-outlined text-base">lightbulb</span>
               Key Points
             </h3>
-            <div className="space-y-2">
+            <div className="space-y-xs">
               {currentRecording.keyPoints.map((point, index) => (
-                <div key={index} className="p-3 rounded-lg border border-outline-variant bg-surface-container-high flex gap-3">
-                  <span className="text-primary font-bold text-sm flex-shrink-0">{index + 1}</span>
-                  <p className="text-body-sm text-on-surface">{point}</p>
+                <div key={index} className="p-md bg-neutral-800 rounded-lg border border-neutral-700 flex gap-md">
+                  <span className="text-accent-400 font-semibold text-xs flex-shrink-0 flex items-center">{index + 1}</span>
+                  <p className="text-neutral-300 text-sm">{point}</p>
                 </div>
               ))}
             </div>
           </section>
         )}
 
-        {/* Action Items Section */}
+        {/* Action Items */}
         {hasActionItems && (
-          <section className="space-y-3">
-            <h3 className="font-label-lg text-label-lg text-on-surface flex items-center gap-2">
-              <span className="material-symbols-outlined">task_alt</span>
+          <section>
+            <h3 className="font-semibold text-neutral-100 text-sm mb-md flex items-center gap-md">
+              <span className="material-symbols-outlined text-base">task_alt</span>
               Action Items
             </h3>
-            <div className="space-y-2">
+            <div className="space-y-xs">
               {currentRecording.actionItems.map((item, index) => (
-                <div key={index} className="p-3 rounded-lg border border-outline-variant bg-surface-container-high flex gap-3">
-                  <input type="checkbox" className="w-5 h-5 rounded border-outline-variant flex-shrink-0" />
-                  <p className="text-body-sm text-on-surface">{item}</p>
+                <div key={index} className="p-md bg-neutral-800 rounded-lg border border-neutral-700 flex gap-md items-start">
+                  <input type="checkbox" className="w-4 h-4 rounded border-neutral-600 flex-shrink-0 mt-xs accent-accent-600" />
+                  <p className="text-neutral-300 text-sm">{item}</p>
                 </div>
               ))}
             </div>
           </section>
         )}
 
-        {/* Key Moments Section */}
+        {/* Key Moments */}
         {hasKeyMoments && (
-          <section className="space-y-3">
-            <h3 className="font-label-lg text-label-lg text-on-surface flex items-center gap-2">
-              <span className="material-symbols-outlined">bookmark</span>
+          <section>
+            <h3 className="font-semibold text-neutral-100 text-sm mb-md flex items-center gap-md">
+              <span className="material-symbols-outlined text-base">bookmark</span>
               Key Moments
             </h3>
-            <div className="space-y-2">
+            <div className="space-y-xs">
               {currentRecording.keyMoments.map((moment, index) => (
                 <button
                   key={index}
-                  className="w-full p-3 rounded-lg border border-outline-variant bg-surface-container-high hover:bg-surface-container-highest transition-all text-left flex items-center justify-between group"
+                  className="w-full p-md bg-neutral-800 rounded-lg border border-neutral-700 hover:border-neutral-600 hover:bg-neutral-750 transition-smooth text-left flex items-center justify-between group"
                 >
-                  <div className="flex items-center gap-3">
-                    <span className="text-primary font-mono text-sm">{moment.time}</span>
-                    <p className="text-body-sm text-on-surface">{moment.label}</p>
+                  <div className="flex items-center gap-md">
+                    <span className="text-accent-400 font-mono text-xs">{moment.time}</span>
+                    <p className="text-neutral-300 text-sm">{moment.label}</p>
                   </div>
-                  <span className="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">
+                  <span className="material-symbols-outlined text-neutral-600 group-hover:text-accent-400 transition-smooth text-base">
                     play_circle
                   </span>
                 </button>
@@ -199,21 +198,13 @@ const TranscriptPanel = ({ recording }: TranscriptPanelProps) => {
 
         {/* Empty State */}
         {!hasTranscription && !hasSummary && !hasKeyPoints && !hasActionItems && !hasKeyMoments && !isTranscribing && (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <span className="material-symbols-outlined text-on-surface-variant text-5xl mb-3">info</span>
-            <p className="text-body-md text-on-surface-variant">
-              No insights available yet. Transcription and AI analysis will appear here.
+          <div className="flex flex-col items-center justify-center py-xl text-center">
+            <span className="material-symbols-outlined text-neutral-700 text-5xl mb-md">info</span>
+            <p className="text-neutral-400 text-sm">
+              No insights available yet.
             </p>
           </div>
         )}
-      </div>
-
-      <div className="p-4 bg-surface-container border-t border-outline-variant">
-        <button className="w-full py-3 bg-surface-container-high border border-outline-variant rounded-xl font-label-sm text-label-sm text-on-surface flex items-center justify-center gap-2 hover:bg-surface-variant transition-all disabled:opacity-50"
-          disabled={!hasTranscription}>
-          <span className="material-symbols-outlined">download</span>
-          Export Transcript
-        </button>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 /**
- * Library Page
- * Displays all recordings with playback and management
+ * Library Page - Editorial Design
+ * Grid of recordings with metadata and playback
  */
 
 import { useState, useEffect } from 'react';
@@ -17,13 +17,12 @@ const LibraryPage = () => {
 
   useEffect(() => {
     fetchRecordings();
-    // Auto-refresh every 3 seconds to show new recordings
     const interval = setInterval(fetchRecordings, 3000);
     return () => clearInterval(interval);
   }, [fetchRecordings]);
 
   const handleDeleteRecording = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this recording?')) {
+    if (!confirm('Delete this recording? This action cannot be undone.')) {
       return;
     }
 
@@ -31,55 +30,41 @@ const LibraryPage = () => {
       setIsDeleting(true);
       await deleteRecording(id);
     } catch (err) {
-      // Error is already handled in the hook
+      // Error handled in hook
     } finally {
       setIsDeleting(false);
     }
   };
 
   return (
-    <>
+    <div className="flex w-full h-full">
       <Sidebar />
       
-      <main className="flex-grow flex flex-col min-w-0 overflow-y-auto">
-        <div className="p-margin-desktop space-y-stack-lg max-w-container-max mx-auto w-full pb-32">
-          {/* Filters & Stats Bento Grid */}
-          <section className="grid grid-cols-1 md:grid-cols-12 gap-gutter">
-            <div className="md:col-span-8 bg-surface p-6 rounded-xl border border-outline-variant note-card-shadow flex items-center justify-between">
-              <div>
-                <p className="font-label-sm text-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">Total Recordings</p>
-                <h3 className="font-headline-lg text-headline-lg text-primary">
-                  {recordings.length} <span className="text-body-md font-normal text-on-surface-variant">recordings</span>
-                </h3>
-              </div>
-              <div className="flex items-center gap-4">
-                <button 
-                  onClick={fetchRecordings}
-                  disabled={loading}
-                  className="px-4 py-2 border border-outline-variant rounded-lg font-label-sm text-label-sm text-on-surface flex items-center gap-2 hover:bg-surface-container transition-all disabled:opacity-50"
-                >
-                  <span className="material-symbols-outlined text-[20px]">refresh</span>
-                  Refresh
-                </button>
-              </div>
+      <main className="flex-grow flex flex-col min-w-0 overflow-y-auto bg-neutral-950">
+        <div className="p-xl max-w-6xl mx-auto w-full">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-xl">
+            <div>
+              <h1 className="text-4xl font-display font-bold text-neutral-50">Library</h1>
+              <p className="text-neutral-400 mt-sm">{recordings.length} recording{recordings.length !== 1 ? 's' : ''}</p>
             </div>
-            
-            <div className="md:col-span-4 bg-primary text-on-primary p-6 rounded-xl border border-outline-variant note-card-shadow flex flex-col justify-center">
-              <p className="font-label-sm text-label-sm opacity-80 mb-1 uppercase">Active Recording</p>
-              <div className="flex items-center gap-3">
-                <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
-                <h3 className="font-headline-lg-mobile text-headline-lg-mobile font-bold">None currently</h3>
-              </div>
-            </div>
-          </section>
+            <button 
+              onClick={fetchRecordings}
+              disabled={loading}
+              className="px-lg py-md border border-neutral-700 rounded-lg font-medium text-sm text-neutral-300 hover:bg-neutral-900 hover-lift disabled:opacity-50 transition-smooth flex items-center gap-md"
+            >
+              <span className="material-symbols-outlined text-lg">refresh</span>
+              Refresh
+            </button>
+          </div>
 
           {/* Error Message */}
           {error && (
-            <div className="p-4 bg-error-container text-on-error-container rounded-lg flex items-center justify-between">
+            <div className="p-md bg-error bg-opacity-10 border border-error border-opacity-30 rounded-lg text-error text-sm mb-xl flex items-center justify-between slide-down">
               <span>{getUserFriendlyMessage(error)}</span>
               <button 
                 onClick={() => setError(null)}
-                className="text-on-error-container hover:opacity-70"
+                className="text-error hover:opacity-70 transition-smooth"
               >
                 <span className="material-symbols-outlined">close</span>
               </button>
@@ -87,17 +72,23 @@ const LibraryPage = () => {
           )}
 
           {/* Recordings Grid */}
-          <section className="grid grid-cols-1 gap-8">
+          <div className="space-y-lg">
             {loading && recordings.length === 0 ? (
-              <div className="text-center py-12">
-                <div className="inline-block w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
-                <p className="text-on-surface-variant">Loading recordings...</p>
+              <div className="text-center py-2xl">
+                <div className="inline-block w-8 h-8 border-2 border-accent-500 border-t-transparent rounded-full animate-spin mb-md"></div>
+                <p className="text-neutral-400">Loading your recordings...</p>
               </div>
             ) : recordings.length === 0 ? (
-              <div className="text-center py-12">
-                <span className="material-symbols-outlined text-6xl text-on-surface-variant mb-4 block">mic_off</span>
-                <p className="text-on-surface-variant text-lg mb-2">No recordings yet</p>
-                <p className="text-on-surface-variant">Start recording to see your audio files here</p>
+              <div className="text-center py-2xl">
+                <span className="material-symbols-outlined text-6xl text-neutral-700 block mb-md">mic_off</span>
+                <p className="text-neutral-300 text-lg mb-md font-medium">No recordings yet</p>
+                <p className="text-neutral-400 mb-xl">Start recording to see your audio files here</p>
+                <button
+                  onClick={() => navigate('/')}
+                  className="px-lg py-md bg-accent-600 text-neutral-50 rounded-lg font-semibold text-sm hover-lift transition-smooth"
+                >
+                  Start Recording
+                </button>
               </div>
             ) : (
               recordings.map(recording => (
@@ -109,18 +100,19 @@ const LibraryPage = () => {
                 />
               ))
             )}
-          </section>
+          </div>
         </div>
       </main>
 
       {/* Floating Action Button */}
       <button 
         onClick={() => navigate('/')}
-        className="fixed bottom-8 right-8 w-16 h-16 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-[60] hover:bg-primary-container"
+        className="fixed bottom-lg right-lg w-16 h-16 bg-accent-600 text-neutral-50 rounded-full shadow-lg flex items-center justify-center hover:bg-accent-700 hover:shadow-xl hover:scale-110 active:scale-95 transition-smooth z-50"
+        title="Start recording"
       >
-        <span className="material-symbols-outlined">add</span>
+        <span className="material-symbols-outlined text-2xl">add</span>
       </button>
-    </>
+    </div>
   );
 };
 

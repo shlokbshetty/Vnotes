@@ -1,3 +1,8 @@
+/**
+ * Settings Page - Editorial Design
+ * User preferences and account management
+ */
+
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
@@ -15,7 +20,6 @@ const SettingsPage = () => {
   });
   const [isSaved, setIsSaved] = useState(false);
 
-  // Load settings from localStorage on mount
   useEffect(() => {
     const savedSettings = localStorage.getItem('vnotes_settings');
     if (savedSettings) {
@@ -41,7 +45,6 @@ const SettingsPage = () => {
     try {
       localStorage.setItem('vnotes_settings', JSON.stringify(settings));
       setIsSaved(true);
-      // Reset the saved indicator after 2 seconds
       setTimeout(() => setIsSaved(false), 2000);
     } catch (error) {
       console.error('Error saving settings:', error);
@@ -60,22 +63,22 @@ const SettingsPage = () => {
   };
 
   return (
-    <>
+    <div className="flex w-full h-full">
       <Sidebar />
       
-      <main className="flex-grow flex flex-col min-w-0">
-        <div className="p-margin-desktop space-y-stack-lg max-w-container-max mx-auto w-full pb-32">
-          {/* Page Header */}
-          <section className="space-y-2">
-            <h1 className="font-headline-lg text-headline-lg text-on-surface">Settings</h1>
-            <p className="text-body-md text-on-surface-variant">Manage your profile and preferences</p>
-          </section>
+      <main className="flex-grow flex flex-col min-w-0 overflow-y-auto bg-neutral-950">
+        <div className="p-xl max-w-4xl mx-auto w-full">
+          {/* Header */}
+          <div className="mb-2xl">
+            <h1 className="text-4xl font-display font-bold text-neutral-50">Settings</h1>
+            <p className="text-neutral-400 mt-sm text-base">Manage your profile and preferences</p>
+          </div>
 
-          {/* Settings Card */}
-          <section className="bg-surface p-8 rounded-xl border border-outline-variant note-card-shadow space-y-6">
-            {/* User Name Field */}
-            <div className="space-y-2">
-              <label htmlFor="userName" className="block font-label-md text-label-md text-on-surface">
+          {/* Settings Form */}
+          <div className="card card-elevated p-lg space-y-lg mb-xl">
+            {/* User Name */}
+            <div>
+              <label htmlFor="userName" className="block font-semibold text-sm text-neutral-200 mb-sm">
                 User Name
               </label>
               <input
@@ -85,13 +88,13 @@ const SettingsPage = () => {
                 value={settings.userName}
                 onChange={handleInputChange}
                 placeholder="Enter your name"
-                className="w-full px-4 py-3 border border-outline-variant rounded-lg bg-surface-container text-on-surface placeholder-on-surface-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                className="w-full px-md py-sm border border-neutral-700 rounded-lg bg-neutral-800 text-neutral-50 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent transition-smooth"
               />
             </div>
 
-            {/* Email Field */}
-            <div className="space-y-2">
-              <label htmlFor="email" className="block font-label-md text-label-md text-on-surface">
+            {/* Email */}
+            <div>
+              <label htmlFor="email" className="block font-semibold text-sm text-neutral-200 mb-sm">
                 Email
               </label>
               <input
@@ -101,61 +104,61 @@ const SettingsPage = () => {
                 value={settings.email}
                 onChange={handleInputChange}
                 placeholder="Enter your email"
-                className="w-full px-4 py-3 border border-outline-variant rounded-lg bg-surface-container text-on-surface placeholder-on-surface-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                className="w-full px-md py-sm border border-neutral-700 rounded-lg bg-neutral-800 text-neutral-50 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent transition-smooth"
               />
             </div>
 
-            {/* Save Status Message */}
+            {/* Save Message */}
             {isSaved && (
-              <div className="p-3 bg-primary-container text-on-primary-container rounded-lg flex items-center gap-2">
-                <span className="material-symbols-outlined text-[20px]">check_circle</span>
-                <span className="font-body-sm">Settings saved successfully</span>
+              <div className="p-md bg-accent-600 bg-opacity-10 border border-accent-600 border-opacity-30 text-accent-400 rounded-lg text-sm font-medium flex items-center gap-md slide-down">
+                <span className="material-symbols-outlined">check_circle</span>
+                Settings saved successfully
               </div>
             )}
 
-            {/* Action Buttons */}
-            <div className="flex gap-4 pt-4">
+            {/* Buttons */}
+            <div className="flex gap-md pt-md border-t border-neutral-700">
               <button
                 onClick={handleSave}
-                className="flex-1 px-6 py-3 bg-primary text-on-primary rounded-lg font-label-lg text-label-lg hover:opacity-90 active:scale-95 transition-all flex items-center justify-center gap-2"
+                className="flex-1 px-lg py-md bg-accent-600 text-neutral-50 rounded-lg font-semibold text-sm hover-lift hover:bg-accent-700 transition-smooth flex items-center justify-center gap-md"
               >
-                <span className="material-symbols-outlined">save</span>
+                <span className="material-symbols-outlined text-base">save</span>
                 Save Settings
               </button>
               <button
                 onClick={handleLogout}
-                className="flex-1 px-6 py-3 border border-outline-variant text-on-surface rounded-lg font-label-lg text-label-lg hover:bg-surface-container-high active:scale-95 transition-all flex items-center justify-center gap-2"
+                className="flex-1 px-lg py-md border border-neutral-700 text-neutral-300 rounded-lg font-semibold text-sm hover:bg-neutral-800 hover-lift transition-smooth flex items-center justify-center gap-md"
               >
-                <span className="material-symbols-outlined">logout</span>
+                <span className="material-symbols-outlined text-base">logout</span>
                 Logout
               </button>
             </div>
-          </section>
+          </div>
 
-          {/* Info Section */}
-          <section className="bg-surface-container-high p-6 rounded-xl border border-outline-variant space-y-3">
-            <h2 className="font-label-lg text-label-lg text-on-surface flex items-center gap-2">
-              <span className="material-symbols-outlined">info</span>
+          {/* Info Box */}
+          <div className="card p-lg border border-neutral-700">
+            <h2 className="font-semibold text-neutral-100 text-sm mb-md flex items-center gap-md">
+              <span className="material-symbols-outlined text-base">info</span>
               About Your Settings
             </h2>
-            <ul className="space-y-2 text-body-sm text-on-surface-variant">
-              <li className="flex gap-3">
-                <span className="text-primary">•</span>
+            <ul className="space-y-sm text-neutral-400 text-sm">
+              <li className="flex gap-md">
+                <span className="text-accent-400 flex-shrink-0">•</span>
                 <span>Your settings are saved locally in your browser</span>
               </li>
-              <li className="flex gap-3">
-                <span className="text-primary">•</span>
+              <li className="flex gap-md">
+                <span className="text-accent-400 flex-shrink-0">•</span>
                 <span>Logging out will clear all your data from this device</span>
               </li>
-              <li className="flex gap-3">
-                <span className="text-primary">•</span>
+              <li className="flex gap-md">
+                <span className="text-accent-400 flex-shrink-0">•</span>
                 <span>Settings are not synced across devices</span>
               </li>
             </ul>
-          </section>
+          </div>
         </div>
       </main>
-    </>
+    </div>
   );
 };
 
