@@ -1,0 +1,171 @@
+/**
+ * Playback Controls
+ * 
+ * Features:
+ * - Record button (red, with recording state)
+ * - Play/pause toggle
+ * - Stop button
+ * - Split/mark button
+ * - Smooth interactions
+ */
+
+.playback-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+/* Base Button Styling */
+.playback-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background-color: #1F2937;
+  border: 1px solid #374151;
+  border-radius: 6px;
+  color: #E5E5E5;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 150ms ease-out;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.playback-button:hover:not(:disabled) {
+  background-color: #27364E;
+  border-color: #4B5563;
+  transform: scale(1.05);
+}
+
+.playback-button:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.playback-button:focus-visible {
+  outline: 2px solid #3B82F6;
+  outline-offset: 2px;
+}
+
+.playback-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* RECORD BUTTON - Red */
+.playback-button-record {
+  background-color: #DC2626;
+  border-color: #991B1B;
+  color: #FFFFFF;
+}
+
+.playback-button-record:hover:not(:disabled) {
+  background-color: #EF4444;
+  border-color: #DC2626;
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+}
+
+.playback-button-record.recording {
+  animation: pulse-record 1.5s ease-in-out infinite;
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
+}
+
+@keyframes pulse-record {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* PLAY/PAUSE BUTTON - Primary */
+.playback-button-play {
+  background-color: #3B82F6;
+  border-color: #1E40AF;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.playback-button-play:hover:not(:disabled) {
+  background-color: #2563EB;
+  border-color: #1E40AF;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+}
+
+.playback-button-play:active:not(:disabled) {
+  background-color: #1E40AF;
+}
+
+/* STOP BUTTON */
+.playback-button-stop {
+  background-color: #6366F1;
+  border-color: #4338CA;
+  color: #FFFFFF;
+}
+
+.playback-button-stop:hover:not(:disabled) {
+  background-color: #4F46E5;
+  border-color: #4338CA;
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
+}
+
+/* SPLIT/MARK BUTTON */
+.playback-button-split {
+  background-color: #374151;
+  border-color: #4B5563;
+  color: #9CA3AF;
+}
+
+.playback-button-split:hover:not(:disabled) {
+  background-color: #4B5563;
+  border-color: #6B7280;
+  color: #E5E5E5;
+}
+
+.playback-button-split:disabled {
+  opacity: 0.4;
+}
+
+/* Icon */
+.playback-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1600px) {
+  .playback-button {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+
+  .playback-controls {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 1400px) {
+  .playback-button {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+    border-radius: 4px;
+  }
+
+  .playback-controls {
+    gap: 8px;
+    padding: 6px 0;
+  }
+}
+
+/* Accessibility */
+.playback-button {
+  -webkit-user-select: none;
+  user-select: none;
+}

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import LoginPage from './LoginPage';
 
@@ -114,7 +114,6 @@ describe('LoginPage', () => {
     fireEvent.click(button);
 
     await waitFor(() => {
-      const redirectUri = `${window.location.origin}/auth/callback`;
       expect(window.location.href).toContain('redirect_uri=');
     });
 

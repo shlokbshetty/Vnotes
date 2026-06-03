@@ -1,23 +1,25 @@
 /**
- * Recording Page - Editorial Design
- * Main recording interface with transcript panel
+ * Recording Page - Refactored with New Workspace Layout
+ * Uses 3-panel layout: Sidebar | List Panel | Main Editor Panel
+ * Recording controls moved to top dock
  */
 
-import { useCallback, useRef, useState } from 'react';
-import Sidebar from '../components/Sidebar';
-import RecordingControls from '../components/RecordingControls';
-import TranscriptPanel from '../components/TranscriptPanel';
+import { useCallback, useRef, useState, useEffect, useMemo } from 'react';
+import Workspace from '../components/Workspace/Workspace';
+import SidebarContent from '../components/Workspace/Sidebar';
+import ListPanel, { ListItem } from '../components/Workspace/ListPanel';
+import EditorPanel, { Recording } from '../components/Editor/EditorPanel';
+import RecordingDock from '../components/RecordingDock/RecordingDock';
 import { useRecording } from '../hooks/useRecording';
 import { useRecordings } from '../hooks/useRecordings';
 import { apiService } from '../services/api';
-import { Recording } from '../types';
+import './RecordingPage.css';
 
 const RecordingPage = () => {
   const {
     isRecording,
     time,
     isUploading,
-    error,
     startRecording,
     stopRecording,
     uploadRecording,
@@ -25,9 +27,73 @@ const RecordingPage = () => {
     setError
   } = useRecording();
 
-  const { addRecording } = useRecordings();
+  const { recordings, addRecording, fetchRecordings } = useRecordings();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [selectedRecording, setSelectedRecording] = useState<Recording | null>(null);
+  const [selectedRecordingId, setSelectedRecordingId] = useState<string | undefined>();
+  const [currentTime, setCurrentTime] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(time);
+
+  useEffect(() => {
+    setRecordingTime(time);
+  }, [time]);
+
+  useEffect(() => {
+    fetchRecordings();
+    const interval = setInterval(fetchRecordings, 3000);
+    return () => clearInterval(interval);
+  }, [fetchRecordings]);
+
+  // Convert recordings to sidebar items
+  const sidebarItems = useMemo(() => [
+    {
+      id: 'all-notes',
+      label: 'All Notes',
+      count: recordings.length,
+      onClick: () => {},
+    },
+    {
+      id: 'recordings',
+      label: 'Recordings',
+      count: recordings.length,
+      onClick: () => {},
+    },
+  ], [recordings.length]);
+
+  // Convert recordings to list items
+  const listItems: ListItem[] = useMemo(() =>
+    recordings.map(rec => ({
+      id: rec.id,
+      title: rec.originalName || 'Untitled',
+      date: new Date(rec.createdAt).toLocaleDateString(),
+      duration: `${Math.floor(rec.duration / 60)}:${(rec.duration % 60).toString().padStart(2, '0')} min`,
+      type: 'recording' as const,
+      tags: [],
+    })),
+    [recordings]
+  );
+
+  const selectedRecording = recordings.find(r => r.id === selectedRecordingId);
+  const currentRecording: Recording = selectedRecording ? {
+    id: selectedRecording.id,
+    title: selectedRecording.originalName || 'Untitled',
+    content: selectedRecording.transcription || '',
+    date: new Date(selectedRecording.createdAt).toLocaleDateString(),
+    duration: selectedRecording.duration,
+    currentTime,
+    isPlaying,
+    isRecording: isRecording,
+    tags: [],
+  } : {
+    id: '',
+    title: 'Start recording to begin',
+    content: 'Click the record button in the dock at the top to start a new recording, or select one from your library.',
+    date: new Date().toLocaleDateString(),
+    duration: 0,
+    currentTime: 0,
+    isPlaying: false,
+    isRecording: isRecording,
+  };
 
   const handleToggleRecording = useCallback(async () => {
     if (isRecording) {
@@ -36,7 +102,7 @@ const RecordingPage = () => {
         try {
           const recording = await uploadRecording(audioBlob);
           addRecording(recording);
-          setSelectedRecording(recording);
+          setSelectedRecordingId(recording.id);
           resetRecording();
         } catch (err) {
           // Error handled in hook
@@ -55,7 +121,7 @@ const RecordingPage = () => {
       setError(null);
       const recording = await apiService.uploadRecording(file);
       addRecording(recording);
-      setSelectedRecording(recording);
+      setSelectedRecordingId(recording.id);
     } catch (err) {
       setError('Failed to upload file. Please try again.');
     }
@@ -66,47 +132,67 @@ const RecordingPage = () => {
   }, [addRecording, setError]);
 
   return (
-    <div className="flex w-full h-full">
-      <Sidebar />
-      
-      <main className="flex-1 flex flex-col overflow-hidden">
-        <div className="flex-1 flex gap-0 overflow-hidden">
-          {/* Recording Controls - Main Area */}
-          <div className="flex-[2] flex flex-col items-center justify-center bg-neutral-900 relative overflow-hidden">
-            <RecordingControls 
-              isRecording={isRecording}
-              onToggleRecording={handleToggleRecording}
-              time={time}
-              isUploading={isUploading}
-              error={error}
-              onDismissError={() => setError(null)}
+    <>
+      <Workspace
+        sidebar={
+          <SidebarContent
+            items={sidebarItems}
+            activeItemId="all-notes"
+            onNavigate={() => {}}
+          />
+        }
+        listPanel={
+          <ListPanel
+            items={listItems}
+            activeItemId={selectedRecordingId}
+            onSelectItem={setSelectedRecordingId}
+            showSearch={true}
+          />
+        }
+        mainPanel={
+          <div className="recording-page-container">
+            <EditorPanel
+              recording={currentRecording}
+              onUpdate={(updates) => {
+                if (updates.title) {
+                  // Handle title update
+                }
+              }}
+              onPlayPause={setIsPlaying}
+              onSeek={setCurrentTime}
             />
 
             {/* Upload Button */}
-            <div className="mt-xl flex gap-md">
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                disabled={isRecording || isUploading}
-                className="px-lg py-md bg-accent-600 text-neutral-50 rounded-lg font-semibold text-sm hover-lift hover:bg-accent-700 disabled:opacity-50 transition-smooth flex items-center gap-md"
-              >
-                <span className="material-symbols-outlined">upload_file</span>
-                Upload File
-              </button>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="audio/*,video/*"
-                onChange={handleFileUpload}
-                className="hidden"
-              />
-            </div>
-          </div>
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isRecording || isUploading}
+              className="recording-page-upload-button"
+              title="Upload audio or video file"
+            >
+              📁 Upload File
+            </button>
 
-          {/* Transcript Panel */}
-          <TranscriptPanel recording={selectedRecording} />
-        </div>
-      </main>
-    </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="audio/*,video/*"
+              onChange={handleFileUpload}
+              className="hidden"
+              aria-label="Upload recording file"
+            />
+          </div>
+        }
+      />
+
+      {isRecording && (
+        <RecordingDock
+          isRecording={isRecording}
+          recordingTime={recordingTime}
+          onRecord={handleToggleRecording}
+          onStop={handleToggleRecording}
+        />
+      )}
+    </>
   );
 };
 

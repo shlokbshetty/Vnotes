@@ -11,6 +11,7 @@ describe('RecordingCard', () => {
     duration: 125,
     size: 2621440, // 2.5 MB
     type: 'audio/wav',
+    isVideo: false,
     createdAt: '2024-01-15T10:30:00Z'
   };
 

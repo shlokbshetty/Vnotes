@@ -142,7 +142,7 @@ const TranscriptPanel = ({ recording }: TranscriptPanelProps) => {
               Key Points
             </h3>
             <div className="space-y-xs">
-              {currentRecording.keyPoints.map((point, index) => (
+              {currentRecording.keyPoints?.map((point, index) => (
                 <div key={index} className="p-md bg-neutral-800 rounded-lg border border-neutral-700 flex gap-md">
                   <span className="text-accent-400 font-semibold text-xs flex-shrink-0 flex items-center">{index + 1}</span>
                   <p className="text-neutral-300 text-sm">{point}</p>
@@ -160,7 +160,7 @@ const TranscriptPanel = ({ recording }: TranscriptPanelProps) => {
               Action Items
             </h3>
             <div className="space-y-xs">
-              {currentRecording.actionItems.map((item, index) => (
+              {currentRecording.actionItems?.map((item, index) => (
                 <div key={index} className="p-md bg-neutral-800 rounded-lg border border-neutral-700 flex gap-md items-start">
                   <input type="checkbox" className="w-4 h-4 rounded border-neutral-600 flex-shrink-0 mt-xs accent-accent-600" />
                   <p className="text-neutral-300 text-sm">{item}</p>
@@ -178,7 +178,7 @@ const TranscriptPanel = ({ recording }: TranscriptPanelProps) => {
               Key Moments
             </h3>
             <div className="space-y-xs">
-              {currentRecording.keyMoments.map((moment, index) => (
+              {currentRecording.keyMoments?.map((moment, index) => (
                 <button
                   key={index}
                   className="w-full p-md bg-neutral-800 rounded-lg border border-neutral-700 hover:border-neutral-600 hover:bg-neutral-750 transition-smooth text-left flex items-center justify-between group"

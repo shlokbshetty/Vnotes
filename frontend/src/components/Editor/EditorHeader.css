@@ -1,0 +1,138 @@
+/**
+ * Editor Header
+ * 
+ * Features:
+ * - Editable title (contentEditable)
+ * - Metadata display with proper spacing
+ * - Inline tag display
+ * - Focus and edit state styling
+ */
+
+.editor-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px 24px;
+  background-color: #0B0F14;
+  border-bottom: 1px solid #1F2937;
+  flex-shrink: 0;
+}
+
+/* TITLE SECTION */
+.editor-header-title-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.editor-header-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0;
+  line-height: 1.2;
+  padding: 4px 8px;
+  border-radius: 4px;
+  word-break: break-word;
+  outline: none;
+  transition: all 150ms ease-out;
+  cursor: text;
+  min-height: 36px;
+  max-width: 100%;
+}
+
+.editor-header-title:focus {
+  background-color: rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.editor-header-title.editing {
+  background-color: rgba(59, 130, 246, 0.15);
+  box-shadow: 0 0 0 1px #3B82F6;
+}
+
+/* METADATA SECTION */
+.editor-header-metadata {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 13px;
+  color: #9CA3AF;
+  line-height: 1.5;
+}
+
+.editor-header-meta-item {
+  display: inline-block;
+  word-break: break-word;
+}
+
+.editor-header-meta-separator {
+  color: #6B7280;
+}
+
+.editor-header-date,
+.editor-header-duration {
+  /* Base styling for metadata items */
+}
+
+/* TAGS CONTAINER */
+.editor-header-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.editor-header-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  background-color: rgba(59, 130, 246, 0.15);
+  color: #9CA3AF;
+  font-size: 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  transition: all 150ms ease-out;
+}
+
+.editor-header-tag:hover {
+  background-color: rgba(59, 130, 246, 0.25);
+  color: #E5E5E5;
+  cursor: default;
+}
+
+/* Responsive typography */
+@media (max-width: 1600px) {
+  .editor-header-title {
+    font-size: 24px;
+  }
+
+  .editor-header-metadata {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 1400px) {
+  .editor-header {
+    padding: 16px 20px;
+    gap: 10px;
+  }
+
+  .editor-header-title {
+    font-size: 22px;
+  }
+}
+
+/* Ensure contentEditable works properly */
+.editor-header-title[contenteditable] {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Placeholder-like behavior when empty */
+.editor-header-title:empty::before {
+  content: attr(data-placeholder);
+  color: #6B7280;
+}
