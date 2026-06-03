@@ -1,9 +1,8 @@
 /**
- * Recording Controls Component
- * Main recording interface with timer and controls
+ * Recording Controls - Editorial Design
+ * Main recording interface with timer and waveform visualization
  */
 
-import { useState, useEffect } from 'react';
 import { formatTime } from '../utils/formatters';
 
 interface RecordingControlsProps {
@@ -24,79 +23,86 @@ const RecordingControls = ({
   onDismissError
 }: RecordingControlsProps) => {
   return (
-    <div className="flex-[2] flex flex-col items-center justify-center bg-surface-container-lowest rounded-[2rem] border-outline-variant shadow-sm relative overflow-hidden rounded-none">
+    <div className="flex flex-col items-center justify-center w-full h-full gap-xl px-xl py-xl relative">
+      {/* Status Indicator */}
       {isRecording && (
-        <div className="absolute top-8 left-8 flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-error recording-pulse"></div>
-          <span className="font-label-sm text-label-sm text-error uppercase font-bold tracking-widest">Recording in Progress</span>
+        <div className="absolute top-lg left-lg flex items-center gap-md">
+          <div className="w-3 h-3 rounded-full bg-accent-500 recording-pulse"></div>
+          <span className="text-xs font-semibold text-accent-400 uppercase tracking-widest">Recording</span>
         </div>
       )}
 
+      {/* Error Message */}
       {error && (
-        <div className="absolute top-8 right-8 bg-error-container text-on-error-container px-4 py-2 rounded-lg flex items-center gap-2 max-w-xs">
-          <span className="text-sm">{error}</span>
+        <div className="absolute top-lg right-lg bg-error bg-opacity-10 border border-error border-opacity-30 px-md py-sm rounded-lg flex items-center gap-sm max-w-xs text-error text-sm slide-down">
+          <span>{error}</span>
           {onDismissError && (
-            <button onClick={onDismissError} className="ml-2">
-              <span className="material-symbols-outlined text-[18px]">close</span>
+            <button onClick={onDismissError} className="ml-md">
+              <span className="material-symbols-outlined text-base">close</span>
             </button>
           )}
         </div>
       )}
 
-      <div className="flex flex-col items-center gap-stack-lg">
+      {/* Timer Display */}
+      <div className="flex flex-col items-center gap-lg">
         <div className="relative w-64 h-64 flex items-center justify-center">
-          <div className="absolute inset-0 bg-white/5 rounded-full blur-3xl"></div>
-          <div className={`z-10 w-48 h-48 rounded-full bg-surface-container-lowest border-8 border-outline-variant flex flex-col items-center justify-center shadow-2xl ${isRecording ? 'recording-pulse' : ''}`}>
-            <span className="font-headline-xl text-headline-xl text-on-surface">{formatTime(time)}</span>
-            <span className="font-label-sm text-label-sm text-on-surface-variant">MM:SS</span>
+          <div className={`absolute inset-0 bg-accent-600 rounded-full blur-3xl opacity-10 ${isRecording ? 'recording-pulse' : ''}`}></div>
+          <div className={`z-10 w-48 h-48 rounded-full bg-neutral-800 border-4 border-neutral-700 flex flex-col items-center justify-center shadow-lg ${isRecording ? 'recording-pulse' : ''}`}>
+            <div className="text-5xl font-display font-bold text-neutral-50">{formatTime(time)}</div>
+            <div className="text-xs text-neutral-500 uppercase tracking-widest mt-sm">Recording Time</div>
           </div>
         </div>
 
-        {/* Waveform */}
-        <div className="h-24 flex items-center justify-center gap-1 px-8">
-          {Array.from({ length: 12 }, (_, i) => (
-            <div 
-              key={i}
-              className={`w-1.5 bg-primary rounded-full ${isRecording ? 'waveform-bar' : ''}`}
-              style={{ height: isRecording ? '20px' : '8px' }}
-            />
-          ))}
-        </div>
+        {/* Waveform Visualization */}
+        {isRecording && (
+          <div className="flex items-center justify-center gap-1 px-xl h-20">
+            {Array.from({ length: 12 }, (_, i) => (
+              <div 
+                key={i}
+                className="w-1.5 waveform-bar rounded-full"
+              />
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Controls */}
-      <div className="mt-12 flex items-center gap-10">
-        <button className="flex flex-col items-center gap-2 group">
-          <div className="w-16 h-16 rounded-full border border-outline-variant bg-surface-container flex items-center justify-center hover:bg-surface-variant transition-all">
-            <span className="material-symbols-outlined text-3xl text-on-surface">pause</span>
+      {/* Control Buttons */}
+      <div className="flex items-center gap-xl mt-xl">
+        {/* Pause Button (Placeholder) */}
+        <button className="flex flex-col items-center gap-sm group hover-lift">
+          <div className="w-14 h-14 rounded-full border-2 border-neutral-700 bg-neutral-800 hover:bg-neutral-700 flex items-center justify-center transition-smooth">
+            <span className="material-symbols-outlined text-neutral-300 text-2xl">pause</span>
           </div>
-          <span className="font-label-sm text-label-sm text-on-surface-variant">Pause</span>
+          <span className="text-xs text-neutral-500 font-medium">Pause</span>
         </button>
 
+        {/* Record/Stop Button (Primary) */}
         <button 
           onClick={onToggleRecording}
-          className="flex flex-col items-center gap-2 group"
+          className="flex flex-col items-center gap-sm group hover-lift"
           disabled={isUploading}
         >
-          <div className={`w-24 h-24 rounded-full bg-error shadow-xl flex items-center justify-center hover:scale-105 transition-all ${isUploading ? 'opacity-50' : ''}`}>
+          <div className={`w-20 h-20 rounded-full bg-accent-600 hover:bg-accent-700 shadow-lg flex items-center justify-center transition-smooth transform ${isUploading ? 'opacity-50 scale-95' : 'group-hover:scale-110'}`}>
             {isUploading ? (
-              <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-6 h-6 border-2 border-neutral-50 border-t-transparent rounded-full animate-spin"></div>
             ) : isRecording ? (
-              <div className="w-8 h-8 bg-white rounded-sm"></div>
+              <div className="w-7 h-7 bg-neutral-50 rounded-sm"></div>
             ) : (
-              <span className="material-symbols-outlined text-4xl text-white">mic</span>
+              <span className="material-symbols-outlined text-4xl text-neutral-50">mic</span>
             )}
           </div>
-          <span className="font-label-sm text-label-sm text-on-surface font-bold">
-            {isUploading ? 'Saving...' : isRecording ? 'Stop & Save' : 'Start Recording'}
+          <span className="text-xs font-semibold text-neutral-200 text-center">
+            {isUploading ? 'Saving...' : isRecording ? 'Stop' : 'Record'}
           </span>
         </button>
 
-        <button className="flex flex-col items-center gap-2 group">
-          <div className="w-16 h-16 rounded-full border border-outline-variant bg-surface-container flex items-center justify-center hover:bg-surface-variant transition-all">
-            <span className="material-symbols-outlined text-3xl text-on-surface">bookmark</span>
+        {/* Bookmark Button (Placeholder) */}
+        <button className="flex flex-col items-center gap-sm group hover-lift">
+          <div className="w-14 h-14 rounded-full border-2 border-neutral-700 bg-neutral-800 hover:bg-neutral-700 flex items-center justify-center transition-smooth">
+            <span className="material-symbols-outlined text-neutral-300 text-2xl">bookmark</span>
           </div>
-          <span className="font-label-sm text-label-sm text-on-surface-variant">Key Moment</span>
+          <span className="text-xs text-neutral-500 font-medium">Mark</span>
         </button>
       </div>
     </div>

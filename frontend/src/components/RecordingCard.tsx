@@ -1,6 +1,6 @@
 /**
- * Recording Card Component
- * Displays individual recording with metadata and playback
+ * Recording Card - Editorial Design
+ * Minimal, focused card for displaying recording metadata and playback
  */
 
 import { Recording } from '../types';
@@ -14,89 +14,92 @@ interface RecordingCardProps {
 
 const RecordingCard = ({ recording, onDelete, isDeleting = false }: RecordingCardProps) => {
   const handleDelete = () => {
-    if (onDelete && confirm('Are you sure you want to delete this recording?')) {
+    if (onDelete && confirm('Delete this recording? This action cannot be undone.')) {
       onDelete(recording.id);
     }
   };
 
   return (
-    <div className="bg-surface border border-outline-variant p-6 rounded-xl flex flex-col md:flex-row gap-6 note-card-shadow transition-all hover:border-primary cursor-pointer group">
-      <div className="flex-shrink-0 w-full md:w-48 h-32 bg-surface-container-high rounded-lg flex items-center justify-center border border-outline-variant overflow-hidden">
-        {recording.isVideo ? (
-          <video 
-            src={`http://localhost:3001/uploads/${recording.filename}`}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <span className="material-symbols-outlined text-4xl text-on-surface-variant group-hover:text-primary transition-colors">
-            {getMediaIcon(recording.isVideo)}
-          </span>
-        )}
-      </div>
-      
-      <div className="flex-grow min-w-0">
-        <div className="flex justify-between items-start mb-2">
-          <h3 className="font-headline-lg-mobile text-on-surface truncate">{recording.originalName}</h3>
-          <div className="flex items-center gap-2">
-            <span className="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-xs font-bold">
-              {recording.isVideo ? 'Video' : 'Audio'}
-            </span>
-            {onDelete && (
-              <button
-                onClick={handleDelete}
-                disabled={isDeleting}
-                className="p-2 text-error hover:bg-error-container rounded-lg transition-all disabled:opacity-50"
-                title="Delete recording"
-              >
-                <span className="material-symbols-outlined text-[18px]">delete</span>
-              </button>
+    <div className="card p-lg hover:shadow-md transition-smooth group">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-lg">
+        {/* Media Preview */}
+        <div className="md:col-span-1">
+          <div className="w-full aspect-square bg-neutral-800 rounded-lg flex items-center justify-center overflow-hidden border border-neutral-700">
+            {recording.isVideo ? (
+              <video 
+                src={`http://localhost:3001/uploads/${recording.filename}`}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <span className="material-symbols-outlined text-5xl text-neutral-600 group-hover:text-accent-500 transition-smooth">
+                {getMediaIcon(recording.isVideo)}
+              </span>
             )}
           </div>
         </div>
-        
-        <div className="flex gap-4 mb-3 flex-wrap">
-          <div className="flex items-center gap-1 text-on-surface-variant font-label-sm">
-            <span className="material-symbols-outlined text-[18px]">calendar_today</span>
-            {formatDate(recording.createdAt)}
+
+        {/* Metadata & Controls */}
+        <div className="md:col-span-2 flex flex-col justify-between">
+          {/* Title & Type */}
+          <div>
+            <h3 className="font-display font-semibold text-lg text-neutral-50 mb-md truncate group-hover:text-accent-400 transition-smooth">
+              {recording.originalName}
+            </h3>
+            
+            {/* Info Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-md mb-lg">
+              {[
+                { label: 'Duration', value: formatDuration(recording.duration), icon: 'timer' },
+                { label: 'Size', value: formatBytes(recording.size), icon: 'storage' },
+                { label: 'Type', value: extractFileType(recording.type), icon: getMediaIcon(recording.isVideo) },
+                { label: 'Date', value: formatDate(recording.createdAt), icon: 'calendar_today' },
+              ].map(({ label, value, icon }) => (
+                <div key={label} className="text-xs">
+                  <p className="text-neutral-500 uppercase tracking-wider font-semibold mb-xs">{label}</p>
+                  <div className="flex items-center gap-xs text-neutral-200">
+                    <span className="material-symbols-outlined text-base">{icon}</span>
+                    <span className="font-mono text-sm">{value}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="flex items-center gap-1 text-on-surface-variant font-label-sm">
-            <span className="material-symbols-outlined text-[18px]">timer</span>
-            {formatDuration(recording.duration)}
+
+          {/* Media Player */}
+          <div className="mb-md">
+            {recording.isVideo ? (
+              <video 
+                controls 
+                src={`http://localhost:3001/uploads/${recording.filename}`}
+                className="w-full max-w-md rounded-lg bg-neutral-800 border border-neutral-700"
+              >
+                Your browser does not support the video element.
+              </video>
+            ) : (
+              <audio 
+                controls 
+                src={`http://localhost:3001/uploads/${recording.filename}`}
+                className="w-full max-w-md rounded-lg bg-neutral-800 border border-neutral-700"
+              >
+                Your browser does not support the audio element.
+              </audio>
+            )}
           </div>
-          <div className="flex items-center gap-1 text-on-surface-variant font-label-sm">
-            <span className="material-symbols-outlined text-[18px]">storage</span>
-            {formatBytes(recording.size)}
-          </div>
-          <div className="flex items-center gap-1 text-on-surface-variant font-label-sm">
-            <span className="material-symbols-outlined text-[18px]">{getMediaIcon(recording.isVideo)}</span>
-            {extractFileType(recording.type)}
-          </div>
-        </div>
-        
-        {/* Media Player */}
-        <div className="mb-3">
-          {recording.isVideo ? (
-            <video 
-              controls 
-              src={`http://localhost:3001/uploads/${recording.filename}`}
-              className="w-full max-w-md rounded-lg"
-            >
-              Your browser does not support the video element.
-            </video>
-          ) : (
-            <audio 
-              controls 
-              src={`http://localhost:3001/uploads/${recording.filename}`}
-              className="w-full max-w-md"
-            >
-              Your browser does not support the audio element.
-            </audio>
+
+          {/* Action Buttons */}
+          {onDelete && (
+            <div className="flex gap-md">
+              <button
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="px-md py-sm text-error text-sm font-medium hover:bg-error hover:bg-opacity-10 rounded-lg transition-smooth disabled:opacity-50 flex items-center gap-xs"
+              >
+                <span className="material-symbols-outlined text-base">delete</span>
+                Delete
+              </button>
+            </div>
           )}
         </div>
-        
-        <p className="text-on-surface-variant font-body-md text-sm">
-          Recorded on {formatDate(recording.createdAt)}
-        </p>
       </div>
     </div>
   );

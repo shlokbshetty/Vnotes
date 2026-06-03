@@ -23,6 +23,7 @@ export interface Recording {
   size: number;
   type: string;
   isVideo: boolean;
+  user_id?: string;
   transcription?: string;
   summary?: string;
   keyPoints?: string[];
@@ -58,7 +59,8 @@ class RecordingService {
     filename: string,
     originalName: string,
     size: number,
-    mimeType: string
+    mimeType: string,
+    userId?: string
   ): Recording {
     const recording: Recording = {
       id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
@@ -68,10 +70,12 @@ class RecordingService {
       size,
       type: mimeType,
       isVideo: isVideoFile(mimeType),
+      user_id: userId,
       createdAt: new Date().toISOString()
+      // TODO (Supabase team): Include user_id in Supabase insert
     };
 
-    logger.info('Recording created', { id: recording.id, filename });
+    logger.info('Recording created', { id: recording.id, filename, userId });
     return recording;
   }
 
@@ -88,9 +92,14 @@ class RecordingService {
     }
   }
 
-  getAllRecordings(searchQuery?: string): Recording[] {
+  getAllRecordings(searchQuery?: string, userId?: string): Recording[] {
     try {
       let recordings = this.readRecordings();
+      
+      // Filter by userId if provided
+      if (userId) {
+        recordings = recordings.filter(r => r.user_id === userId);
+      }
       
       if (searchQuery) {
         const query = searchQuery.toLowerCase();

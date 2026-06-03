@@ -24,3 +24,26 @@ export interface Settings {
   email: string;
   enableTranscription?: boolean;
 }
+
+// Auth types
+export interface AuthUser {
+  user_id: string;
+  email: string;
+  name: string;
+  profile_picture_url?: string;
+}
+
+export interface AuthContextType {
+  user: AuthUser | null;
+  sessionToken: string | null;
+  isAuthenticated: boolean;
+  login: (token: string, user: AuthUser) => void;
+  logout: () => void;
+}
+
+export interface OAuthResponse {
+  success: boolean;
+  sessionToken: string;
+  user: AuthUser;
+  expiresIn?: number;
+}

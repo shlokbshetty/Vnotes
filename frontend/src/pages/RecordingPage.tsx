@@ -1,6 +1,6 @@
 /**
- * Recording Page
- * Main page for recording audio or uploading existing files
+ * Recording Page - Editorial Design
+ * Main recording interface with transcript panel
  */
 
 import { useCallback, useRef, useState } from 'react';
@@ -39,7 +39,7 @@ const RecordingPage = () => {
           setSelectedRecording(recording);
           resetRecording();
         } catch (err) {
-          // Error is already handled in the hook
+          // Error handled in hook
         }
       }
     } else {
@@ -60,20 +60,19 @@ const RecordingPage = () => {
       setError('Failed to upload file. Please try again.');
     }
 
-    // Reset input
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
   }, [addRecording, setError]);
 
   return (
-    <>
+    <div className="flex w-full h-full">
       <Sidebar />
       
-      <main className="flex-1 flex flex-col relative overflow-hidden">
-        <div className="flex-1 flex overflow-hidden bg-background h-full">
-          <div className="flex-[2] flex flex-col items-center justify-center bg-surface-container-lowest rounded-[2rem] border-outline-variant shadow-sm relative overflow-hidden rounded-none">
-            {/* Recording Controls */}
+      <main className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex gap-0 overflow-hidden">
+          {/* Recording Controls - Main Area */}
+          <div className="flex-[2] flex flex-col items-center justify-center bg-neutral-900 relative overflow-hidden">
             <RecordingControls 
               isRecording={isRecording}
               onToggleRecording={handleToggleRecording}
@@ -83,12 +82,12 @@ const RecordingPage = () => {
               onDismissError={() => setError(null)}
             />
 
-            {/* Upload File Button */}
-            <div className="mt-8 flex gap-4">
+            {/* Upload Button */}
+            <div className="mt-xl flex gap-md">
               <button
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isRecording || isUploading}
-                className="px-6 py-3 bg-secondary text-on-secondary rounded-lg font-label-lg hover:opacity-90 disabled:opacity-50 transition-all flex items-center gap-2"
+                className="px-lg py-md bg-accent-600 text-neutral-50 rounded-lg font-semibold text-sm hover-lift hover:bg-accent-700 disabled:opacity-50 transition-smooth flex items-center gap-md"
               >
                 <span className="material-symbols-outlined">upload_file</span>
                 Upload File
@@ -107,11 +106,7 @@ const RecordingPage = () => {
           <TranscriptPanel recording={selectedRecording} />
         </div>
       </main>
-
-      {/* Background Decoration Elements */}
-      <div className="fixed top-[-10%] right-[-10%] w-[40%] h-[40%] bg-white/5 rounded-full blur-[120px] pointer-events-none z-[-1]"></div>
-      <div className="fixed bottom-[-10%] left-[20%] w-[30%] h-[30%] bg-white/5 rounded-full blur-[100px] pointer-events-none z-[-1]"></div>
-    </>
+    </div>
   );
 };
 

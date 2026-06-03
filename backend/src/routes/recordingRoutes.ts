@@ -9,6 +9,7 @@ import path from 'path';
 import { uploadRecording, getRecordings, getRecording, deleteRecording, addKeyMoment, removeKeyMoment, generateSummary, transcribeRecording } from '../controllers/recordingController';
 import { config } from '../config/env';
 import { logger } from '../utils/logger';
+import { authMiddleware } from '../middlewares/authMiddleware';
 
 const router = express.Router();
 
@@ -47,15 +48,15 @@ const upload = multer({
 });
 
 // Routes
-router.post('/upload', upload.single('file'), uploadRecording);
-router.get('/', getRecordings);
-router.get('/:id', getRecording);
-router.delete('/:id', deleteRecording);
+router.post('/upload', authMiddleware, upload.single('file'), uploadRecording);
+router.get('/', authMiddleware, getRecordings);
+router.get('/:id', authMiddleware, getRecording);
+router.delete('/:id', authMiddleware, deleteRecording);
 
 // AI Features
-router.post('/:id/key-moments', addKeyMoment);
-router.delete('/:id/key-moments', removeKeyMoment);
-router.post('/:id/summary', generateSummary);
-router.post('/:id/transcribe', transcribeRecording);
+router.post('/:id/key-moments', authMiddleware, addKeyMoment);
+router.delete('/:id/key-moments', authMiddleware, removeKeyMoment);
+router.post('/:id/summary', authMiddleware, generateSummary);
+router.post('/:id/transcribe', authMiddleware, transcribeRecording);
 
 export default router;

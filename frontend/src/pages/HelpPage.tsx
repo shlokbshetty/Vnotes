@@ -1,3 +1,8 @@
+/**
+ * Help Page - Editorial Design
+ * Usage guide and frequently asked questions
+ */
+
 import { useState } from 'react';
 import Sidebar from '../components/Sidebar';
 
@@ -14,22 +19,22 @@ const HelpPage = () => {
     {
       id: 1,
       question: 'Where are my files stored?',
-      answer: 'Your audio files are stored locally on the server in the backend/uploads directory. Each file is saved with a timestamp-prefixed filename to ensure uniqueness and easy organization.'
+      answer: 'Your audio files are stored on the backend server in the uploads directory. Each file is saved with a timestamp to ensure uniqueness.'
     },
     {
       id: 2,
       question: 'Why is there no transcription feature yet?',
-      answer: 'Transcription is coming soon! We\'re working on integrating speech-to-text capabilities to automatically convert your audio recordings into text. Stay tuned for updates.'
+      answer: 'Transcription is coming soon! We\'re working on integrating speech-to-text capabilities to convert your audio to text automatically.'
     },
     {
       id: 3,
       question: 'Can I delete recordings?',
-      answer: 'Yes! You can delete any recording from the History page by clicking the delete button on the recording card. The audio file will be permanently removed from the server.'
+      answer: 'Yes! You can delete any recording from the Library page by clicking the delete button. The file will be permanently removed.'
     },
     {
       id: 4,
       question: 'What audio formats are supported?',
-      answer: 'VNotes currently supports WAV format for recording. The audio is captured directly from your microphone and saved in high quality.'
+      answer: 'VNotes currently supports WAV format for recording. Audio is captured from your microphone in high quality.'
     }
   ];
 
@@ -38,110 +43,94 @@ const HelpPage = () => {
   };
 
   return (
-    <>
+    <div className="flex w-full h-full">
       <Sidebar />
       
-      <main className="flex-grow flex flex-col min-w-0 overflow-y-auto">
-        <div className="p-margin-desktop space-y-stack-lg max-w-container-max mx-auto w-full pb-32">
-          {/* Page Header */}
-          <section className="space-y-2">
-            <h1 className="font-headline-lg text-headline-lg text-on-surface">How to use VNotes</h1>
-            <p className="text-body-md text-on-surface-variant">Learn how to record, save, and manage your audio notes</p>
-          </section>
+      <main className="flex-grow flex flex-col min-w-0 overflow-y-auto bg-neutral-950">
+        <div className="p-xl max-w-4xl mx-auto w-full">
+          {/* Header */}
+          <div className="mb-2xl">
+            <h1 className="text-4xl font-display font-bold text-neutral-50">How to use VNotes</h1>
+            <p className="text-neutral-400 mt-sm text-base">Learn how to record, save, and manage your audio notes</p>
+          </div>
 
-          {/* Usage Guide Section */}
-          <section className="space-y-4">
-            <h2 className="font-headline-md text-headline-md text-on-surface">Getting Started</h2>
+          {/* Getting Started Section */}
+          <section className="mb-2xl">
+            <h2 className="text-2xl font-display font-semibold text-neutral-50 mb-lg">Getting Started</h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
               {/* Step 1 */}
-              <div className="bg-surface p-6 rounded-xl border border-outline-variant note-card-shadow space-y-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-lg">
+              <div className="card p-lg border border-neutral-700 hover:border-neutral-600 transition-smooth">
+                <div className="flex items-center gap-md mb-md">
+                  <div className="w-10 h-10 rounded-full bg-accent-600 text-neutral-50 flex items-center justify-center font-bold text-base">
                     1
                   </div>
-                  <h3 className="font-label-lg text-label-lg text-on-surface">Start Recording</h3>
+                  <h3 className="font-semibold text-neutral-100">Start Recording</h3>
                 </div>
-                <p className="text-body-md text-on-surface-variant">
-                  Click the microphone icon in the sidebar to go to the Recordings page. Press the red record button to start capturing your audio. Make sure your microphone is connected and permissions are granted.
+                <p className="text-neutral-400 text-sm leading-relaxed">
+                  Click the microphone icon in the sidebar. Press the record button to start capturing. Make sure your microphone is connected.
                 </p>
-                <div className="flex items-center gap-2 text-primary">
-                  <span className="material-symbols-outlined">mic</span>
-                  <span className="text-body-sm font-medium">Recording Page</span>
-                </div>
               </div>
 
               {/* Step 2 */}
-              <div className="bg-surface p-6 rounded-xl border border-outline-variant note-card-shadow space-y-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-lg">
+              <div className="card p-lg border border-neutral-700 hover:border-neutral-600 transition-smooth">
+                <div className="flex items-center gap-md mb-md">
+                  <div className="w-10 h-10 rounded-full bg-accent-600 text-neutral-50 flex items-center justify-center font-bold text-base">
                     2
                   </div>
-                  <h3 className="font-label-lg text-label-lg text-on-surface">Stop to Save</h3>
+                  <h3 className="font-semibold text-neutral-100">Stop to Save</h3>
                 </div>
-                <p className="text-body-md text-on-surface-variant">
-                  When you're done recording, click the stop button. Your audio will be automatically uploaded and saved to the server. You'll see a confirmation message when the save is complete.
+                <p className="text-neutral-400 text-sm leading-relaxed">
+                  When done, click the stop button. Your audio uploads automatically. You'll see a confirmation when complete.
                 </p>
-                <div className="flex items-center gap-2 text-primary">
-                  <span className="material-symbols-outlined">stop_circle</span>
-                  <span className="text-body-sm font-medium">Auto-Save</span>
-                </div>
               </div>
 
               {/* Step 3 */}
-              <div className="bg-surface p-6 rounded-xl border border-outline-variant note-card-shadow space-y-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-lg">
+              <div className="card p-lg border border-neutral-700 hover:border-neutral-600 transition-smooth">
+                <div className="flex items-center gap-md mb-md">
+                  <div className="w-10 h-10 rounded-full bg-accent-600 text-neutral-50 flex items-center justify-center font-bold text-base">
                     3
                   </div>
-                  <h3 className="font-label-lg text-label-lg text-on-surface">Go to History</h3>
+                  <h3 className="font-semibold text-neutral-100">Go to Library</h3>
                 </div>
-                <p className="text-body-md text-on-surface-variant">
-                  Navigate to the History page by clicking the history icon in the sidebar. Here you'll see all your saved recordings with their metadata including file size, type, and creation date.
+                <p className="text-neutral-400 text-sm leading-relaxed">
+                  Navigate to the Library to see all your recordings with metadata like file size, type, and date.
                 </p>
-                <div className="flex items-center gap-2 text-primary">
-                  <span className="material-symbols-outlined">history</span>
-                  <span className="text-body-sm font-medium">History Page</span>
-                </div>
               </div>
 
               {/* Step 4 */}
-              <div className="bg-surface p-6 rounded-xl border border-outline-variant note-card-shadow space-y-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-lg">
+              <div className="card p-lg border border-neutral-700 hover:border-neutral-600 transition-smooth">
+                <div className="flex items-center gap-md mb-md">
+                  <div className="w-10 h-10 rounded-full bg-accent-600 text-neutral-50 flex items-center justify-center font-bold text-base">
                     4
                   </div>
-                  <h3 className="font-label-lg text-label-lg text-on-surface">Click to Play</h3>
+                  <h3 className="font-semibold text-neutral-100">Play & Manage</h3>
                 </div>
-                <p className="text-body-md text-on-surface-variant">
-                  Select any recording from the History page to play it. Use the built-in audio player controls to play, pause, adjust volume, and seek through your recording.
+                <p className="text-neutral-400 text-sm leading-relaxed">
+                  Select a recording to play it. Use the built-in player to play, pause, and seek through your audio.
                 </p>
-                <div className="flex items-center gap-2 text-primary">
-                  <span className="material-symbols-outlined">play_circle</span>
-                  <span className="text-body-sm font-medium">Audio Player</span>
-                </div>
               </div>
             </div>
           </section>
 
           {/* FAQ Section */}
-          <section className="space-y-4">
-            <h2 className="font-headline-md text-headline-md text-on-surface">Frequently Asked Questions</h2>
+          <section className="mb-2xl">
+            <h2 className="text-2xl font-display font-semibold text-neutral-50 mb-lg">Frequently Asked Questions</h2>
             
-            <div className="space-y-3">
+            <div className="space-y-sm">
               {faqItems.map((item) => (
                 <div 
                   key={item.id}
-                  className="bg-surface border border-outline-variant rounded-xl overflow-hidden note-card-shadow"
+                  className="card border border-neutral-700 overflow-hidden hover:border-neutral-600 transition-smooth"
                 >
                   <button
                     onClick={() => toggleFAQ(item.id)}
-                    className="w-full px-6 py-4 flex items-center justify-between hover:bg-surface-container-high transition-all"
+                    className="w-full px-lg py-md flex items-center justify-between hover:bg-neutral-800 transition-smooth"
                   >
-                    <h3 className="font-label-lg text-label-lg text-on-surface text-left">
+                    <h3 className="font-semibold text-neutral-100 text-left text-sm">
                       {item.question}
                     </h3>
-                    <span className={`material-symbols-outlined text-on-surface-variant transition-transform ${
+                    <span className={`material-symbols-outlined text-neutral-500 transition-transform duration-200 ${
                       expandedFAQ === item.id ? 'rotate-180' : ''
                     }`}>
                       expand_more
@@ -149,8 +138,8 @@ const HelpPage = () => {
                   </button>
                   
                   {expandedFAQ === item.id && (
-                    <div className="px-6 py-4 border-t border-outline-variant bg-surface-container-low">
-                      <p className="text-body-md text-on-surface-variant">
+                    <div className="px-lg py-md border-t border-neutral-700 bg-neutral-800 bg-opacity-50 slide-down">
+                      <p className="text-neutral-400 text-sm leading-relaxed">
                         {item.answer}
                       </p>
                     </div>
@@ -160,34 +149,34 @@ const HelpPage = () => {
             </div>
           </section>
 
-          {/* Tips Section */}
-          <section className="bg-primary-container border border-primary rounded-xl p-6 space-y-3">
-            <h2 className="font-label-lg text-label-lg text-on-primary-container flex items-center gap-2">
-              <span className="material-symbols-outlined">lightbulb</span>
+          {/* Pro Tips */}
+          <section className="card p-lg bg-accent-600 bg-opacity-10 border border-accent-600 border-opacity-30">
+            <h2 className="font-semibold text-accent-400 text-sm mb-md flex items-center gap-md">
+              <span className="material-symbols-outlined text-base">lightbulb</span>
               Pro Tips
             </h2>
-            <ul className="space-y-2 text-body-sm text-on-primary-container">
-              <li className="flex gap-3">
-                <span className="text-on-primary-container">•</span>
-                <span>Use descriptive names for your recordings to easily find them later</span>
+            <ul className="space-y-sm text-accent-200 text-sm">
+              <li className="flex gap-md">
+                <span className="flex-shrink-0">•</span>
+                <span>Use descriptive names for easy searching later</span>
               </li>
-              <li className="flex gap-3">
-                <span className="text-on-primary-container">•</span>
-                <span>Check your microphone permissions if you can't start recording</span>
+              <li className="flex gap-md">
+                <span className="flex-shrink-0">•</span>
+                <span>Check microphone permissions if recording won't start</span>
               </li>
-              <li className="flex gap-3">
-                <span className="text-on-primary-container">•</span>
-                <span>Recordings are stored locally on your server for privacy and quick access</span>
+              <li className="flex gap-md">
+                <span className="flex-shrink-0">•</span>
+                <span>Recordings are stored locally for privacy</span>
               </li>
-              <li className="flex gap-3">
-                <span className="text-on-primary-container">•</span>
-                <span>You can delete recordings anytime from the History page</span>
+              <li className="flex gap-md">
+                <span className="flex-shrink-0">•</span>
+                <span>Delete recordings anytime from the Library</span>
               </li>
             </ul>
           </section>
         </div>
       </main>
-    </>
+    </div>
   );
 };
 

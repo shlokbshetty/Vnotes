@@ -38,5 +38,60 @@
     "isVideo": false,
     "createdAt": "2026-05-22T11:30:24.091Z",
     "transcription": "[Transcription pending for C:\\GitHub\\Vnotes\\backend\\uploads\\1779449424039-gp68pgd8g-harvard.wav (3.10MB)]\n\nNote: To enable automatic transcription, please configure your ElevenLabs API key in the .env file:\nELEVENLABS_API_KEY=your_api_key_here\n\nOnce configured, re-upload the audio file to generate a full transcription."
+  },
+  {
+    "id": "1779449945362o6mjy6ynz",
+    "filename": "1779449945323-lpvgq0nxv-harvard.wav",
+    "originalName": "harvard.wav",
+    "duration": 0,
+    "size": 3249924,
+    "type": "audio/wav",
+    "isVideo": false,
+    "createdAt": "2026-05-22T11:39:05.362Z",
+    "transcription": "[Transcription pending for C:\\GitHub\\Vnotes\\backend\\uploads\\1779449945323-lpvgq0nxv-harvard.wav (3.10MB)]\n\nReason: API key not configured\n\nTo enable automatic transcription:\n1. Get an ElevenLabs API key from https://elevenlabs.io\n2. Ensure the key has speech-to-text permissions\n3. Add to .env file: ELEVENLABS_API_KEY=your_api_key_here\n4. Restart the backend server\n5. Re-upload the audio file to generate a full transcription"
+  },
+  {
+    "id": "1779450010323cq5dxynhe",
+    "filename": "1779450010290-db1cjobh2-harvard.wav",
+    "originalName": "harvard.wav",
+    "duration": 0,
+    "size": 3249924,
+    "type": "audio/wav",
+    "isVideo": false,
+    "createdAt": "2026-05-22T11:40:10.323Z",
+    "transcription": "[Transcription pending for C:\\GitHub\\Vnotes\\backend\\uploads\\1779450010290-db1cjobh2-harvard.wav (3.10MB)]\n\nReason: API key not configured\n\nTo enable automatic transcription:\n1. Get an ElevenLabs API key from https://elevenlabs.io\n2. Ensure the key has speech-to-text permissions\n3. Add to .env file: ELEVENLABS_API_KEY=your_api_key_here\n4. Restart the backend server\n5. Re-upload the audio file to generate a full transcription"
+  },
+  {
+    "id": "177945010549596s4i9maa",
+    "filename": "1779450105457-82avt84v7-harvard.wav",
+    "originalName": "harvard.wav",
+    "duration": 0,
+    "size": 3249924,
+    "type": "audio/wav",
+    "isVideo": false,
+    "createdAt": "2026-05-22T11:41:45.495Z",
+    "transcription": "[Transcription pending for C:\\GitHub\\Vnotes\\backend\\uploads\\1779450105457-82avt84v7-harvard.wav (3.10MB)]\n\nReason: API key not configured\n\nTo enable automatic transcription:\n1. Get an ElevenLabs API key from https://elevenlabs.io\n2. Ensure the key has speech-to-text permissions\n3. Add to .env file: ELEVENLABS_API_KEY=your_api_key_here\n4. Restart the backend server\n5. Re-upload the audio file to generate a full transcription"
+  },
+  {
+    "id": "1779450544982bubhix5uz",
+    "filename": "1779450544944-xr7fs6e15-harvard.wav",
+    "originalName": "harvard.wav",
+    "duration": 0,
+    "size": 3249924,
+    "type": "audio/wav",
+    "isVideo": false,
+    "createdAt": "2026-05-22T11:49:04.982Z",
+    "transcription": "[Transcription pending for C:\\GitHub\\Vnotes\\backend\\uploads\\1779450544944-xr7fs6e15-harvard.wav (3.10MB)]\n\nReason: API key not configured\n\nTo enable automatic transcription:\n1. Get an ElevenLabs API key from https://elevenlabs.io\n2. Ensure the key has speech-to-text permissions\n3. Add to .env file: ELEVENLABS_API_KEY=your_api_key_here\n4. Restart the backend server\n5. Re-upload the audio file to generate a full transcription"
+  },
+  {
+    "id": "1779450573065m4r91uym1",
+    "filename": "1779450573047-rdl5qpbej-1779450544944-xr7fs6e15-harvard.wav",
+    "originalName": "1779450544944-xr7fs6e15-harvard.wav",
+    "duration": 0,
+    "size": 3249924,
+    "type": "audio/wav",
+    "isVideo": false,
+    "createdAt": "2026-05-22T11:49:33.065Z",
+    "transcription": "[Transcription pending for C:\\GitHub\\Vnotes\\backend\\uploads\\1779450573047-rdl5qpbej-1779450544944-xr7fs6e15-harvard.wav (3.10MB)]\n\nReason: API key not configured\n\nTo enable automatic transcription:\n1. Get an ElevenLabs API key from https://elevenlabs.io\n2. Ensure the key has speech-to-text permissions\n3. Add to .env file: ELEVENLABS_API_KEY=your_api_key_here\n4. Restart the backend server\n5. Re-upload the audio file to generate a full transcription"
   }
 ]
