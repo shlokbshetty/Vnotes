@@ -10,6 +10,7 @@ import path from 'path';
 import recordingRoutes from './routes/recordingRoutes';
 import authRoutes from './routes/authRoutes';
 import userRoutes from './routes/userRoutes';
+import pricingRoutes from './routes/pricingRoutes';
 import { syncUploadsWithMetadata } from './utils/syncUploads';
 import { config } from './config/env';
 import { logger } from './utils/logger';
@@ -51,6 +52,7 @@ app.get('/health', (req, res) => {
 app.use('/auth', authRoutes);
 app.use('/api/recordings', recordingRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/pricing', pricingRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {

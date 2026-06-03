@@ -8,7 +8,9 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "lint": "eslint src --ext .ts",
-    "test": "ts-node tests/api.test.ts",
+    "test": "vitest run tests/pricingController.test.ts",
+    "test:vitest": "vitest run",
+    "test:api": "ts-node tests/api.test.ts",
     "test:auth": "ts-node tests/authService.test.ts"
   },
   "dependencies": {

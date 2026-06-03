@@ -8,7 +8,82 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Primary accent color (blue)
+        // Obsidian Echo - Dark mode surface levels
+        "surface": {
+          0: "#111111",    // Background
+          1: "#1C1B1B",    // Sidebars
+          2: "#201F1F",    // Cards/Panels
+          3: "#2a2a2a",    // Active elements
+          4: "#353534",    // Hover
+          DEFAULT: "#0A0A0C", // Base
+        },
+        // Obsidian Echo - Light mode surface levels
+        "surface-light": {
+          0: "#F5F5F4",    // Background
+          1: "#EEEEEC",    // Sidebars
+          2: "#E8E8E6",    // Cards/Panels
+          3: "#E0E0DE",    // Active elements
+          4: "#D8D8D6",    // Hover
+        },
+        // Obsidian Echo - Primary accent colors (design tokens using CSS variables)
+        "primary-accent": "rgb(var(--color-primary-accent) / <alpha-value>)",   // Electric Blue #B7C4FF
+        "secondary-accent": "rgb(var(--color-secondary-accent) / <alpha-value>)", // Pulse Red #FFBAB0
+        "success-accent": "rgb(var(--color-success-accent) / <alpha-value>)",   // Mint Green #6DDC9E
+
+        // Redesign mockups specific colors
+        "primary": "#b7c4ff",
+        "primary-container": "#3e63dd",
+        "on-primary": "#002681",
+        "on-primary-container": "#eeeeff",
+        "primary-fixed": "#dce1ff",
+        "primary-fixed-dim": "#b7c4ff",
+        "on-primary-fixed": "#001551",
+        "on-primary-fixed-variant": "#0039b4",
+        "inverse-primary": "#2c54ce",
+
+        "secondary": "#ffb3b0",
+        "secondary-container": "#92011a",
+        "on-secondary": "#68000f",
+        "on-secondary-container": "#ff9996",
+        "secondary-fixed": "#ffdad8",
+        "secondary-fixed-dim": "#ffb3b0",
+        "on-secondary-fixed": "#410006",
+        "on-secondary-fixed-variant": "#92011a",
+
+        "tertiary": "#6ddc9e",
+        "tertiary-container": "#007d4d",
+        "on-tertiary": "#003920",
+        "on-tertiary-container": "#bcffd3",
+        "tertiary-fixed": "#8af8b9",
+        "tertiary-fixed-dim": "#6ddc9e",
+        "on-tertiary-fixed": "#002111",
+        "on-tertiary-fixed-variant": "#005231",
+
+        "background": "#131313",
+        "on-background": "#e5e2e1",
+        "on-surface": "#e5e2e1",
+        "surface-dim": "#131313",
+        "surface-bright": "#3a3939",
+        "surface-variant": "#353534",
+        "on-surface-variant": "#c4c5d6",
+        "inverse-surface": "#e5e2e1",
+        "inverse-on-surface": "#313030",
+
+        "surface-container-lowest": "#0e0e0e",
+        "surface-container-low": "#1c1b1b",
+        "surface-container": "#201f1f",
+        "surface-container-high": "#2a2a2a",
+        "surface-container-highest": "#353534",
+
+        "outline": "#8e909f",
+        "outline-variant": "#444654",
+        "error": "#ffb4ab",
+        "error-container": "#93000a",
+        "on-error": "#690005",
+        "on-error-container": "#ffdad6",
+        "surface-tint": "#b7c4ff",
+        
+        // Primary accent color (blue) - legacy
         "accent": {
           50: "#eff6ff",
           500: "#3b82f6",
@@ -52,9 +127,9 @@ export default {
         "2xl": "3rem",
       },
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
+        sans: ["Hanken Grotesk", "system-ui", "sans-serif"],
         mono: ["JetBrains Mono", "monospace"],
-        display: ["Manrope", "system-ui", "sans-serif"],
+        display: ["Hanken Grotesk", "system-ui", "sans-serif"],
       },
       fontSize: {
         xs: ["12px", { lineHeight: "16px", letterSpacing: "0.02em" }],

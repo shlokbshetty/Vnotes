@@ -4,7 +4,7 @@
  */
 
 import { useState } from 'react';
-import Sidebar from '../components/Sidebar';
+import AppPageShell from '../components/AppPageShell';
 
 interface FAQItem {
   id: number;
@@ -43,10 +43,8 @@ const HelpPage = () => {
   };
 
   return (
-    <div className="flex w-full h-full">
-      <Sidebar />
-      
-      <main className="flex-grow flex flex-col min-w-0 overflow-y-auto bg-neutral-950">
+    <AppPageShell>
+      <main className="flex min-h-0 flex-1 flex-col overflow-y-auto bg-surface-0">
         <div className="p-xl max-w-4xl mx-auto w-full">
           {/* Header */}
           <div className="mb-2xl">
@@ -62,7 +60,7 @@ const HelpPage = () => {
               {/* Step 1 */}
               <div className="card p-lg border border-neutral-700 hover:border-neutral-600 transition-smooth">
                 <div className="flex items-center gap-md mb-md">
-                  <div className="w-10 h-10 rounded-full bg-accent-600 text-neutral-50 flex items-center justify-center font-bold text-base">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-accent text-sm font-bold text-slate-900">
                     1
                   </div>
                   <h3 className="font-semibold text-neutral-100">Start Recording</h3>
@@ -75,7 +73,7 @@ const HelpPage = () => {
               {/* Step 2 */}
               <div className="card p-lg border border-neutral-700 hover:border-neutral-600 transition-smooth">
                 <div className="flex items-center gap-md mb-md">
-                  <div className="w-10 h-10 rounded-full bg-accent-600 text-neutral-50 flex items-center justify-center font-bold text-base">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-accent text-sm font-bold text-slate-900">
                     2
                   </div>
                   <h3 className="font-semibold text-neutral-100">Stop to Save</h3>
@@ -88,7 +86,7 @@ const HelpPage = () => {
               {/* Step 3 */}
               <div className="card p-lg border border-neutral-700 hover:border-neutral-600 transition-smooth">
                 <div className="flex items-center gap-md mb-md">
-                  <div className="w-10 h-10 rounded-full bg-accent-600 text-neutral-50 flex items-center justify-center font-bold text-base">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-accent text-sm font-bold text-slate-900">
                     3
                   </div>
                   <h3 className="font-semibold text-neutral-100">Go to Library</h3>
@@ -101,7 +99,7 @@ const HelpPage = () => {
               {/* Step 4 */}
               <div className="card p-lg border border-neutral-700 hover:border-neutral-600 transition-smooth">
                 <div className="flex items-center gap-md mb-md">
-                  <div className="w-10 h-10 rounded-full bg-accent-600 text-neutral-50 flex items-center justify-center font-bold text-base">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-accent text-sm font-bold text-slate-900">
                     4
                   </div>
                   <h3 className="font-semibold text-neutral-100">Play & Manage</h3>
@@ -176,7 +174,7 @@ const HelpPage = () => {
           </section>
         </div>
       </main>
-    </div>
+    </AppPageShell>
   );
 };
 

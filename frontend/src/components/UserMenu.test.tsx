@@ -87,11 +87,11 @@ describe('UserMenu', () => {
     renderWithAuth();
     const button = screen.getByRole('button');
 
-    expect(screen.queryByText(/logout/i)).not.toBeInTheDocument();
+    expect(screen.queryByTestId('user-menu-logout-button')).not.toBeInTheDocument();
 
     fireEvent.click(button);
 
-    expect(screen.getByText(/logout/i)).toBeInTheDocument();
+    expect(screen.getByTestId('user-menu-logout-button')).toBeInTheDocument();
   });
 
   it('closes dropdown menu when button is clicked again', () => {
@@ -99,10 +99,10 @@ describe('UserMenu', () => {
     const button = screen.getByRole('button');
 
     fireEvent.click(button);
-    expect(screen.getByText(/logout/i)).toBeInTheDocument();
+    expect(screen.getByTestId('user-menu-logout-button')).toBeInTheDocument();
 
     fireEvent.click(button);
-    expect(screen.queryByText(/logout/i)).not.toBeInTheDocument();
+    expect(screen.queryByTestId('user-menu-logout-button')).not.toBeInTheDocument();
   });
 
   it('displays user email in dropdown', () => {
@@ -122,8 +122,7 @@ describe('UserMenu', () => {
 
     fireEvent.click(button);
 
-    const logoutButton = screen.getByText(/logout/i);
-    fireEvent.click(logoutButton);
+    fireEvent.click(screen.getByTestId('user-menu-logout-button'));
 
     await waitFor(() => {
       expect(globalThis.fetch).toHaveBeenCalledWith(
@@ -147,8 +146,7 @@ describe('UserMenu', () => {
 
     fireEvent.click(button);
 
-    const logoutButton = screen.getByText(/logout/i);
-    fireEvent.click(logoutButton);
+    fireEvent.click(screen.getByTestId('user-menu-logout-button'));
 
     await waitFor(() => {
       expect(mockLogout).toHaveBeenCalled();
@@ -169,8 +167,7 @@ describe('UserMenu', () => {
 
     fireEvent.click(button);
 
-    const logoutButton = screen.getByText(/logout/i);
-    fireEvent.click(logoutButton);
+    fireEvent.click(screen.getByTestId('user-menu-logout-button'));
 
     await waitFor(() => {
       expect(mockLogout).toHaveBeenCalled();
@@ -182,12 +179,12 @@ describe('UserMenu', () => {
     const button = screen.getByRole('button');
 
     fireEvent.click(button);
-    expect(screen.getByText(/logout/i)).toBeInTheDocument();
+    expect(screen.getByTestId('user-menu-logout-button')).toBeInTheDocument();
 
     fireEvent.mouseDown(document.body);
 
     await waitFor(() => {
-      expect(screen.queryByText(/logout/i)).not.toBeInTheDocument();
+      expect(screen.queryByTestId('user-menu-logout-button')).not.toBeInTheDocument();
     });
   });
 

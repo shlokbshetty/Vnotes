@@ -1,0 +1,120 @@
+/* ========================================
+   Obsidian Echo Design System - Theme Variables
+   ======================================== */
+
+/**
+ * Dark Mode Theme
+ * Premium pitch-black background with carefully layered surface levels
+ * and accent colors for primary, secondary, and success states
+ */
+:root[data-theme="dark"],
+:root.dark {
+  /* Primary Accent Colors - RGB format for alpha-value support */
+  --color-primary-accent: 183 196 255;     /* #B7C4FF - Electric Blue */
+  --color-secondary-accent: 255 186 176;   /* #FFBAB0 - Pulse Red */
+  --color-success-accent: 109 220 158;     /* #6DDC9E - Mint Green */
+
+  /* Divider Colors - for glass-edge effect */
+  --color-divider-dark: 255 255 255;       /* White dividers in dark mode */
+  --color-divider-light: 0 0 0;            /* Black dividers in light mode */
+
+  /* On-Surface Colors (Text) */
+  --color-on-surface: 229 226 225;         /* Light text on dark background */
+
+  /* Surface Container Colors */
+  --color-surface-container: 32 31 31;     /* #201F1F - Cards/Panels */
+  --color-surface-container-high: 42 42 42; /* #2a2a2a - Active Elements */
+  --color-surface-container-highest: 53 53 52; /* #353534 - Hover */
+
+  /* Base Surface Color */
+  --color-base-surface: 10 10 12;          /* #0A0A0C - Base pitch-black */
+}
+
+/**
+ * Light Mode Theme
+ * Off-white base with lighter surface levels and adjusted accent colors
+ */
+:root[data-theme="light"],
+:root.light {
+  /* Primary Accent Colors - RGB format for alpha-value support */
+  --color-primary-accent: 183 196 255;     /* #B7C4FF - Electric Blue (same as dark) */
+  --color-secondary-accent: 255 186 176;   /* #FFBAB0 - Pulse Red (same as dark) */
+  --color-success-accent: 109 220 158;     /* #6DDC9E - Mint Green (same as dark) */
+
+  /* Divider Colors - for glass-edge effect */
+  --color-divider-dark: 255 255 255;       /* White dividers in dark mode */
+  --color-divider-light: 0 0 0;            /* Black dividers in light mode */
+
+  /* On-Surface Colors (Text) */
+  --color-on-surface: 33 33 33;            /* Dark text on light background */
+
+  /* Surface Container Colors */
+  --color-surface-container: 232 232 230;  /* #E8E8E6 - Cards/Panels */
+  --color-surface-container-high: 224 224 222; /* #E0E0DE - Active Elements */
+  --color-surface-container-highest: 216 216 214; /* #D8D8D6 - Hover */
+
+  /* Base Surface Color */
+  --color-base-surface: 245 245 244;       /* #F5F5F4 - Off-white */
+}
+
+/* Fallback for browsers that don't support data-theme */
+:root {
+  /* Primary Accent Colors */
+  --color-primary-accent: 183 196 255;
+  --color-secondary-accent: 255 186 176;
+  --color-success-accent: 109 220 158;
+
+  /* Divider Colors */
+  --color-divider-dark: 255 255 255;
+  --color-divider-light: 0 0 0;
+
+  /* On-Surface Colors */
+  --color-on-surface: 229 226 225;
+
+  /* Surface Container Colors */
+  --color-surface-container: 32 31 31;
+  --color-surface-container-high: 42 42 42;
+  --color-surface-container-highest: 53 53 52;
+
+  /* Base Surface Color */
+  --color-base-surface: 10 10 12;
+}
+
+/* ========================================
+   Typography System Integration
+   ======================================== */
+
+/* Glass-Edge Divider Styles */
+.dark .glass-edge-divider {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.light .glass-edge-divider,
+.glass-edge-divider {
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+/* ========================================
+   Animation & Motion Utilities
+   ======================================== */
+
+/* Smooth opacity transitions for waveform updates */
+.transition-colors-smooth {
+  transition: color 200ms ease-in-out;
+  transition: background-color 200ms ease-in-out;
+}
+
+/* Playhead pulse animation for waveform */
+@keyframes playhead-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(183, 196, 255, 0.8);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(183, 196, 255, 0);
+  }
+}
+
+.animate-playhead-pulse {
+  animation: playhead-pulse 2s infinite;
+}
+

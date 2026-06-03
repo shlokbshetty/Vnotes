@@ -37,8 +37,9 @@ describe('RecordingCard', () => {
 
   it('renders audio player', () => {
     render(<RecordingCard recording={mockRecording} />);
-    const audioElement = screen.getByRole('img', { hidden: true });
+    const audioElement = document.querySelector('audio');
     expect(audioElement).toBeInTheDocument();
+    expect(audioElement).toHaveAttribute('controls');
   });
 
   it('handles different file sizes', () => {

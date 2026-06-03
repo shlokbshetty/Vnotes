@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VNotes - Transcript View</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .waveform-bar {
+            transition: height 0.2s ease, opacity 0.2s ease;
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111111;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #444654;
+            border-radius: 10px;
+        }
+        .transcript-line:hover .timestamp {
+            opacity: 1;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-secondary-fixed-variant": "#92011a",
+                      "tertiary-fixed-dim": "#6ddc9e",
+                      "tertiary-fixed": "#8af8b9",
+                      "surface": "#131313",
+                      "inverse-primary": "#2c54ce",
+                      "error": "#ffb4ab",
+                      "secondary": "#ffb3b0",
+                      "surface-container": "#201f1f",
+                      "on-secondary-fixed": "#410006",
+                      "on-tertiary-fixed-variant": "#005231",
+                      "tertiary": "#6ddc9e",
+                      "surface-container-high": "#2a2a2a",
+                      "on-error": "#690005",
+                      "secondary-container": "#92011a",
+                      "on-tertiary": "#003920",
+                      "primary-fixed": "#dce1ff",
+                      "primary-container": "#3e63dd",
+                      "tertiary-container": "#007d4d",
+                      "outline": "#8e909f",
+                      "background": "#131313",
+                      "surface-dim": "#131313",
+                      "on-tertiary-container": "#bcffd3",
+                      "on-surface-variant": "#c4c5d6",
+                      "on-secondary": "#68000f",
+                      "on-primary-fixed": "#001551",
+                      "on-primary-fixed-variant": "#0039b4",
+                      "error-container": "#93000a",
+                      "primary-fixed-dim": "#b7c4ff",
+                      "surface-tint": "#b7c4ff",
+                      "on-error-container": "#ffdad6",
+                      "surface-variant": "#353534",
+                      "secondary-fixed-dim": "#ffb3b0",
+                      "surface-container-low": "#1c1b1b",
+                      "on-tertiary-fixed": "#002111",
+                      "surface-container-highest": "#353534",
+                      "on-primary": "#002681",
+                      "primary": "#b7c4ff",
+                      "surface-bright": "#3a3939",
+                      "inverse-on-surface": "#313030",
+                      "secondary-fixed": "#ffdad8",
+                      "inverse-surface": "#e5e2e1",
+                      "surface-container-lowest": "#0e0e0e",
+                      "outline-variant": "#444654",
+                      "on-primary-container": "#eeeeff",
+                      "on-secondary-container": "#ff9996",
+                      "on-background": "#e5e2e1",
+                      "on-surface": "#e5e2e1"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "gutter": "1rem",
+                      "margin-page": "2rem",
+                      "stack-lg": "2rem",
+                      "panel-padding": "1.5rem",
+                      "stack-sm": "0.5rem",
+                      "stack-md": "1rem"
+              },
+              "fontFamily": {
+                      "headline-lg": ["Hanken Grotesk"],
+                      "headline-sm": ["Hanken Grotesk"],
+                      "headline-lg-mobile": ["Hanken Grotesk"],
+                      "label-mono": ["JetBrains Mono"],
+                      "headline-md": ["Hanken Grotesk"],
+                      "body-md": ["Hanken Grotesk"],
+                      "body-lg": ["Hanken Grotesk"]
+              },
+              "fontSize": {
+                      "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                      "headline-sm": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                      "label-mono": ["12px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                      "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md selection:bg-primary/30">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-full w-64 border-r border-outline-variant bg-surface-container-low flex flex-col px-4 py-6 z-40 hidden md:flex">
+<div class="mb-stack-lg">
+<h1 class="text-headline-md font-headline-md font-bold text-primary">VNotes</h1>
+<p class="text-label-mono font-label-mono text-on-surface-variant uppercase tracking-widest mt-1">Pro Workspace</p>
+</div>
+<button class="mb-stack-lg w-full bg-primary-container text-on-primary-container py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition-transform active:scale-95">
+<span class="material-symbols-outlined" data-icon="mic">mic</span>
+            New Recording
+        </button>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="text-label-mono font-label-mono">All Notes</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 bg-primary-container text-on-primary-container font-bold rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="mic">mic</span>
+<span class="text-label-mono font-label-mono">Recordings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="grade">grade</span>
+<span class="text-label-mono font-label-mono">Favorites</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="folder">folder</span>
+<span class="text-label-mono font-label-mono">Folders</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="archive">archive</span>
+<span class="text-label-mono font-label-mono">Archive</span>
+</a>
+</nav>
+<div class="pt-6 border-t border-white/10 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-label-mono font-label-mono">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="text-label-mono font-label-mono">Help</span>
+</a>
+</div>
+</aside>
+<!-- Top App Bar -->
+<header class="fixed top-0 left-0 md:left-64 right-0 h-16 bg-surface border-b border-white/10 flex justify-between items-center px-margin-page z-30">
+<div class="flex items-center gap-gutter">
+<div class="flex items-center gap-stack-md">
+<a class="text-on-surface-variant hover:text-on-surface transition-all text-body-md font-body-md" href="#">Editor</a>
+<a class="text-primary border-b-2 border-primary pb-2 text-body-md font-body-md" href="#">Transcript</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-all text-body-md font-body-md" href="#">Insights</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden sm:flex items-center gap-2">
+<button class="px-4 py-1.5 border border-white/10 rounded-lg text-primary text-body-md font-body-md hover:bg-surface-container-highest transition-all">Export</button>
+<button class="px-4 py-1.5 bg-primary-container text-on-primary-container rounded-lg text-body-md font-body-md font-bold hover:bg-opacity-90 transition-all">Share</button>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-container-highest rounded-full cursor-pointer" data-icon="history">history</span>
+<span class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-container-highest rounded-full cursor-pointer" data-icon="more_vert">more_vert</span>
+</div>
+<img alt="User avatar" class="w-8 h-8 rounded-full border border-white/10 ml-2" data-alt="A professional studio portrait of a modern software engineer in a dark workspace. The lighting is moody and focused, with a soft blue rim light that matches the application's electric blue palette. The background is a blurred high-tech office with minimalist architecture. The mood is concentrated and professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBn6E_7UTtgc0iGRpCIUjipER1ZmDLAEIf8_2QScvAjMHDUXC3o8va-eCwI4ML9AaYR3Af7NFtorOcSGgpUxd2WwNFSERHVmYN3JUCBJXqBy5UosIyZKePR3124Oo3uvsnoXFWHWZKvstAo1aSmUvEB6SB-ZIxvRAKqFbA7RABGOxuFXFMksGDKdMBdBBMYJhnAwsU3IvPGKSwjvg1ymmUoHZMsJ8BP3BSMCoZnwUDOp9p5GA2WWE_CRgV1tUABOTqB6H2XYpNSRLg"/>
+</div>
+</header>
+<!-- Main Content -->
+<main class="pt-16 pb-32 md:pl-64 min-h-screen bg-surface">
+<div class="max-w-4xl mx-auto px-margin-page py-stack-lg">
+<!-- Recording Meta -->
+<div class="mb-stack-lg flex flex-col gap-2">
+<div class="flex items-center gap-2 text-label-mono font-label-mono text-tertiary">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+                    PROCESSED • OCT 24, 2023
+                </div>
+<h2 class="text-headline-lg font-headline-lg text-on-surface">Product Strategy Sync - Q4 Planning</h2>
+<div class="flex gap-2 mt-2">
+<span class="bg-surface-container border border-white/10 px-2 py-0.5 rounded-lg flex items-center gap-2 text-label-mono font-label-mono">
+<span class="w-2 h-2 rounded-full bg-primary"></span> STRATEGY
+                    </span>
+<span class="bg-surface-container border border-white/10 px-2 py-0.5 rounded-lg flex items-center gap-2 text-label-mono font-label-mono">
+<span class="w-2 h-2 rounded-full bg-secondary"></span> PRODUCT
+                    </span>
+</div>
+</div>
+<!-- Transcript Section -->
+<section class="space-y-stack-lg">
+<!-- Speaker 1 Block -->
+<div class="transcript-block group">
+<div class="flex items-start gap-gutter">
+<div class="flex flex-col items-center gap-1 w-12 pt-1">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-xs">JD</div>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-stack-md mb-2">
+<span class="font-bold text-primary font-headline-sm">Jane Doe</span>
+<span class="text-label-mono font-label-mono text-on-surface-variant opacity-60">00:00:00</span>
+</div>
+<p class="text-body-lg font-body-lg text-on-surface leading-relaxed transition-all cursor-pointer hover:bg-white/5 p-2 -m-2 rounded-lg" onclick="jumpTo(0)">
+                                Welcome everyone to the Q4 planning session. Today we need to talk about the "Obsidian" redesign and how it impacts our performance benchmarks. We've seen some drift in the late Q3 metrics, specifically around the voice-to-text latency.
+                            </p>
+</div>
+</div>
+</div>
+<!-- Speaker 2 Block -->
+<div class="transcript-block group">
+<div class="flex items-start gap-gutter">
+<div class="flex flex-col items-center gap-1 w-12 pt-1">
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold text-xs">MK</div>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-stack-md mb-2">
+<span class="font-bold text-secondary font-headline-sm">Marcus Kane</span>
+<span class="text-label-mono font-label-mono text-on-surface-variant opacity-60">00:00:18</span>
+</div>
+<p class="text-body-lg font-body-lg text-on-surface leading-relaxed transition-all cursor-pointer hover:bg-white/5 p-2 -m-2 rounded-lg" onclick="jumpTo(18)">
+                                Jane, I've looked into those latency spikes. It seems like the waveform rendering engine is competing with the transcription thread on lower-end devices. If we shift the processing to the secondary worker, we should see about a 40% improvement. 
+                            </p>
+<p class="text-body-lg font-body-lg text-on-surface leading-relaxed mt-4 transition-all cursor-pointer hover:bg-white/5 p-2 -m-2 rounded-lg" onclick="jumpTo(32)">
+                                I've also drafted a new visualization module that uses the same GPU buffer as the text engine. This would keep our "Waveform" aesthetic consistent without sacrificing the speed power users expect.
+                            </p>
+</div>
+</div>
+</div>
+<!-- Speaker 1 Block -->
+<div class="transcript-block group">
+<div class="flex items-start gap-gutter">
+<div class="flex flex-col items-center gap-1 w-12 pt-1">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-xs">JD</div>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-stack-md mb-2">
+<span class="font-bold text-primary font-headline-sm">Jane Doe</span>
+<span class="text-label-mono font-label-mono text-on-surface-variant opacity-60">00:01:04</span>
+</div>
+<p class="text-body-lg font-body-lg text-on-surface leading-relaxed transition-all cursor-pointer hover:bg-white/5 p-2 -m-2 rounded-lg" onclick="jumpTo(64)">
+                                That sounds promising. Let's make sure the "Electric Blue" highlight remains precise during playback. Precision is the primary brand anchor here. We can't have the audio trailing the visual cues even by a few milliseconds.
+                            </p>
+</div>
+</div>
+</div>
+<!-- Spacer -->
+<div class="h-24"></div>
+</section>
+</div>
+</main>
+<!-- Bottom Navigation & Waveform (The Shell) -->
+<div class="fixed bottom-0 left-0 w-full z-50 flex flex-col bg-surface-container-high border-t border-white/10 shadow-lg rounded-t-xl transition-all duration-300">
+<!-- Waveform Visualizer -->
+<div class="w-full h-16 px-margin-page flex items-center gap-1 relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<!-- Mock Waveform Bars -->
+<div class="flex items-end gap-[2px] h-10 w-full" id="waveform-container">
+<!-- Generated by JS -->
+</div>
+<!-- Playhead -->
+<div class="absolute left-0 top-0 bottom-0 w-[2px] bg-primary z-10 transition-all duration-100" id="playhead" style="left: 15%;">
+<div class="w-3 h-3 bg-primary rounded-full -ml-[5px] -mt-[5px] shadow-[0_0_10px_#b7c4ff]"></div>
+</div>
+</div>
+<!-- Controls -->
+<div class="flex justify-between items-center px-8 py-4 gap-stack-lg">
+<div class="hidden md:flex items-center gap-4 w-1/3">
+<span class="text-label-mono font-label-mono text-on-surface-variant">00:14 / 03:42</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary" data-icon="volume_up">volume_up</span>
+</div>
+<div class="flex items-center justify-center gap-8">
+<button class="flex flex-col items-center text-on-surface-variant hover:text-primary transition-all duration-300">
+<span class="material-symbols-outlined" data-icon="fast_rewind">fast_rewind</span>
+<span class="text-label-mono font-label-mono uppercase mt-1">Skip</span>
+</button>
+<button class="w-12 h-12 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-lg active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-3xl" data-icon="play_arrow">play_arrow</span>
+</button>
+<button class="flex flex-col items-center text-on-surface-variant hover:text-primary transition-all duration-300">
+<span class="material-symbols-outlined" data-icon="fast_forward">fast_forward</span>
+<span class="text-label-mono font-label-mono uppercase mt-1">Skip</span>
+</button>
+</div>
+<div class="hidden md:flex items-center justify-end gap-4 w-1/3">
+<button class="flex items-center gap-2 px-3 py-1 bg-surface-variant rounded-lg text-label-mono font-label-mono text-on-surface hover:bg-surface-container-highest transition-colors">
+                    1.0x
+                </button>
+<button class="flex flex-col items-center text-secondary font-bold scale-110 group relative">
+<span class="material-symbols-outlined animate-pulse" data-icon="mic">mic</span>
+<span class="text-label-mono font-label-mono uppercase mt-1">Record</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Mobile Navigation Overlay (Simplified for context) -->
+<div class="md:hidden fixed bottom-0 left-0 w-full bg-surface-container-high border-t border-white/10 px-4 py-2 flex justify-around items-center z-[60]">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="description">description</span>
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center -mt-8 shadow-xl">
+<span class="material-symbols-outlined text-on-primary-container" data-icon="mic">mic</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="grade">grade</span>
+</div>
+<script>
+        // Generate Waveform Bars
+        const container = document.getElementById('waveform-container');
+        const barCount = 120;
+        
+        for (let i = 0; i < barCount; i++) {
+            const bar = document.createElement('div');
+            const height = Math.random() * 80 + 10;
+            const isPlayed = i < (barCount * 0.15);
+            
+            bar.className = `waveform-bar w-full rounded-t-sm ${isPlayed ? 'bg-primary' : 'bg-outline-variant opacity-40'}`;
+            bar.style.height = `${height}%`;
+            container.appendChild(bar);
+        }
+
+        // Micro-interaction for Transcript Jump
+        function jumpTo(seconds) {
+            console.log(`Jumping to: ${seconds}s`);
+            const playhead = document.getElementById('playhead');
+            const percent = (seconds / 222) * 100; // Mock total length 3:42
+            playhead.style.left = `${percent}%`;
+            
+            // Highlight bars
+            const bars = document.querySelectorAll('.waveform-bar');
+            bars.forEach((bar, index) => {
+                const barPercent = (index / barCount) * 100;
+                if (barPercent <= percent) {
+                    bar.classList.add('bg-primary');
+                    bar.classList.remove('bg-outline-variant', 'opacity-40');
+                } else {
+                    bar.classList.remove('bg-primary');
+                    bar.classList.add('bg-outline-variant', 'opacity-40');
+                }
+            });
+        }
+
+        // Subtle animation for played bars
+        setInterval(() => {
+            const activeBars = document.querySelectorAll('.waveform-bar.bg-primary');
+            if (activeBars.length > 0) {
+                const randomBar = activeBars[Math.floor(Math.random() * activeBars.length)];
+                const originalHeight = parseFloat(randomBar.style.height);
+                randomBar.style.height = `${originalHeight + (Math.random() * 4 - 2)}%`;
+            }
+        }, 150);
+    </script>
+</body></html>

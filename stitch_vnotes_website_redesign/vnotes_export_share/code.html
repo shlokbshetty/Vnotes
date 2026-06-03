@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VNotes - Export &amp; Share</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .waveform-bar {
+            width: 3px;
+            border-radius: 1px;
+            transition: height 0.2s ease;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#92011a",
+                        "tertiary-fixed-dim": "#6ddc9e",
+                        "tertiary-fixed": "#8af8b9",
+                        "surface": "#131313",
+                        "inverse-primary": "#2c54ce",
+                        "error": "#ffb4ab",
+                        "secondary": "#ffb3b0",
+                        "surface-container": "#201f1f",
+                        "on-secondary-fixed": "#410006",
+                        "on-tertiary-fixed-variant": "#005231",
+                        "tertiary": "#6ddc9e",
+                        "surface-container-high": "#2a2a2a",
+                        "on-error": "#690005",
+                        "secondary-container": "#92011a",
+                        "on-tertiary": "#003920",
+                        "primary-fixed": "#dce1ff",
+                        "primary-container": "#3e63dd",
+                        "tertiary-container": "#007d4d",
+                        "outline": "#8e909f",
+                        "background": "#131313",
+                        "surface-dim": "#131313",
+                        "on-tertiary-container": "#bcffd3",
+                        "on-surface-variant": "#c4c5d6",
+                        "on-secondary": "#68000f",
+                        "on-primary-fixed": "#001551",
+                        "on-primary-fixed-variant": "#0039b4",
+                        "error-container": "#93000a",
+                        "primary-fixed-dim": "#b7c4ff",
+                        "surface-tint": "#b7c4ff",
+                        "on-error-container": "#ffdad6",
+                        "surface-variant": "#353534",
+                        "secondary-fixed-dim": "#ffb3b0",
+                        "surface-container-low": "#1c1b1b",
+                        "on-tertiary-fixed": "#002111",
+                        "surface-container-highest": "#353534",
+                        "on-primary": "#002681",
+                        "primary": "#b7c4ff",
+                        "surface-bright": "#3a3939",
+                        "inverse-on-surface": "#313030",
+                        "secondary-fixed": "#ffdad8",
+                        "inverse-surface": "#e5e2e1",
+                        "surface-container-lowest": "#0e0e0e",
+                        "outline-variant": "#444654",
+                        "on-primary-container": "#eeeeff",
+                        "on-secondary-container": "#ff9996",
+                        "on-background": "#e5e2e1",
+                        "on-surface": "#e5e2e1"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "1rem",
+                        "margin-page": "2rem",
+                        "stack-lg": "2rem",
+                        "panel-padding": "1.5rem",
+                        "stack-sm": "0.5rem",
+                        "stack-md": "1rem"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Hanken Grotesk"],
+                        "headline-sm": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "label-mono": ["JetBrains Mono"],
+                        "body-md": ["Hanken Grotesk"],
+                        "body-lg": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "headline-sm": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "label-mono": ["12px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface selection:bg-primary/30 font-body-md overflow-hidden">
+<!-- Background Workspace (Dimmed) -->
+<div class="fixed inset-0 flex transition-all duration-500 blur-[2px] opacity-40">
+<!-- SideNavBar Structure -->
+<aside class="bg-surface-container-low border-r border-white/10 w-64 h-screen flex flex-col px-4 py-6">
+<div class="mb-10 px-2">
+<span class="text-headline-md font-headline-md font-bold text-primary">VNotes</span>
+<p class="text-label-mono font-label-mono text-on-surface-variant opacity-60">Pro Workspace</p>
+</div>
+<nav class="space-y-1 flex-1">
+<div class="bg-primary-container text-on-primary-container rounded-lg font-bold px-3 py-2 flex items-center gap-3">
+<span class="material-symbols-outlined">description</span>
+<span class="text-label-mono font-label-mono">All Notes</span>
+</div>
+<div class="text-on-surface-variant hover:bg-surface-variant px-3 py-2 flex items-center gap-3 transition-colors">
+<span class="material-symbols-outlined">mic</span>
+<span class="text-label-mono font-label-mono">Recordings</span>
+</div>
+<div class="text-on-surface-variant hover:bg-surface-variant px-3 py-2 flex items-center gap-3 transition-colors">
+<span class="material-symbols-outlined">grade</span>
+<span class="text-label-mono font-label-mono">Favorites</span>
+</div>
+</nav>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-margin-page h-16 border-b border-white/10 bg-surface">
+<div class="flex items-center gap-8">
+<span class="text-headline-md font-headline-md font-bold text-on-surface">Editor</span>
+<nav class="hidden md:flex gap-6">
+<span class="text-primary border-b-2 border-primary pb-2 text-body-md font-body-md">Editor</span>
+<span class="text-on-surface-variant hover:text-on-surface text-body-md font-body-md">Transcript</span>
+<span class="text-on-surface-variant hover:text-on-surface text-body-md font-body-md">Insights</span>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant">history</span>
+<span class="material-symbols-outlined text-on-surface-variant">more_vert</span>
+</div>
+</header>
+<!-- Editor Preview -->
+<div class="p-10 max-w-4xl mx-auto w-full">
+<div class="h-4 w-1/4 bg-surface-container-high rounded mb-4"></div>
+<div class="h-10 w-3/4 bg-surface-container-high rounded mb-8"></div>
+<div class="space-y-4">
+<div class="h-4 w-full bg-surface-container-low rounded"></div>
+<div class="h-4 w-full bg-surface-container-low rounded"></div>
+<div class="h-4 w-2/3 bg-surface-container-low rounded"></div>
+</div>
+<!-- Waveform Mockup -->
+<div class="mt-12 flex items-end gap-1 h-24">
+<div class="waveform-bar bg-primary h-12"></div>
+<div class="waveform-bar bg-primary h-16"></div>
+<div class="waveform-bar bg-primary h-10"></div>
+<div class="waveform-bar bg-primary h-20"></div>
+<div class="waveform-bar bg-primary h-24"></div>
+<div class="waveform-bar bg-on-surface-variant/20 h-14"></div>
+<div class="waveform-bar bg-on-surface-variant/20 h-8"></div>
+</div>
+</div>
+</main>
+</div>
+<!-- Modal Overlay -->
+<div class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm px-4" id="modal-backdrop">
+<div class="bg-surface-container-low border border-white/10 w-full max-w-2xl rounded-xl overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-300">
+<!-- Modal Header -->
+<div class="flex items-center justify-between px-6 py-4 border-b border-white/10">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">ios_share</span>
+</div>
+<h2 class="text-headline-sm font-headline-sm text-on-surface">Share &amp; Export</h2>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface transition-colors" onclick="window.history.back()">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2">
+<!-- Left Section: Collaboration -->
+<div class="p-6 border-r border-white/10 bg-surface-container-lowest">
+<label class="text-label-mono font-label-mono text-primary mb-4 block">COLLABORATE</label>
+<div class="space-y-4">
+<div class="relative">
+<input class="w-full bg-surface-container border-b border-outline-variant focus:border-primary transition-all px-3 py-2 text-body-md outline-none rounded-t-lg" placeholder="Invite by email..." type="text"/>
+<button class="absolute right-2 top-1.5 px-3 py-1 bg-primary text-on-primary text-label-mono font-label-mono rounded-lg hover:opacity-90 transition-opacity">
+                                Invite
+                            </button>
+</div>
+<div class="space-y-3 pt-2">
+<div class="flex items-center justify-between group">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-variant border border-white/10">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a software developer with short hair and glasses, set against a clean, softly lit studio background. The lighting is crisp and modern, reflecting a high-tech corporate aesthetic with subtle cool blue tones that match the VNotes interface. The person has a friendly but focused expression, embodying a professional power user." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHAI-TuV8Lhi6poARB5g8HygSbPlrC7-HqRBb1kSTzAv-O7Rhk8LsQYQc1-rv7nCbHvuWqHNgpEcCVbnvdwxkbP2ngUhUjYyu14TwWP8AOCS79JpUVHuXAYTl9yyLf8ljCF-h6v34LNC4glOY4Inoae-Y3ze4oqAElPxBVkVP6mhx-X70PUk_MT4Xp8rmqMSzXjI85ygKpSUBAJBpqMuh5gcNBEn4kjfievaOIYfCtB1OzpqRtybgt185HNxeCXPp8GPlG6E4pI_Q"/>
+</div>
+<div>
+<p class="text-body-md font-bold text-on-surface">Alex Rivera</p>
+<p class="text-[10px] text-on-surface-variant font-label-mono uppercase tracking-widest">Owner</p>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between group">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-variant border border-white/10 flex items-center justify-center">
+<span class="text-label-mono text-primary">SC</span>
+</div>
+<div>
+<p class="text-body-md text-on-surface">Sarah Chen</p>
+<p class="text-[10px] text-on-surface-variant font-label-mono uppercase">Can edit</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-sm cursor-pointer hover:text-on-surface">expand_more</span>
+</div>
+</div>
+<div class="pt-6 border-t border-white/10">
+<button class="w-full flex items-center justify-between p-3 rounded-lg border border-outline-variant hover:border-primary transition-all text-on-surface group bg-surface-container-high/50">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">link</span>
+<div class="text-left">
+<p class="text-label-mono font-label-mono text-primary leading-none">Get shareable link</p>
+<p class="text-[11px] text-on-surface-variant mt-1">Anyone with the link can view</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Right Section: Export Formats -->
+<div class="p-6 flex flex-col bg-surface-container-low">
+<label class="text-label-mono font-label-mono text-primary mb-4 block">EXPORT DOCUMENT</label>
+<div class="grid grid-cols-1 gap-3 flex-1">
+<!-- PDF Option -->
+<button class="flex items-center gap-4 p-4 rounded-xl bg-surface-container-high border border-white/5 hover:border-primary/40 transition-all group relative overflow-hidden">
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<span class="material-symbols-outlined text-secondary text-3xl" style="font-variation-settings: 'FILL' 1;">picture_as_pdf</span>
+<div class="text-left">
+<h4 class="font-headline-sm text-body-lg text-on-surface">PDF Document</h4>
+<p class="text-body-md text-on-surface-variant text-xs">Formatted with waveform visual</p>
+</div>
+</button>
+<!-- TXT Option -->
+<button class="flex items-center gap-4 p-4 rounded-xl bg-surface-container-high border border-white/5 hover:border-primary/40 transition-all group relative overflow-hidden">
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<span class="material-symbols-outlined text-tertiary text-3xl">description</span>
+<div class="text-left">
+<h4 class="font-headline-sm text-body-lg text-on-surface">Plain Text</h4>
+<p class="text-body-md text-on-surface-variant text-xs">Clean transcript only (.txt)</p>
+</div>
+</button>
+<!-- JSON Option -->
+<button class="flex items-center gap-4 p-4 rounded-xl bg-surface-container-high border border-white/5 hover:border-primary/40 transition-all group relative overflow-hidden">
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<span class="material-symbols-outlined text-primary text-3xl">data_object</span>
+<div class="text-left">
+<h4 class="font-headline-sm text-body-lg text-on-surface">Developer JSON</h4>
+<p class="text-body-md text-on-surface-variant text-xs">Metadata &amp; raw audio markers</p>
+</div>
+</button>
+</div>
+<div class="mt-8">
+<label class="flex items-center gap-3 cursor-pointer group">
+<div class="w-10 h-5 bg-surface-container-highest rounded-full p-1 transition-colors group-hover:bg-primary-container relative">
+<div class="w-3 h-3 bg-white rounded-full transition-transform"></div>
+</div>
+<span class="text-body-md text-on-surface-variant">Include Speaker Labels</span>
+</label>
+</div>
+</div>
+</div>
+<!-- Modal Footer Actions -->
+<div class="px-6 py-4 bg-surface-container-highest flex items-center justify-between border-t border-white/10">
+<p class="text-[11px] text-on-surface-variant font-label-mono">LAST EXPORTED: 2 MINS AGO</p>
+<div class="flex gap-3">
+<button class="px-5 py-2 text-label-mono font-label-mono border border-outline-variant rounded-lg hover:bg-surface-variant transition-colors">
+                        Settings
+                    </button>
+<button class="px-6 py-2 bg-primary text-on-primary font-headline-sm text-body-md rounded-lg shadow-lg hover:shadow-primary/20 transition-all active:scale-95">
+                        Download Now
+                    </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Micro-interactions Script -->
+<script>
+        // Simple toggle for the speaker switch
+        document.querySelector('.group-hover\\:bg-primary-container').parentNode.addEventListener('click', function() {
+            const toggle = this.querySelector('div > div');
+            const bg = this.querySelector('div');
+            if(toggle.classList.contains('translate-x-5')) {
+                toggle.classList.remove('translate-x-5');
+                bg.classList.remove('bg-primary');
+            } else {
+                toggle.classList.add('translate-x-5');
+                bg.classList.add('bg-primary');
+            }
+        });
+
+        // Close modal logic (simplified)
+        document.getElementById('modal-backdrop').addEventListener('click', function(e) {
+            if(e.target === this) {
+                this.classList.add('opacity-0');
+                this.querySelector('div').classList.add('scale-95');
+                setTimeout(() => this.style.display = 'none', 300);
+            }
+        });
+    </script>
+</body></html>

@@ -1,18 +1,19 @@
 /**
- * Library Page - Refactored with New Workspace Layout
- * Uses 3-panel layout: Sidebar | List Panel | Main Editor Panel
+ * Library Page — SideNavBar + recordings list + editor
  */
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
+import AppPageShell from '../components/AppPageShell';
 import Workspace from '../components/Workspace/Workspace';
-import SidebarContent from '../components/Workspace/Sidebar';
-import ListPanel, { ListItem } from '../components/Workspace/ListPanel';
+import RecordingsListPanel from '../components/RecordingsListPanel';
 import EditorPanel, { Recording } from '../components/Editor/EditorPanel';
 import RecordingDock from '../components/RecordingDock/RecordingDock';
 import { useRecordings } from '../hooks/useRecordings';
+import { useAuth } from '../contexts/AuthContext';
 
 const LibraryPage = () => {
-  const { recordings, fetchRecordings } = useRecordings();
+  const { user } = useAuth();
+  const { recordings, loading, error, fetchRecordings } = useRecordings();
   const [selectedRecordingId, setSelectedRecordingId] = useState<string | undefined>();
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -24,100 +25,66 @@ const LibraryPage = () => {
     return () => clearInterval(interval);
   }, [fetchRecordings]);
 
-  // Convert recordings to sidebar items
-  const sidebarItems = useMemo(() => [
-    {
-      id: 'all-notes',
-      label: 'All Notes',
-      count: recordings.length,
-      onClick: () => {},
-    },
-    {
-      id: 'recordings',
-      label: 'Recordings',
-      count: recordings.length,
-      onClick: () => {},
-    },
-  ], [recordings.length]);
-
-  // Convert recordings to list items
-  const listItems: ListItem[] = useMemo(() =>
-    recordings.map(rec => ({
-      id: rec.id,
-      title: rec.originalName || 'Untitled',
-      date: new Date(rec.createdAt).toLocaleDateString(),
-      duration: `${Math.floor(rec.duration / 60)}:${(rec.duration % 60).toString().padStart(2, '0')} min`,
-      type: 'recording' as const,
-      tags: [],
-    })),
-    [recordings]
-  );
-
-  const selectedRecording = recordings.find(r => r.id === selectedRecordingId);
-  const currentRecording: Recording = selectedRecording ? {
-    id: selectedRecording.id,
-    title: selectedRecording.originalName || 'Untitled',
-    content: selectedRecording.transcription || '',
-    date: new Date(selectedRecording.createdAt).toLocaleDateString(),
-    duration: selectedRecording.duration,
-    currentTime,
-    isPlaying,
-    isRecording,
-    tags: [],
-  } : {
-    id: '',
-    title: 'Select a recording',
-    content: '',
-    date: '',
-    duration: 0,
-    currentTime: 0,
-    isPlaying: false,
-    isRecording: false,
-  };
+  const selectedRecording = recordings.find((r) => r.id === selectedRecordingId);
+  const currentRecording: Recording = selectedRecording
+    ? {
+        id: selectedRecording.id,
+        title: selectedRecording.originalName || 'Untitled',
+        content: selectedRecording.transcription || '',
+        date: new Date(selectedRecording.createdAt).toLocaleDateString(),
+        duration: selectedRecording.duration,
+        currentTime,
+        isPlaying,
+        isRecording,
+        tags: [],
+      }
+    : {
+        id: '',
+        title: 'Select a recording',
+        content: '',
+        date: '',
+        duration: 0,
+        currentTime: 0,
+        isPlaying: false,
+        isRecording: false,
+      };
 
   return (
-    <>
+    <AppPageShell>
       <Workspace
-        sidebar={
-          <SidebarContent
-            items={sidebarItems}
-            activeItemId="all-notes"
-            onNavigate={() => {}}
-          />
-        }
+        hideSidebar
         listPanel={
-          <ListPanel
-            items={listItems}
-            activeItemId={selectedRecordingId}
-            onSelectItem={setSelectedRecordingId}
-            showSearch={true}
+          <RecordingsListPanel
+            recordings={recordings}
+            userId={user?.user_id ?? ''}
+            activeId={selectedRecordingId}
+            onSelect={setSelectedRecordingId}
+            loading={loading}
+            error={error}
+            onRetry={fetchRecordings}
           />
         }
         mainPanel={
           selectedRecording ? (
-            <EditorPanel
-              recording={currentRecording}
-              onUpdate={(updates) => {
-                if (updates.title) {
-                  // Handle title update
-                }
-              }}
-              onPlayPause={setIsPlaying}
-              onSeek={setCurrentTime}
-            />
+            <div className="flex h-full flex-col bg-background">
+              <div className="min-h-0 flex-1">
+                <EditorPanel
+                  recording={currentRecording}
+                  onUpdate={() => {}}
+                  onPlayPause={setIsPlaying}
+                  onSeek={setCurrentTime}
+                />
+              </div>
+            </div>
           ) : (
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '100%',
-              color: '#9CA3AF',
-            }}>
-              <p>Select a recording to view details</p>
+            <div className="flex h-full flex-col items-center justify-center text-on-surface-variant font-label-mono p-8 select-none bg-background">
+              <span className="material-symbols-outlined text-4xl mb-3 text-primary opacity-60">graphic_eq</span>
+              <span>Select a note from the list to view</span>
             </div>
           )
         }
       />
+
       {isRecording && (
         <RecordingDock
           isRecording={isRecording}
@@ -126,7 +93,7 @@ const LibraryPage = () => {
           onStop={() => setIsRecording(false)}
         />
       )}
-    </>
+    </AppPageShell>
   );
 };
 

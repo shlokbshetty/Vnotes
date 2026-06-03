@@ -95,10 +95,14 @@ const UserMenu = () => {
             <p className="text-xs text-neutral-400 truncate">{user.email}</p>
           </div>
           <button
+            type="button"
+            data-testid="user-menu-logout-button"
             onClick={handleLogout}
             className="w-full flex items-center gap-md px-md py-sm text-neutral-300 hover:bg-neutral-700 hover:text-neutral-50 transition-smooth text-sm font-medium"
           >
-            <span className="material-symbols-outlined text-base">logout</span>
+            <span className="material-symbols-outlined text-base" aria-hidden="true">
+              logout
+            </span>
             Logout
           </button>
         </div>

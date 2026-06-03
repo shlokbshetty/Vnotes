@@ -14,7 +14,7 @@
   flex: 1;
   flex-direction: column;
   overflow: hidden;
-  background-color: #0B0F14;
+  background-color: #111111;
   transition: all 200ms ease-out;
 }
 
