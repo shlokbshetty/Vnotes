@@ -47,3 +47,21 @@ export interface OAuthResponse {
   user: AuthUser;
   expiresIn?: number;
 }
+
+export interface PricingTier {
+  id: string;
+  name: string;
+  price: number;
+  description: string;
+  features: string[];
+  cta: string;
+  isPopular?: boolean;
+}
+
+export interface PricingResponse {
+  tiers: PricingTier[];
+  comparison: {
+    features: string[];
+    tiers: Record<string, string[]>;
+  };
+}

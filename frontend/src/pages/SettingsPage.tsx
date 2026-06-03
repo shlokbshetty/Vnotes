@@ -5,7 +5,7 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Sidebar from '../components/Sidebar';
+import AppPageShell from '../components/AppPageShell';
 
 interface Settings {
   userName: string;
@@ -63,10 +63,8 @@ const SettingsPage = () => {
   };
 
   return (
-    <div className="flex w-full h-full">
-      <Sidebar />
-      
-      <main className="flex-grow flex flex-col min-w-0 overflow-y-auto bg-neutral-950">
+    <AppPageShell>
+      <main className="flex min-h-0 flex-1 flex-col overflow-y-auto bg-surface-0">
         <div className="p-xl max-w-4xl mx-auto w-full">
           {/* Header */}
           <div className="mb-2xl">
@@ -120,7 +118,7 @@ const SettingsPage = () => {
             <div className="flex gap-md pt-md border-t border-neutral-700">
               <button
                 onClick={handleSave}
-                className="flex-1 px-lg py-md bg-accent-600 text-neutral-50 rounded-lg font-semibold text-sm hover-lift hover:bg-accent-700 transition-smooth flex items-center justify-center gap-md"
+                className="flex flex-1 items-center justify-center gap-3 rounded-lg bg-primary-accent px-6 py-3 text-sm font-semibold text-slate-900 transition-colors hover:brightness-110"
               >
                 <span className="material-symbols-outlined text-base">save</span>
                 Save Settings
@@ -158,7 +156,7 @@ const SettingsPage = () => {
           </div>
         </div>
       </main>
-    </div>
+    </AppPageShell>
   );
 };
 

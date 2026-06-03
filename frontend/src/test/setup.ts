@@ -5,6 +5,9 @@ import '@testing-library/jest-dom';
 // Cleanup after each test
 afterEach(() => {
   cleanup();
+  // Clear storage mocks after each test
+  window.localStorage.clear();
+  window.sessionStorage.clear();
 });
 
 // Mock window.matchMedia

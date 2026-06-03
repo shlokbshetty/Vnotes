@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import LoginPage from './LoginPage';
 
@@ -13,6 +13,10 @@ describe('LoginPage', () => {
     sessionStorage.clear();
     delete (window as any).location;
     window.location = { href: '' } as any;
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
   });
 
   it('renders the login page with VNotes branding', () => {
@@ -65,8 +69,7 @@ describe('LoginPage', () => {
   });
 
   it('displays error when client ID is not configured', async () => {
-    const originalEnv = import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID;
-    (import.meta.env as any).VITE_GOOGLE_OAUTH_CLIENT_ID = '';
+    vi.stubEnv('VITE_GOOGLE_OAUTH_CLIENT_ID', '');
 
     render(<LoginPage />);
     const button = screen.getByRole('button', { name: /sign in with google/i });
@@ -78,7 +81,7 @@ describe('LoginPage', () => {
       expect(screen.getByText('Google sign-in failed. Please try again.')).toBeInTheDocument();
     });
 
-    (import.meta.env as any).VITE_GOOGLE_OAUTH_CLIENT_ID = originalEnv;
+    vi.unstubAllEnvs();
   });
 
   it('shows loading state during OAuth initiation', async () => {

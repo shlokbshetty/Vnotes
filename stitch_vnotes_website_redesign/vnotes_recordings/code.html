@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VNotes - Recordings Library</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+    }
+    .waveform-bar {
+      transition: height 0.2s ease;
+    }
+    .glass-edge {
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+  </style>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-secondary-fixed-variant": "#92011a",
+            "tertiary-fixed-dim": "#6ddc9e",
+            "tertiary-fixed": "#8af8b9",
+            "surface": "#131313",
+            "inverse-primary": "#2c54ce",
+            "error": "#ffb4ab",
+            "secondary": "#ffb3b0",
+            "surface-container": "#201f1f",
+            "on-secondary-fixed": "#410006",
+            "on-tertiary-fixed-variant": "#005231",
+            "tertiary": "#6ddc9e",
+            "surface-container-high": "#2a2a2a",
+            "on-error": "#690005",
+            "secondary-container": "#92011a",
+            "on-tertiary": "#003920",
+            "primary-fixed": "#dce1ff",
+            "primary-container": "#3e63dd",
+            "tertiary-container": "#007d4d",
+            "outline": "#8e909f",
+            "background": "#131313",
+            "surface-dim": "#131313",
+            "on-tertiary-container": "#bcffd3",
+            "on-surface-variant": "#c4c5d6",
+            "on-secondary": "#68000f",
+            "on-primary-fixed": "#001551",
+            "on-primary-fixed-variant": "#0039b4",
+            "error-container": "#93000a",
+            "primary-fixed-dim": "#b7c4ff",
+            "surface-tint": "#b7c4ff",
+            "on-error-container": "#ffdad6",
+            "surface-variant": "#353534",
+            "secondary-fixed-dim": "#ffb3b0",
+            "surface-container-low": "#1c1b1b",
+            "on-tertiary-fixed": "#002111",
+            "surface-container-highest": "#353534",
+            "on-primary": "#002681",
+            "primary": "#b7c4ff",
+            "surface-bright": "#3a3939",
+            "inverse-on-surface": "#313030",
+            "secondary-fixed": "#ffdad8",
+            "inverse-surface": "#e5e2e1",
+            "surface-container-lowest": "#0e0e0e",
+            "outline-variant": "#444654",
+            "on-primary-container": "#eeeeff",
+            "on-secondary-container": "#ff9996",
+            "on-background": "#e5e2e1",
+            "on-surface": "#e5e2e1"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "gutter": "1rem",
+            "margin-page": "2rem",
+            "stack-lg": "2rem",
+            "panel-padding": "1.5rem",
+            "stack-sm": "0.5rem",
+            "stack-md": "1rem"
+          },
+          "fontFamily": {
+            "headline-lg": ["Hanken Grotesk"],
+            "headline-sm": ["Hanken Grotesk"],
+            "label-mono": ["JetBrains Mono"],
+            "headline-md": ["Hanken Grotesk"],
+            "body-md": ["Hanken Grotesk"],
+            "body-lg": ["Hanken Grotesk"]
+          },
+          "fontSize": {
+            "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+            "headline-sm": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+            "label-mono": ["12px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "500"}],
+            "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+            "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+            "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+          }
+        },
+      },
+    }
+  </script>
+</head>
+<body class="bg-background text-on-surface flex h-screen overflow-hidden selection:bg-primary/30">
+<!-- SideNavBar Component -->
+<aside class="hidden md:flex flex-col h-screen overflow-y-auto px-4 py-6 bg-surface-container-low border-r border-white/10 w-64 flex-shrink-0">
+<div class="mb-10 px-2 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">graphic_eq</span>
+</div>
+<span class="text-headline-md font-headline-md font-bold text-primary">VNotes</span>
+</div>
+<button class="mb-8 flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-lg font-bold transition-transform active:scale-95">
+<span class="material-symbols-outlined">mic</span>
+<span class="text-label-mono font-label-mono">New Recording</span>
+</button>
+<nav class="flex-1 space-y-1">
+<div class="px-2 mb-2">
+<span class="text-[10px] font-bold uppercase tracking-widest text-outline">Library</span>
+</div>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant transition-colors duration-200 rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-on-surface">description</span>
+<span class="text-label-mono font-label-mono">All Notes</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 bg-primary-container text-on-primary-container rounded-lg font-bold" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">mic</span>
+<span class="text-label-mono font-label-mono">Recordings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant transition-colors duration-200 rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-on-surface">grade</span>
+<span class="text-label-mono font-label-mono">Favorites</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant transition-colors duration-200 rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-on-surface">folder</span>
+<span class="text-label-mono font-label-mono">Folders</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant transition-colors duration-200 rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-on-surface">archive</span>
+<span class="text-label-mono font-label-mono">Archive</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 space-y-1 border-t border-white/5">
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant transition-colors duration-200 rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-on-surface">payments</span>
+<span class="text-label-mono font-label-mono">Pricing</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant transition-colors duration-200 rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-on-surface">settings</span>
+<span class="text-label-mono font-label-mono">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-variant transition-colors duration-200 rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-on-surface">help</span>
+<span class="text-label-mono font-label-mono">Help</span>
+</a>
+<div class="mt-4 px-3 py-3 flex items-center gap-3 rounded-lg bg-surface-container hover:bg-surface-container-highest transition-all cursor-pointer border border-white/5">
+<img alt="User profile" class="w-8 h-8 rounded-full border border-white/10" data-alt="A professional headshot of a creative individual with thoughtful eyes, set against a dark, moody studio background. The lighting is dramatic and low-key, highlighting the person's features with soft highlights that align with the Obsidian dark mode aesthetic. The overall mood is sophisticated and high-tech, reflecting a premium pro workspace environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtZsPCO0Bkz3BGVOvbNLtCuPx8xZPocjn4xmjkyey8WvzoC0JNvhAKSZ4eCQc8WSbG3nFcBZjUpicPEqpHmhhnkgLNkiwZ1dtx7oBR9uu-Y62eBRiXrvGXGQktlqXgumV9-mlKlvhmXLvaVc05RRWkTgtoc6eJOEoJHNx33jQ6mP0IcmbrPYB9za2UsWM0gw6l8jP_GU27KCZwTe2kPheGAtJ09BumOM1jlHrwBZNIlYhwQMOGo7c9grSSRipCIEdsYJ4T4q6ujqQ"/>
+<div class="flex-1 overflow-hidden">
+<p class="text-body-md font-bold truncate">Alex Rivera</p>
+<p class="text-[10px] text-primary/70 font-label-mono uppercase tracking-tighter">Pro Plan</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col min-w-0 bg-surface">
+<!-- TopAppBar Component -->
+<header class="flex justify-between items-center w-full px-8 h-16 bg-surface border-b border-white/10 shrink-0">
+<div class="flex items-center gap-8 flex-1">
+<div class="flex items-center gap-4 bg-surface-container-low px-4 py-2 rounded-full border border-white/5 w-full max-w-md">
+<span class="material-symbols-outlined text-on-surface-variant">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-md w-full placeholder:text-on-surface-variant/50" placeholder="Search recordings, tags, or transcripts..." type="text"/>
+</div>
+<nav class="hidden lg:flex items-center gap-6">
+<a class="text-primary border-b-2 border-primary pb-2 font-body-md" href="#">Library</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-all font-body-md" href="#">Transcript</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-all font-body-md" href="#">Insights</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:bg-surface-container-highest p-2 rounded transition-all">
+<span class="material-symbols-outlined">history</span>
+</button>
+<button class="text-on-surface-variant hover:bg-surface-container-highest p-2 rounded transition-all">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+<button class="px-4 py-1.5 rounded bg-surface-variant border border-white/10 text-on-surface text-body-md hover:bg-surface-container-highest transition-all">
+          Export
+        </button>
+<button class="px-4 py-1.5 rounded bg-primary text-on-primary text-body-md font-bold hover:opacity-90 transition-all">
+          Share
+        </button>
+</div>
+</header>
+<!-- Workspace Content -->
+<div class="flex-1 overflow-y-auto p-8">
+<div class="flex items-end justify-between mb-8">
+<div>
+<h1 class="text-headline-lg font-headline-lg mb-2">Recordings</h1>
+<div class="flex items-center gap-4">
+<span class="text-body-md text-on-surface-variant">Showing 24 audio files</span>
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+<span class="text-label-mono font-label-mono text-tertiary uppercase">Cloud Synced</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-high p-1 rounded-lg glass-edge">
+<button class="p-2 rounded bg-surface-variant text-primary">
+<span class="material-symbols-outlined">grid_view</span>
+</button>
+<button class="p-2 rounded text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined">list</span>
+</button>
+</div>
+</div>
+<!-- Bento-style Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+<!-- Recording Card 1 (Active/Recent) -->
+<div class="group relative bg-surface-container-high rounded-xl p-6 glass-edge hover:border-primary/40 transition-all duration-300 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="text-label-mono font-label-mono text-primary mb-1">MAY 24, 2024 • 14:02</span>
+<h3 class="text-headline-sm font-headline-sm">Product Strategy Sync</h3>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<!-- Waveform Visual -->
+<div class="h-16 flex items-end gap-[2px] w-full">
+<div class="waveform-bar bg-primary w-1 h-[20%]"></div>
+<div class="waveform-bar bg-primary w-1 h-[45%]"></div>
+<div class="waveform-bar bg-primary w-1 h-[80%]"></div>
+<div class="waveform-bar bg-primary w-1 h-[60%]"></div>
+<div class="waveform-bar bg-primary w-1 h-[90%]"></div>
+<div class="waveform-bar bg-primary w-1 h-[50%]"></div>
+<div class="waveform-bar bg-primary w-1 h-[70%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[40%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[20%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[30%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[60%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[45%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[55%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[20%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[10%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[35%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[75%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[40%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[15%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[30%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[60%]"></div>
+</div>
+<div class="flex flex-wrap gap-2">
+<div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-variant text-label-mono font-label-mono text-on-surface-variant border border-white/5">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+              Internal
+            </div>
+<div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-variant text-label-mono font-label-mono text-on-surface-variant border border-white/5">
+<span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+              Planning
+            </div>
+</div>
+<div class="mt-2 flex items-center justify-between text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+<span class="text-label-mono font-label-mono">42:15</span>
+</div>
+<button class="flex items-center gap-2 text-primary hover:underline transition-all">
+<span class="text-label-mono font-label-mono">OPEN EDITOR</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Recording Card 2 -->
+<div class="group relative bg-surface-container-high rounded-xl p-6 glass-edge hover:border-primary/40 transition-all duration-300 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="text-label-mono font-label-mono text-on-surface-variant mb-1">MAY 22, 2024 • 09:15</span>
+<h3 class="text-headline-sm font-headline-sm">Client Interview - Phase 2</h3>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<div class="h-16 flex items-end gap-[2px] w-full opacity-60">
+<div class="waveform-bar bg-outline-variant w-1 h-[30%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[50%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[20%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[40%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[60%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[10%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[25%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[45%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[80%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[40%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[60%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[30%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[70%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[20%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[40%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[50%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[35%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[65%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[15%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[30%]"></div>
+</div>
+<div class="flex flex-wrap gap-2">
+<div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-variant text-label-mono font-label-mono text-on-surface-variant border border-white/5">
+<span class="w-1.5 h-1.5 rounded-full bg-green-400"></span>
+              Research
+            </div>
+</div>
+<div class="mt-2 flex items-center justify-between text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+<span class="text-label-mono font-label-mono">18:04</span>
+</div>
+<button class="flex items-center gap-2 text-primary/80 hover:text-primary hover:underline transition-all">
+<span class="text-label-mono font-label-mono">OPEN EDITOR</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Recording Card 3 -->
+<div class="group relative bg-surface-container-high rounded-xl p-6 glass-edge hover:border-primary/40 transition-all duration-300 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="text-label-mono font-label-mono text-on-surface-variant mb-1">MAY 21, 2024 • 16:50</span>
+<h3 class="text-headline-sm font-headline-sm">Personal Brainstorming</h3>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<div class="h-16 flex items-end gap-[2px] w-full opacity-60">
+<div class="waveform-bar bg-outline-variant w-1 h-[60%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[20%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[45%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[70%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[30%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[50%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[90%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[40%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[10%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[55%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[25%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[45%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[60%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[80%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[30%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[20%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[50%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[40%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[15%]"></div>
+</div>
+<div class="flex flex-wrap gap-2">
+<div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-variant text-label-mono font-label-mono text-on-surface-variant border border-white/5">
+<span class="w-1.5 h-1.5 rounded-full bg-orange-400"></span>
+              Ideas
+            </div>
+</div>
+<div class="mt-2 flex items-center justify-between text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+<span class="text-label-mono font-label-mono">05:22</span>
+</div>
+<button class="flex items-center gap-2 text-primary/80 hover:text-primary hover:underline transition-all">
+<span class="text-label-mono font-label-mono">OPEN EDITOR</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Recording Card 4 -->
+<div class="group relative bg-surface-container-high rounded-xl p-6 glass-edge hover:border-primary/40 transition-all duration-300 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="text-label-mono font-label-mono text-on-surface-variant mb-1">MAY 20, 2024 • 11:30</span>
+<h3 class="text-headline-sm font-headline-sm">Weekly Design Review</h3>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<div class="h-16 flex items-end gap-[2px] w-full opacity-60">
+<div class="waveform-bar bg-outline-variant w-1 h-[20%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[30%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[60%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[40%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[50%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[20%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[35%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[55%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[75%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[40%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[15%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[30%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[50%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[20%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[60%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[45%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[55%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[20%]"></div>
+<div class="waveform-bar bg-outline-variant w-1 h-[10%]"></div>
+</div>
+<div class="flex flex-wrap gap-2">
+<div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-variant text-label-mono font-label-mono text-on-surface-variant border border-white/5">
+<span class="w-1.5 h-1.5 rounded-full bg-pink-400"></span>
+              Design
+            </div>
+<div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-variant text-label-mono font-label-mono text-on-surface-variant border border-white/5">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+              Internal
+            </div>
+</div>
+<div class="mt-2 flex items-center justify-between text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+<span class="text-label-mono font-label-mono">55:40</span>
+</div>
+<button class="flex items-center gap-2 text-primary/80 hover:text-primary hover:underline transition-all">
+<span class="text-label-mono font-label-mono">OPEN EDITOR</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Placeholder for New Recording (Empty State/CTA) -->
+<div class="group relative border-2 border-dashed border-white/10 rounded-xl p-6 flex flex-col items-center justify-center gap-4 hover:border-primary/50 hover:bg-surface-container transition-all cursor-pointer">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[32px]">add</span>
+</div>
+<div class="text-center">
+<p class="text-body-lg font-bold">Start New Session</p>
+<p class="text-body-md text-on-surface-variant">Capture audio instantly</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar Component (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around gap-stack-lg items-center px-8 py-4 md:hidden bg-surface-container-high border-t border-white/10 shadow-lg rounded-t-xl">
+<button class="flex flex-col items-center text-on-surface-variant hover:text-primary transition-all duration-300">
+<span class="material-symbols-outlined">play_arrow</span>
+<span class="text-label-mono font-label-mono">Play</span>
+</button>
+<button class="flex flex-col items-center text-secondary font-bold scale-110 animate-pulse transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">mic</span>
+<span class="text-label-mono font-label-mono">Record</span>
+</button>
+<button class="flex flex-col items-center text-on-surface-variant hover:text-primary transition-all duration-300">
+<span class="material-symbols-outlined">fast_forward</span>
+<span class="text-label-mono font-label-mono">Skip</span>
+</button>
+<button class="flex flex-col items-center text-on-surface-variant hover:text-primary transition-all duration-300">
+<span class="material-symbols-outlined">stop</span>
+<span class="text-label-mono font-label-mono">Stop</span>
+</button>
+</nav>
+<!-- Floating Audio Visualizer Micro-interaction Script -->
+<script>
+    document.querySelectorAll('.waveform-bar').forEach(bar => {
+      const originalHeight = bar.style.height;
+      bar.addEventListener('mouseover', () => {
+        bar.style.height = '100%';
+      });
+      bar.addEventListener('mouseleave', () => {
+        bar.style.height = originalHeight;
+      });
+    });
+
+    // Simple recording pulse effect simulation
+    const recordBtn = document.querySelector('.animate-pulse');
+    if(recordBtn) {
+      setInterval(() => {
+        recordBtn.style.opacity = recordBtn.style.opacity === '0.5' ? '1' : '0.5';
+      }, 800);
+    }
+  </script>
+</body></html>

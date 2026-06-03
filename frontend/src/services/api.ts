@@ -3,7 +3,7 @@
  * Centralized API communication layer with AI features
  */
 
-import { Recording } from '../types';
+import { PricingResponse, Recording } from '../types';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -145,6 +145,10 @@ class ApiService {
     return this.request<Recording>(`/recordings/${id}/transcribe`, {
       method: 'POST'
     });
+  }
+
+  async getPricing(): Promise<PricingResponse> {
+    return this.request<PricingResponse>('/pricing');
   }
 
   async checkHealth(): Promise<{ status: string }> {
