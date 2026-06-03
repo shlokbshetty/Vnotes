@@ -93,10 +93,12 @@ export async function exchangeAuthorizationCode(
     if (error instanceof Error) {
       const errorMessage = error.message;
 
-      // Log the error with context
+      // Log the error with context - including full error object for debugging
       logger.error('Authorization code exchange failed', {
         error: errorMessage,
         code: authorizationCode?.substring(0, 10) + '***',
+        fullError: JSON.stringify(error, null, 2),
+        stack: error.stack,
       });
 
       // Categorize the error for better error responses

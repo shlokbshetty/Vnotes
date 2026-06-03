@@ -51,6 +51,13 @@ router.post('/oauth', oauthLimiter, async (req: Request, res: Response) => {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       
+      // Log full error details for debugging
+      logger.error('OAuth flow failed - full error details', {
+        errorObject: JSON.stringify(error, Object.getOwnPropertyNames(error)),
+        errorMessage: errorMessage,
+        errorStack: error instanceof Error ? error.stack : undefined,
+      });
+      
       // Categorize error and get appropriate HTTP status
       const errorInfo = categorizeOAuthError(error);
       
