@@ -1,0 +1,194 @@
+/**
+ * Obsidian-Inspired Sidebar
+ * 
+ * Features:
+ * - Hierarchical navigation
+ * - Left border accent for active state
+ * - Smooth hover animations (no heavy color changes)
+ * - Section headers with counts
+ */
+
+.sidebar-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #111827;
+  color: #E5E5E5;
+  padding: 0;
+}
+
+/* HEADER SECTION */
+.sidebar-header {
+  padding: 20px 16px;
+  border-bottom: 1px solid #1F2937;
+  flex-shrink: 0;
+}
+
+.sidebar-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+/* NAVIGATION SECTION */
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 0;
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 12px;
+  margin: 2px 0;
+  background: transparent;
+  border: none;
+  border-left: 3px solid transparent;
+  color: #9CA3AF;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 150ms ease-out;
+  text-align: left;
+  position: relative;
+}
+
+.sidebar-nav-item:hover {
+  background-color: #1F2937;
+  color: #E5E5E5;
+  transform: scale(1.01);
+}
+
+.sidebar-nav-item.active {
+  background-color: #1F2937;
+  border-left-color: #3B82F6;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.sidebar-nav-item:active {
+  transform: scale(0.97);
+}
+
+/* Navigation label with optional icon */
+.sidebar-nav-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.sidebar-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* Item count badge */
+.sidebar-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  background-color: rgba(59, 130, 246, 0.1);
+  color: #9CA3AF;
+  font-size: 12px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-left: 8px;
+  transition: background-color 150ms ease-out;
+}
+
+.sidebar-nav-item:hover .sidebar-count {
+  background-color: rgba(59, 130, 246, 0.2);
+  color: #E5E5E5;
+}
+
+.sidebar-nav-item.active .sidebar-count {
+  background-color: rgba(59, 130, 246, 0.3);
+  color: #3B82F6;
+}
+
+/* Chevron for expandable items */
+.sidebar-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: #6B7280;
+  font-size: 10px;
+  flex-shrink: 0;
+  transition: transform 150ms ease-out, color 150ms ease-out;
+  margin-left: 4px;
+}
+
+.sidebar-chevron.expanded {
+  transform: rotate(90deg);
+}
+
+.sidebar-nav-item:hover .sidebar-chevron {
+  color: #9CA3AF;
+}
+
+/* Nested children container */
+.sidebar-children {
+  display: flex;
+  flex-direction: column;
+}
+
+/* FOOTER SECTION */
+.sidebar-footer {
+  padding: 12px 0;
+  border-top: 1px solid #1F2937;
+  flex-shrink: 0;
+}
+
+/* Ensure proper text overflow behavior */
+.sidebar-nav-item {
+  white-space: nowrap;
+}
+
+.sidebar-nav-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Focus state for keyboard navigation */
+.sidebar-nav-item:focus-visible {
+  outline: 2px solid #3B82F6;
+  outline-offset: -2px;
+}
+
+/* Scrollbar styling for sidebar nav */
+.sidebar-nav::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background: #374151;
+  border-radius: 3px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
+  background: #4B5563;
+}
+
+.sidebar-nav {
+  scrollbar-width: thin;
+  scrollbar-color: #374151 transparent;
+}

@@ -1,0 +1,228 @@
+/**
+ * Motion & Transition System
+ * 
+ * Global motion rules for the workspace redesign:
+ * - Hover: scale 1.02, 150-200ms ease-out
+ * - Click: scale 0.97, 100ms ease-in
+ * - Panel transitions: slide + fade, 200-250ms ease-out
+ * - Focus: soft highlight, 200ms ease-out
+ * - NO layout shifts (transform + opacity only)
+ */
+
+/* HOVER ANIMATIONS */
+.hover-scale {
+  transition: transform 150ms ease-out, background-color 150ms ease-out;
+}
+
+.hover-scale:hover {
+  transform: scale(1.02);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* CLICK/ACTIVE ANIMATIONS */
+.click-scale {
+  transition: transform 100ms ease-in;
+}
+
+.click-scale:active {
+  transform: scale(0.97);
+}
+
+/* COMBINED INTERACTIVE ELEMENT */
+.interactive-element {
+  transition: transform 150ms ease-out, background-color 150ms ease-out, opacity 150ms ease-out;
+}
+
+.interactive-element:hover {
+  transform: scale(1.02);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.interactive-element:active {
+  transform: scale(0.97);
+  opacity: 0.9;
+}
+
+/* PANEL TRANSITIONS */
+.panel-slide-in {
+  animation: slideIn 200ms ease-out forwards;
+}
+
+.panel-slide-out {
+  animation: slideOut 200ms ease-out forwards;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+}
+
+/* FADE TRANSITIONS */
+.fade-in {
+  animation: fadeIn 200ms ease-out forwards;
+}
+
+.fade-out {
+  animation: fadeOut 200ms ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* SMOOTH TRANSITIONS FOR COMMON PROPERTIES */
+.smooth-transition {
+  transition: all 200ms ease-out;
+}
+
+.smooth-transition-fast {
+  transition: all 100ms ease-out;
+}
+
+.smooth-transition-slow {
+  transition: all 300ms ease-out;
+}
+
+/* FOCUS STATE ANIMATIONS */
+.focus-highlight {
+  transition: background-color 200ms ease-out, box-shadow 200ms ease-out;
+}
+
+.focus-highlight:focus,
+.focus-highlight:focus-visible {
+  outline: none;
+  background-color: rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+/* PULSE ANIMATIONS */
+.pulse-soft {
+  animation: pulseSoft 2s ease-in-out infinite;
+}
+
+@keyframes pulseSoft {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.pulse-strong {
+  animation: pulseStrong 1.5s ease-in-out infinite;
+}
+
+@keyframes pulseStrong {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
+/* SHIMMER LOADING ANIMATION */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    #1F2937 0%,
+    #27364E 50%,
+    #1F2937 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmerLoad 1.5s infinite;
+}
+
+@keyframes shimmerLoad {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* REDUCED MOTION SUPPORT */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* FOCUS VISIBLE POLYFILL */
+.js-focus-visible :focus:not(.focus-visible) {
+  outline: none;
+}
+
+/* SMOOTH SCROLLING */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* 60FPS PERFORMANCE OPTIMIZATION */
+.will-change-transform {
+  will-change: transform;
+}
+
+.gpu-accelerate {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* TEXT SELECTION */
+::selection {
+  background-color: rgba(59, 130, 246, 0.3);
+  color: #FFFFFF;
+}
+
+::-moz-selection {
+  background-color: rgba(59, 130, 246, 0.3);
+  color: #FFFFFF;
+}

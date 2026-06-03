@@ -1,0 +1,50 @@
+/**
+ * Editor Panel
+ * 
+ * Main content area combining:
+ * - Header (title + metadata)
+ * - Editor (rich text)
+ * - Timeline (media playback)
+ */
+
+.editor-panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background-color: #0B0F14;
+  overflow: hidden;
+  flex: 1;
+}
+
+/* Ensure proper flex layout for all sections */
+.editor-panel > * {
+  flex-shrink: 0;
+}
+
+/* Make editor flexible to fill space */
+.editor-panel > .rich-editor-container {
+  flex: 1;
+  flex-shrink: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Ensure timeline stays at bottom */
+.editor-panel > .timeline-container {
+  margin-top: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1400px) {
+  .editor-panel {
+    /* Maintain layout */
+  }
+}
+
+@media (max-width: 1200px) {
+  .editor-panel {
+    width: 100%;
+    min-width: auto;
+  }
+}
