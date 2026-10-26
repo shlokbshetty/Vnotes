@@ -23,7 +23,11 @@ export const syncUploadsWithMetadata = () => {
       return;
     }
 
-    // Ensure recordings.json exists
+    // Ensure recordings directory and recordings.json exist
+    const recordingsDir = path.dirname(RECORDINGS_FILE);
+    if (!fs.existsSync(recordingsDir)) {
+      fs.mkdirSync(recordingsDir, { recursive: true });
+    }
     if (!fs.existsSync(RECORDINGS_FILE)) {
       fs.writeFileSync(RECORDINGS_FILE, JSON.stringify([], null, 2));
       logger.info('Created recordings.json');

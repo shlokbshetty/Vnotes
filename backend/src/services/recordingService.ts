@@ -48,6 +48,10 @@ class RecordingService {
 
   private writeRecordings(recordings: Recording[]): void {
     try {
+      const dataDir = path.dirname(RECORDINGS_FILE);
+      if (!fs.existsSync(dataDir)) {
+        fs.mkdirSync(dataDir, { recursive: true });
+      }
       fs.writeFileSync(RECORDINGS_FILE, JSON.stringify(recordings, null, 2));
     } catch (error) {
       logger.error('Failed to write recordings', error);

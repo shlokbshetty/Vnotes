@@ -90,7 +90,7 @@ router.post('/oauth', oauthLimiter, async (req: Request, res: Response) => {
     // Handle duplicate email errors appropriately
     
     // Mock user_id generation for now (Supabase will generate real UUID)
-    const mockUserId = `user_${userProfile.google_id.substring(0, 10)}`;
+    const mockUserId = `user_${userProfile.google_id}`;
     const now = new Date().toISOString();
     
     const userProfileComplete = {

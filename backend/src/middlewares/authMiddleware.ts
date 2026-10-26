@@ -76,7 +76,7 @@ export function authMiddleware(
       });
       res.status(401).json({
         success: false,
-        message: 'Missing Authorization header',
+        message: 'Unauthorized: Missing Authorization header',
         code: 'MISSING_AUTH_HEADER',
         timestamp: new Date().toISOString(),
       });

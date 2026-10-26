@@ -8,6 +8,7 @@
  */
 
 import * as jwt from 'jsonwebtoken';
+import * as crypto from 'crypto';
 import { JWTPayload, UserProfile, ErrorResponse } from '../types/auth';
 import { logger } from '../utils/logger';
 import { config } from '../config/env';
@@ -42,6 +43,7 @@ export function generateSessionToken(
       iat: now,
       exp: expiresAt,
       iss: JWT_ISSUER,
+      jti: crypto.randomUUID(),
     };
 
     const token = jwt.sign(payload, JWT_SECRET, {
@@ -106,18 +108,11 @@ function validateTokenStructure(token: string): void {
     throw new JWTValidationError('Token must have three parts (header.payload.signature)', 'MALFORMED');
   }
 
-  // Validate that each part is valid base64
-  try {
-    parts.forEach((part, index) => {
-      if (!part) {
-        throw new Error('Empty part');
-      }
-      // Base64 URL decode - add padding if needed
-      const padded = part + '='.repeat((4 - part.length % 4) % 4);
-      Buffer.from(padded, 'base64').toString('utf-8');
-    });
-  } catch (error) {
-    throw new JWTValidationError('Token contains invalid base64 encoding', 'MALFORMED');
+  // Validate that each part is valid base64url encoding
+  for (const part of parts) {
+    if (!part || !/^[A-Za-z0-9_-]+$/.test(part)) {
+      throw new JWTValidationError('Token contains invalid base64 encoding', 'MALFORMED');
+    }
   }
 }
 
@@ -182,7 +177,6 @@ export function validateSessionToken(token: string): JWTPayload {
     try {
       decoded = jwt.verify(token, JWT_SECRET, {
         algorithms: ['HS256'],
-        issuer: JWT_ISSUER,
       });
     } catch (error) {
       if (error instanceof jwt.TokenExpiredError) {
@@ -193,6 +187,9 @@ export function validateSessionToken(token: string): JWTPayload {
         if (error.message.includes('invalid signature')) {
           throw new JWTValidationError('Token signature verification failed', 'INVALID_SIGNATURE');
         }
+        if (error.message.includes('jwt malformed')) {
+          throw new JWTValidationError('Token is malformed', 'MALFORMED');
+        }
         throw new JWTValidationError('Token verification failed', 'VERIFICATION_FAILED');
       }
       throw error;
@@ -200,6 +197,11 @@ export function validateSessionToken(token: string): JWTPayload {
 
     // Step 3: Validate required claims
     validateRequiredClaims(decoded);
+
+    // Validate issuer
+    if (decoded.iss !== JWT_ISSUER) {
+      throw new JWTValidationError('Invalid token issuer', 'VERIFICATION_FAILED');
+    }
 
     return decoded as JWTPayload;
   } catch (error) {

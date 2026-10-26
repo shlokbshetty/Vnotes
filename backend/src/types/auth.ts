@@ -16,6 +16,7 @@ export interface JWTPayload {
   iat: number;              // Issued at timestamp (seconds)
   exp: number;              // Expiration timestamp (seconds)
   iss: string;              // Issuer claim (backend identifier)
+  jti?: string;             // Unique token identifier (nonce)
 }
 
 /**
