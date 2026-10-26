@@ -52,6 +52,10 @@ const checkUploadsFolder = () => {
 
 const checkRecordingsJson = () => {
   const recordingsPath = path.join(__dirname, '../backend/src/data/recordings.json');
+  const dir = path.dirname(recordingsPath);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
   if (!fs.existsSync(recordingsPath)) {
     fs.writeFileSync(recordingsPath, JSON.stringify([], null, 2));
     return true;
@@ -60,8 +64,9 @@ const checkRecordingsJson = () => {
 };
 
 const checkEnvFile = () => {
-  const envPath = path.join(__dirname, '../.env');
-  return fs.existsSync(envPath);
+  const rootEnv = path.join(__dirname, '../.env');
+  const backendEnv = path.join(__dirname, '../backend/.env');
+  return fs.existsSync(rootEnv) || fs.existsSync(backendEnv);
 };
 
 const runChecks = async () => {
@@ -102,15 +107,20 @@ const runChecks = async () => {
     log(COLORS.YELLOW, `⚠ ${CHECKS.ENV_FILE} - NOT FOUND (using defaults)\n`);
   }
 
-  // Check 4: Backend Running
+  // Check 4: Backend Running (informational before dev server launches)
+  const requireRunning = process.argv.includes('--require-running');
   log(COLORS.YELLOW, `Checking ${CHECKS.BACKEND_RUNNING}...`);
   results.backendRunning = await checkBackendRunning();
   if (results.backendRunning) {
-    log(COLORS.GREEN, `✓ ${CHECKS.BACKEND_RUNNING} - OK\n`);
+    log(COLORS.GREEN, `✓ ${CHECKS.BACKEND_RUNNING} - RUNNING\n`);
   } else {
-    log(COLORS.RED, `✗ ${CHECKS.BACKEND_RUNNING} - NOT RUNNING\n`);
-    log(COLORS.YELLOW, `  Start backend with: cd backend && npm run dev\n`);
-    allPassed = false;
+    if (requireRunning) {
+      log(COLORS.RED, `✗ ${CHECKS.BACKEND_RUNNING} - NOT RUNNING\n`);
+      log(COLORS.YELLOW, `  Start backend with: cd backend && npm run dev\n`);
+      allPassed = false;
+    } else {
+      log(COLORS.GREEN, `✓ ${CHECKS.BACKEND_RUNNING} - READY (will start with dev command)\n`);
+    }
   }
 
   // Summary

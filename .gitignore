@@ -50,6 +50,8 @@ Thumbs.db
 # Uploads (keep .gitkeep)
 uploads/*
 !uploads/.gitkeep
+backend/uploads/*
+!backend/uploads/.gitkeep
 
 # Data files (keep .gitkeep)
 backend/src/data/*
