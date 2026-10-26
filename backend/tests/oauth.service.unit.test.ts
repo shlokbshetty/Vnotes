@@ -219,17 +219,13 @@ describe('OAuth Service - ID Token Verification', () => {
 });
 
 describe('OAuth Service - Complete OAuth Flow', () => {
-  it('should require non-empty authorization code for complete flow', () => {
-    expect(async () => {
-      await completeOAuthFlow('');
-    }).rejects.toThrow();
+  it('should require non-empty authorization code for complete flow', async () => {
+    await expect(completeOAuthFlow('')).rejects.toThrow();
   });
 
-  it('should handle network errors during OAuth flow', () => {
+  it('should handle network errors during OAuth flow', async () => {
     // Network errors during token exchange should be caught
-    expect(async () => {
-      await completeOAuthFlow('invalid_code_will_cause_error');
-    }).rejects.toThrow();
+    await expect(completeOAuthFlow('invalid_code_will_cause_error')).rejects.toThrow();
   });
 
   // Note: Full OAuth flow tests would require:
@@ -342,7 +338,7 @@ describe('OAuth Service - Edge Cases', () => {
 
   it('should handle multiple plus signs in email', () => {
     const email = 'user+test+prod@example.com';
-    const claims = createMockIDTokenClaims({ email });
+    const claims = createMockIDTokenClaims({ email, name: '' });
 
     const profile = extractUserProfileFromIDToken(claims);
 

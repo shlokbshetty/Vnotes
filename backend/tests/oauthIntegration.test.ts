@@ -25,7 +25,7 @@ import {
   JWTValidationError
 } from '../src/services/authService';
 import { recordingService } from '../src/services/recordingService';
-import { revokeSession, isSessionRevoked } from '../src/utils/sessionStore';
+import { revokeSession, isSessionRevoked, clearAllSessions } from '../src/utils/sessionStore';
 import authRoutes from '../src/routes/authRoutes';
 import recordingRoutes from '../src/routes/recordingRoutes';
 import userRoutes from '../src/routes/userRoutes';
@@ -44,6 +44,7 @@ vi.mock('../src/utils/logger', () => ({
     info: vi.fn(),
     warn: vi.fn(),
     error: vi.fn(),
+    debug: vi.fn(),
   },
 }));
 
@@ -75,6 +76,7 @@ describe('OAuth Integration Tests', () => {
     // Test data storage
     testUsers.clear();
     testRecordings.clear();
+    clearAllSessions();
 
     // Mock OAuth service to simulate Google's responses
     vi.mocked(completeOAuthFlow).mockImplementation(async (code: string) => {

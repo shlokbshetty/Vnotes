@@ -7,8 +7,14 @@
  * Run with: npm run test:api (from backend directory)
  */
 
+import 'dotenv/config';
+import { generateSessionToken } from '../src/services/authService';
+
 const BASE_URL = 'http://localhost:3001/api';
 const UPLOADS_URL = 'http://localhost:3001/uploads';
+
+const authToken = generateSessionToken('test-google-sub', 'test-user-id', 'test@example.com');
+const authHeaders = { Authorization: `Bearer ${authToken}` };
 
 // Color codes for console output
 const colors = {
@@ -41,7 +47,7 @@ function logTest(name: string, passed: boolean, error?: string) {
 async function testHealthCheck() {
   try {
     const response = await fetch(BASE_URL.replace('/api', ''));
-    const data = await response.json();
+    const data = await response.json() as any;
     const passed = response.ok && data.message === 'VNotes Backend API';
     logTest('Health Check - GET /', passed);
   } catch (error) {
@@ -52,9 +58,12 @@ async function testHealthCheck() {
 // Test 2: GET /api/recordings - Get all recordings
 async function testGetRecordings() {
   try {
-    const response = await fetch(`${BASE_URL}/recordings`);
-    const data = await response.json();
-    const passed = response.ok && Array.isArray(data);
+    const response = await fetch(`${BASE_URL}/recordings`, {
+      headers: authHeaders
+    });
+    const data = await response.json() as any;
+    const recordings = Array.isArray(data) ? data : data?.data;
+    const passed = response.ok && Array.isArray(recordings);
     logTest('Get All Recordings - GET /api/recordings', passed);
   } catch (error) {
     logTest('Get All Recordings - GET /api/recordings', false, String(error));
@@ -85,14 +94,16 @@ async function testUploadAudio() {
 
     const response = await fetch(`${BASE_URL}/recordings/upload`, {
       method: 'POST',
-      body: formData
+      body: formData,
+      headers: authHeaders
     });
 
-    const data = await response.json();
-    const passed = response.ok && data.id && data.filename && data.type === 'audio/wav';
+    const data = await response.json() as any;
+    const rec = data?.data || data;
+    const passed = response.ok && rec?.id && rec?.filename && rec?.type === 'audio/wav';
     logTest('Upload Audio File - POST /api/recordings/upload', passed);
     
-    return passed ? data.id : null;
+    return passed ? rec.id : null;
   } catch (error) {
     logTest('Upload Audio File - POST /api/recordings/upload', false, String(error));
     return null;
@@ -102,9 +113,12 @@ async function testUploadAudio() {
 // Test 4: GET /api/recordings/:id - Get single recording
 async function testGetRecording(recordingId: string) {
   try {
-    const response = await fetch(`${BASE_URL}/recordings/${recordingId}`);
-    const data = await response.json();
-    const passed = response.ok && data.id === recordingId;
+    const response = await fetch(`${BASE_URL}/recordings/${recordingId}`, {
+      headers: authHeaders
+    });
+    const data = await response.json() as any;
+    const rec = data?.data || data;
+    const passed = response.ok && rec?.id === recordingId;
     logTest('Get Single Recording - GET /api/recordings/:id', passed);
   } catch (error) {
     logTest('Get Single Recording - GET /api/recordings/:id', false, String(error));
@@ -115,10 +129,11 @@ async function testGetRecording(recordingId: string) {
 async function testDeleteRecording(recordingId: string) {
   try {
     const response = await fetch(`${BASE_URL}/recordings/${recordingId}`, {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: authHeaders
     });
-    const data = await response.json();
-    const passed = response.ok && data.message;
+    const data = await response.json() as any;
+    const passed = response.ok && (data.message || data.success);
     logTest('Delete Recording - DELETE /api/recordings/:id', passed);
   } catch (error) {
     logTest('Delete Recording - DELETE /api/recordings/:id', false, String(error));
@@ -146,7 +161,8 @@ async function testInvalidFileUpload() {
 
     const response = await fetch(`${BASE_URL}/recordings/upload`, {
       method: 'POST',
-      body: formData
+      body: formData,
+      headers: authHeaders
     });
 
     const passed = response.status === 400 || response.status === 500;
@@ -159,7 +175,9 @@ async function testInvalidFileUpload() {
 // Test 8: Get non-existent recording
 async function testGetNonExistentRecording() {
   try {
-    const response = await fetch(`${BASE_URL}/recordings/999999999`);
+    const response = await fetch(`${BASE_URL}/recordings/999999999`, {
+      headers: authHeaders
+    });
     const passed = response.status === 404;
     logTest('Get Non-Existent Recording - GET /api/recordings/:id (should 404)', passed);
   } catch (error) {
@@ -171,7 +189,8 @@ async function testGetNonExistentRecording() {
 async function testDeleteNonExistentRecording() {
   try {
     const response = await fetch(`${BASE_URL}/recordings/999999999`, {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: authHeaders
     });
     const passed = response.status === 404;
     logTest('Delete Non-Existent Recording - DELETE /api/recordings/:id (should 404)', passed);

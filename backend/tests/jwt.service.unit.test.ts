@@ -22,8 +22,16 @@ import {
 } from '../src/services/authService';
 import { config } from '../src/config/env';
 import * as jwt from 'jsonwebtoken';
+import * as crypto from 'crypto';
 
 const JWT_SECRET = config.JWT_SECRET;
+
+function createManualToken(payload: any, secret = JWT_SECRET): string {
+  const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url');
+  const body = Buffer.from(JSON.stringify(payload)).toString('base64url');
+  const signature = crypto.createHmac('sha256', secret).update(`${header}.${body}`).digest('base64url');
+  return `${header}.${body}.${signature}`;
+}
 
 describe('JWT Service - Token Generation', () => {
   it('should generate a valid JWT token with correct structure', () => {
@@ -342,7 +350,7 @@ describe('JWT Service - Token Validation', () => {
       iss: 'vnotes-backend',
     };
 
-    const tokenWithInvalidIat = jwt.sign(payload, JWT_SECRET, { algorithm: 'HS256' });
+    const tokenWithInvalidIat = createManualToken(payload);
 
     expect(() => {
       validateSessionToken(tokenWithInvalidIat);
@@ -367,7 +375,7 @@ describe('JWT Service - Token Validation', () => {
       iss: 'vnotes-backend',
     };
 
-    const tokenWithInvalidExp = jwt.sign(payload, JWT_SECRET, { algorithm: 'HS256' });
+    const tokenWithInvalidExp = createManualToken(payload);
 
     expect(() => {
       validateSessionToken(tokenWithInvalidExp);
