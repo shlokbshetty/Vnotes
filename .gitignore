@@ -56,3 +56,8 @@ backend/uploads/*
 # Data files (keep .gitkeep)
 backend/src/data/*
 !backend/src/data/.gitkeep
+
+#agents
+.agents
+
+
