@@ -1,0 +1,324 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 980" width="100%" height="100%" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#090D16"/>
+      <stop offset="50%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+    <linearGradient id="clientGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1E3A8A" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#0F172A" stop-opacity="0.7"/>
+    </linearGradient>
+    <linearGradient id="gatewayGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#065F46" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#0F172A" stop-opacity="0.7"/>
+    </linearGradient>
+    <linearGradient id="serviceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#5B21B6" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#0F172A" stop-opacity="0.7"/>
+    </linearGradient>
+    <linearGradient id="storageGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#9A3412" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#0F172A" stop-opacity="0.7"/>
+    </linearGradient>
+    <linearGradient id="extGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#831843" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#0F172A" stop-opacity="0.7"/>
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.45"/>
+    </filter>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38BDF8"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#34D399"/>
+    </marker>
+    <marker id="arrowPurple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#A78BFA"/>
+    </marker>
+    <marker id="arrowAmber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#FBBF24"/>
+    </marker>
+    <marker id="arrowPink" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#F472B6"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1440" height="980" fill="url(#bgGrad)" rx="12"/>
+
+  <!-- Header Banner -->
+  <rect x="24" y="20" width="1392" height="64" rx="10" fill="#1E293B" stroke="#334155" stroke-width="1.5" filter="url(#shadow)"/>
+  <circle cx="56" cy="52" r="14" fill="#10B981"/>
+  <text x="56" y="57" text-anchor="middle" fill="#090D16" font-size="13" font-weight="800">VN</text>
+  <text x="84" y="47" fill="#F8FAFC" font-size="20" font-weight="700" letter-spacing="0.4">VNotes — Enterprise Voice &amp; Multimedia Knowledge Platform Architecture</text>
+  <text x="84" y="68" fill="#94A3B8" font-size="12.5">Obsidian 3-Panel React Workspace • Google OAuth 2.0 + HS256 JWT • Multer 500MB Media Intake • ElevenLabs Scribe v2 Transcription</text>
+  <rect x="1210" y="34" width="186" height="34" rx="6" fill="#0F172A" stroke="#475569" stroke-width="1"/>
+  <text x="1303" y="55" text-anchor="middle" fill="#34D399" font-size="12" font-weight="600">Express 4.18 + React 18</text>
+
+  <!-- ==================== TIER 1: CLIENT PRESENTATION BOUNDARY ==================== -->
+  <rect x="24" y="104" width="330" height="620" rx="12" fill="url(#clientGrad)" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="6,3" filter="url(#shadow)"/>
+  <rect x="40" y="118" width="298" height="32" rx="6" fill="#1D4ED8" fill-opacity="0.4"/>
+  <text x="52" y="139" fill="#93C5FD" font-size="13" font-weight="700" letter-spacing="0.8">CLIENT BOUNDARY (Vite :3000)</text>
+
+  <!-- React Router & Auth Shell -->
+  <rect x="44" y="166" width="290" height="115" rx="8" fill="#0F172A" stroke="#3B82F6" stroke-width="1.2"/>
+  <text x="60" y="190" fill="#F8FAFC" font-size="14" font-weight="700">React 18 + Router v6 SPA Shell</text>
+  <text x="60" y="210" fill="#94A3B8" font-size="11.5">• Public: /login, /auth/callback, /pricing</text>
+  <text x="60" y="228" fill="#94A3B8" font-size="11.5">• ProtectedRoute: /, /library, /settings, /help</text>
+  <text x="60" y="246" fill="#94A3B8" font-size="11.5">• ThemeContext (Dark/Light Persistence)</text>
+  <text x="60" y="266" fill="#38BDF8" font-size="11" font-family="monospace">frontend/src/App.tsx</text>
+
+  <!-- Obsidian 3-Panel Workspace -->
+  <rect x="44" y="297" width="290" height="135" rx="8" fill="#0F172A" stroke="#3B82F6" stroke-width="1.2"/>
+  <text x="60" y="321" fill="#F8FAFC" font-size="14" font-weight="700">Obsidian 3-Panel Workspace UI</text>
+  <text x="60" y="341" fill="#94A3B8" font-size="11.5">• SideNavBar &amp; RecordingsListPanel</text>
+  <text x="60" y="359" fill="#94A3B8" font-size="11.5">• EditorPanel &amp; RichEditor (Notes/Summary)</text>
+  <text x="60" y="377" fill="#94A3B8" font-size="11.5">• TranscriptPanel &amp; Key Moments</text>
+  <text x="60" y="395" fill="#94A3B8" font-size="11.5">• ShareExportModal (TXT, Markdown, JSON)</text>
+  <text x="60" y="416" fill="#38BDF8" font-size="11" font-family="monospace">src/components/{Workspace,Editor}/*</text>
+
+  <!-- Web Audio & Waveform Engine -->
+  <rect x="44" y="448" width="290" height="125" rx="8" fill="#0F172A" stroke="#3B82F6" stroke-width="1.2"/>
+  <text x="60" y="472" fill="#F8FAFC" font-size="14" font-weight="700">Web Audio &amp; Waveform Engine</text>
+  <text x="60" y="492" fill="#94A3B8" font-size="11.5">• MediaRecorder + Web AudioContext</text>
+  <text x="60" y="510" fill="#94A3B8" font-size="11.5">• RecordingDock &amp; RecordingControls</text>
+  <text x="60" y="528" fill="#94A3B8" font-size="11.5">• WaveformPlayer &amp; Timeline Seeking</text>
+  <text x="60" y="546" fill="#94A3B8" font-size="11.5">• Hooks: useRecording.ts, useRecordings.ts</text>
+  <text x="60" y="564" fill="#38BDF8" font-size="11" font-family="monospace">src/components/{RecordingDock,Timeline}</text>
+
+  <!-- Frontend API Client -->
+  <rect x="44" y="589" width="290" height="115" rx="8" fill="#0F172A" stroke="#60A5FA" stroke-width="1.2"/>
+  <text x="60" y="613" fill="#F8FAFC" font-size="14" font-weight="700">Auth &amp; REST API Client Layer</text>
+  <text x="60" y="633" fill="#94A3B8" font-size="11.5">• GoogleAuthCallback.tsx (Code Exchange)</text>
+  <text x="60" y="651" fill="#94A3B8" font-size="11.5">• Bearer JWT Injection (localStorage)</text>
+  <text x="60" y="669" fill="#94A3B8" font-size="11.5">• Multipart Upload &amp; Search Queries</text>
+  <text x="60" y="689" fill="#38BDF8" font-size="11" font-family="monospace">frontend/src/services/api.ts</text>
+
+  <!-- ==================== TIER 2: EXPRESS GATEWAY & SECURITY MIDDLEWARE ==================== -->
+  <rect x="404" y="104" width="320" height="620" rx="12" fill="url(#gatewayGrad)" stroke="#10B981" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="420" y="118" width="288" height="32" rx="6" fill="#047857" fill-opacity="0.45"/>
+  <text x="432" y="139" fill="#6EE7B7" font-size="13" font-weight="700" letter-spacing="0.8">INGRESS GATEWAY (Express :3001)</text>
+
+  <!-- Security Headers & CORS -->
+  <rect x="422" y="166" width="284" height="120" rx="8" fill="#0F172A" stroke="#10B981" stroke-width="1.2"/>
+  <text x="438" y="190" fill="#F8FAFC" font-size="14" font-weight="700">CORS &amp; Security Headers</text>
+  <text x="438" y="210" fill="#94A3B8" font-size="11.5">• Origin: CORS_ORIGIN (localhost:3000)</text>
+  <text x="438" y="228" fill="#94A3B8" font-size="11.5">• X-Content-Type-Options: nosniff</text>
+  <text x="438" y="246" fill="#94A3B8" font-size="11.5">• X-Frame-Options: DENY</text>
+  <text x="438" y="264" fill="#94A3B8" font-size="11.5">• X-XSS-Protection: 1; mode=block</text>
+  <text x="438" y="280" fill="#34D399" font-size="11" font-family="monospace">backend/src/server.ts</text>
+
+  <!-- Rate Limiters -->
+  <rect x="422" y="302" width="284" height="120" rx="8" fill="#0F172A" stroke="#10B981" stroke-width="1.2"/>
+  <text x="438" y="326" fill="#F8FAFC" font-size="14" font-weight="700">Endpoint Rate Limiters</text>
+  <text x="438" y="346" fill="#94A3B8" font-size="11.5">• oauthLimiter: 5 req / 5 min per IP</text>
+  <text x="438" y="364" fill="#94A3B8" font-size="11.5">• logoutLimiter: 10 req / 1 hr per IP</text>
+  <text x="438" y="382" fill="#94A3B8" font-size="11.5">• RateLimit-* RFC Standard Headers</text>
+  <text x="438" y="400" fill="#94A3B8" font-size="11.5">• HTTP 429 + retryAfter Seconds</text>
+  <text x="438" y="416" fill="#34D399" font-size="11" font-family="monospace">src/middlewares/rateLimiter.ts</text>
+
+  <!-- JWT Auth & Revocation Guard -->
+  <rect x="422" y="438" width="284" height="135" rx="8" fill="#0F172A" stroke="#10B981" stroke-width="1.2"/>
+  <text x="438" y="462" fill="#F8FAFC" font-size="14" font-weight="700">JWT &amp; Revocation Middleware</text>
+  <text x="438" y="482" fill="#94A3B8" font-size="11.5">• Bearer Token Structure Check</text>
+  <text x="438" y="500" fill="#94A3B8" font-size="11.5">• isSessionRevoked() Fast Blacklist Check</text>
+  <text x="438" y="518" fill="#94A3B8" font-size="11.5">• HS256 Signature &amp; Claim Verifier</text>
+  <text x="438" y="536" fill="#94A3B8" font-size="11.5">• Injects req.{userId,email,googleId}</text>
+  <text x="438" y="558" fill="#34D399" font-size="11" font-family="monospace">src/middlewares/authMiddleware.ts</text>
+
+  <!-- Multer Media Intake -->
+  <rect x="422" y="589" width="284" height="115" rx="8" fill="#0F172A" stroke="#10B981" stroke-width="1.2"/>
+  <text x="438" y="613" fill="#F8FAFC" font-size="14" font-weight="700">Multer Multipart Stream Intake</text>
+  <text x="438" y="633" fill="#94A3B8" font-size="11.5">• Max File Size: 500 MB (524,288,000 B)</text>
+  <text x="438" y="651" fill="#94A3B8" font-size="11.5">• Audio: wav, mp3, m4a, aac, flac</text>
+  <text x="438" y="669" fill="#94A3B8" font-size="11.5">• Video: mp4, mkv, webm, avi, mov</text>
+  <text x="438" y="689" fill="#34D399" font-size="11" font-family="monospace">src/routes/recordingRoutes.ts</text>
+
+  <!-- ==================== TIER 3: DOMAIN CONTROLLERS & AI SERVICES ==================== -->
+  <rect x="774" y="104" width="330" height="620" rx="12" fill="url(#serviceGrad)" stroke="#8B5CF6" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="790" y="118" width="298" height="32" rx="6" fill="#6D28D9" fill-opacity="0.45"/>
+  <text x="802" y="139" fill="#C4B5FD" font-size="13" font-weight="700" letter-spacing="0.8">DOMAIN &amp; AI ORCHESTRATION</text>
+
+  <!-- OAuth & Session Service -->
+  <rect x="792" y="166" width="294" height="125" rx="8" fill="#0F172A" stroke="#8B5CF6" stroke-width="1.2"/>
+  <text x="808" y="190" fill="#F8FAFC" font-size="14" font-weight="700">OAuth 2.0 &amp; JWT Auth Service</text>
+  <text x="808" y="210" fill="#94A3B8" font-size="11.5">• POST /auth/oauth &amp; POST /auth/logout</text>
+  <text x="808" y="228" fill="#94A3B8" font-size="11.5">• OAuth2Client Code → Token Exchange</text>
+  <text x="808" y="246" fill="#94A3B8" font-size="11.5">• Google JWKS ID Token Signature Check</text>
+  <text x="808" y="264" fill="#94A3B8" font-size="11.5">• HS256 JWT + UUID jti Claim Generation</text>
+  <text x="808" y="282" fill="#A78BFA" font-size="11" font-family="monospace">services/{oauthService,authService}.ts</text>
+
+  <!-- Recording & Ownership Service -->
+  <rect x="792" y="307" width="294" height="130" rx="8" fill="#0F172A" stroke="#8B5CF6" stroke-width="1.2"/>
+  <text x="808" y="331" fill="#F8FAFC" font-size="14" font-weight="700">Recording &amp; Ownership Controller</text>
+  <text x="808" y="351" fill="#94A3B8" font-size="11.5">• CRUD: /api/recordings (GET, POST, DELETE)</text>
+  <text x="808" y="369" fill="#94A3B8" font-size="11.5">• Strict Tenant Filter (user_id === userId)</text>
+  <text x="808" y="387" fill="#94A3B8" font-size="11.5">• Full-Text Search (?q= name/transcript)</text>
+  <text x="808" y="405" fill="#94A3B8" font-size="11.5">• Key Moments (POST/DELETE /:id/key-moments)</text>
+  <text x="808" y="425" fill="#A78BFA" font-size="11" font-family="monospace">controllers/recordingController.ts</text>
+
+  <!-- Transcription & Summary AI Services -->
+  <rect x="792" y="453" width="294" height="130" rx="8" fill="#0F172A" stroke="#8B5CF6" stroke-width="1.2"/>
+  <text x="808" y="477" fill="#F8FAFC" font-size="14" font-weight="700">Transcription &amp; Summary Engine</text>
+  <text x="808" y="497" fill="#94A3B8" font-size="11.5">• POST /api/recordings/:id/transcribe</text>
+  <text x="808" y="515" fill="#94A3B8" font-size="11.5">• ElevenLabs Scribe v2 (120s Stream)</text>
+  <text x="808" y="533" fill="#94A3B8" font-size="11.5">• POST /api/recordings/:id/summary</text>
+  <text x="808" y="551" fill="#94A3B8" font-size="11.5">• Extracts Summary, KeyPoints &amp; Actions</text>
+  <text x="808" y="571" fill="#A78BFA" font-size="11" font-family="monospace">services/{transcription,summary}Service.ts</text>
+
+  <!-- User Profile, Pricing & Sync -->
+  <rect x="792" y="599" width="294" height="105" rx="8" fill="#0F172A" stroke="#8B5CF6" stroke-width="1.2"/>
+  <text x="808" y="623" fill="#F8FAFC" font-size="14" font-weight="700">Profile, Pricing &amp; Startup Sync</text>
+  <text x="808" y="643" fill="#94A3B8" font-size="11.5">• GET /api/user/profile &amp; GET /api/pricing</text>
+  <text x="808" y="661" fill="#94A3B8" font-size="11.5">• syncUploadsWithMetadata() Auto-Index</text>
+  <text x="808" y="679" fill="#94A3B8" font-size="11.5">• Structured Error Categorizer &amp; Logger</text>
+  <text x="808" y="695" fill="#A78BFA" font-size="11" font-family="monospace">controllers/pricingController.ts • utils/*</text>
+
+  <!-- ==================== TIER 4: STORAGE & EXTERNAL PROVIDERS ==================== -->
+  <rect x="1144" y="104" width="272" height="330" rx="12" fill="url(#storageGrad)" stroke="#F59E0B" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="1160" y="118" width="240" height="32" rx="6" fill="#B45309" fill-opacity="0.45"/>
+  <text x="1172" y="139" fill="#FDE68A" font-size="13" font-weight="700" letter-spacing="0.8">STORAGE &amp; STATE TIER</text>
+
+  <rect x="1160" y="164" width="240" height="82" rx="8" fill="#0F172A" stroke="#F59E0B" stroke-width="1.2"/>
+  <text x="1174" y="185" fill="#F8FAFC" font-size="13" font-weight="700">Session Revocation Registry</text>
+  <text x="1174" y="203" fill="#94A3B8" font-size="11">• In-Memory Map&lt;token, Entry&gt;</text>
+  <text x="1174" y="220" fill="#94A3B8" font-size="11">• Hourly Expired Token Cleanup</text>
+  <text x="1174" y="236" fill="#FBBF24" font-size="10.5" font-family="monospace">src/utils/sessionStore.ts</text>
+
+  <rect x="1160" y="256" width="240" height="82" rx="8" fill="#0F172A" stroke="#F59E0B" stroke-width="1.2"/>
+  <text x="1174" y="277" fill="#F8FAFC" font-size="13" font-weight="700">Recording Metadata Store</text>
+  <text x="1174" y="295" fill="#94A3B8" font-size="11">• User-Scoped Recording JSON</text>
+  <text x="1174" y="312" fill="#94A3B8" font-size="11">• Transcripts, Summaries, Moments</text>
+  <text x="1174" y="328" fill="#FBBF24" font-size="10.5" font-family="monospace">src/data/recordings.json</text>
+
+  <rect x="1160" y="348" width="240" height="74" rx="8" fill="#0F172A" stroke="#F59E0B" stroke-width="1.2"/>
+  <text x="1174" y="369" fill="#F8FAFC" font-size="13" font-weight="700">Media File Blob Storage</text>
+  <text x="1174" y="387" fill="#94A3B8" font-size="11">• Static Stream: /uploads/:filename</text>
+  <text x="1174" y="406" fill="#FBBF24" font-size="10.5" font-family="monospace">backend/uploads/*</text>
+
+  <!-- External Cloud APIs -->
+  <rect x="1144" y="450" width="272" height="274" rx="12" fill="url(#extGrad)" stroke="#EC4899" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="1160" y="464" width="240" height="32" rx="6" fill="#9D174D" fill-opacity="0.45"/>
+  <text x="1172" y="485" fill="#FBCFE8" font-size="13" font-weight="700" letter-spacing="0.8">EXTERNAL CLOUD APIS</text>
+
+  <rect x="1160" y="508" width="240" height="64" rx="8" fill="#0F172A" stroke="#EC4899" stroke-width="1.2"/>
+  <text x="1174" y="528" fill="#F8FAFC" font-size="13" font-weight="700">Google OAuth 2.0 &amp; JWKS</text>
+  <text x="1174" y="545" fill="#94A3B8" font-size="11">• Token Exchange &amp; Certs Verification</text>
+  <text x="1174" y="562" fill="#F472B6" font-size="10.5" font-family="monospace">oauth2.googleapis.com/token</text>
+
+  <rect x="1160" y="582" width="240" height="64" rx="8" fill="#0F172A" stroke="#EC4899" stroke-width="1.2"/>
+  <text x="1174" y="602" fill="#F8FAFC" font-size="13" font-weight="700">ElevenLabs Scribe v2 API</text>
+  <text x="1174" y="619" fill="#94A3B8" font-size="11">• Multipart Audio Speech-to-Text</text>
+  <text x="1174" y="636" fill="#F472B6" font-size="10.5" font-family="monospace">api.elevenlabs.io/v1/speech-to-text</text>
+
+  <rect x="1160" y="654" width="240" height="58" rx="8" fill="#0F172A" stroke="#EC4899" stroke-width="1.2"/>
+  <text x="1174" y="674" fill="#F8FAFC" font-size="13" font-weight="700">Supabase Cloud DB Target</text>
+  <text x="1174" y="691" fill="#94A3B8" font-size="11">• User Profiles &amp; Cloud Metadata</text>
+  <text x="1174" y="706" fill="#F472B6" font-size="10.5" font-family="monospace">SUPABASE_URL (Configurable)</text>
+
+  <!-- ==================== DATA FLOW ARROWS ==================== -->
+  <!-- Client <-> Express Gateway -->
+  <line x1="334" y1="220" x2="418" y2="355" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrowBlue)"/>
+  <text x="376" y="268" text-anchor="middle" fill="#38BDF8" font-size="10" font-weight="600">POST /auth/oauth</text>
+
+  <line x1="334" y1="365" x2="418" y2="495" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrowBlue)"/>
+  <text x="376" y="450" text-anchor="middle" fill="#38BDF8" font-size="10" font-weight="600">Bearer JWT</text>
+
+  <line x1="334" y1="640" x2="418" y2="640" stroke="#34D399" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowGreen)"/>
+  <text x="376" y="630" text-anchor="middle" fill="#34D399" font-size="10" font-weight="600">Multipart Media</text>
+
+  <!-- Gateway <-> Domain Services -->
+  <line x1="706" y1="360" x2="788" y2="230" stroke="#34D399" stroke-width="2" marker-end="url(#arrowGreen)"/>
+  <text x="747" y="280" text-anchor="middle" fill="#34D399" font-size="10" font-weight="600">Rate Checked</text>
+
+  <line x1="706" y1="505" x2="788" y2="375" stroke="#34D399" stroke-width="2" marker-end="url(#arrowGreen)"/>
+  <text x="747" y="425" text-anchor="middle" fill="#34D399" font-size="10" font-weight="600">req.userId</text>
+
+  <line x1="706" y1="640" x2="788" y2="395" stroke="#A78BFA" stroke-width="2" marker-end="url(#arrowPurple)"/>
+  <text x="747" y="555" text-anchor="middle" fill="#A78BFA" font-size="10" font-weight="600">req.file</text>
+
+  <!-- Services <-> Storage & External APIs -->
+  <line x1="1086" y1="205" x2="1156" y2="205" stroke="#FBBF24" stroke-width="2" marker-end="url(#arrowAmber)"/>
+  <text x="1121" y="197" text-anchor="middle" fill="#FBBF24" font-size="10" font-weight="600">Revoke</text>
+
+  <line x1="1086" y1="350" x2="1156" y2="295" stroke="#FBBF24" stroke-width="2" marker-end="url(#arrowAmber)"/>
+  <text x="1121" y="312" text-anchor="middle" fill="#FBBF24" font-size="10" font-weight="600">JSON R/W</text>
+
+  <line x1="1086" y1="385" x2="1156" y2="385" stroke="#FBBF24" stroke-width="2" marker-end="url(#arrowAmber)"/>
+  <text x="1121" y="377" text-anchor="middle" fill="#FBBF24" font-size="10" font-weight="600">Blob I/O</text>
+
+  <line x1="1086" y1="250" x2="1156" y2="535" stroke="#F472B6" stroke-width="2" marker-end="url(#arrowPink)"/>
+  <text x="1124" y="438" text-anchor="middle" fill="#F472B6" font-size="10" font-weight="600">OAuth2</text>
+
+  <line x1="1086" y1="515" x2="1156" y2="610" stroke="#F472B6" stroke-width="2" marker-end="url(#arrowPink)"/>
+  <text x="1124" y="582" text-anchor="middle" fill="#F472B6" font-size="10" font-weight="600">Scribe v2</text>
+
+  <!-- ==================== END-TO-END WORKFLOW BAR ==================== -->
+  <rect x="24" y="744" width="1392" height="96" rx="10" fill="#1E293B" stroke="#334155" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="44" y="768" fill="#F8FAFC" font-size="13" font-weight="700" letter-spacing="0.6">END-TO-END AUTHENTICATION, RECORDING CAPTURE &amp; AI TRANSCRIPTION PIPELINE</text>
+
+  <rect x="44" y="780" width="205" height="46" rx="6" fill="#0F172A" stroke="#38BDF8" stroke-width="1.2"/>
+  <text x="56" y="799" fill="#38BDF8" font-size="11.5" font-weight="700">1. Google OAuth Login</text>
+  <text x="56" y="816" fill="#94A3B8" font-size="10.5">Code → POST /auth/oauth → JWT</text>
+  <line x1="249" y1="803" x2="269" y2="803" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+  <rect x="273" y="780" width="215" height="46" rx="6" fill="#0F172A" stroke="#34D399" stroke-width="1.2"/>
+  <text x="285" y="799" fill="#34D399" font-size="11.5" font-weight="700">2. Web Audio Capture</text>
+  <text x="285" y="816" fill="#94A3B8" font-size="10.5">MediaRecorder + Live Waveform</text>
+  <line x1="488" y1="803" x2="508" y2="803" stroke="#34D399" stroke-width="2" marker-end="url(#arrowGreen)"/>
+
+  <rect x="512" y="780" width="215" height="46" rx="6" fill="#0F172A" stroke="#A78BFA" stroke-width="1.2"/>
+  <text x="524" y="799" fill="#A78BFA" font-size="11.5" font-weight="700">3. Multipart Upload</text>
+  <text x="524" y="816" fill="#94A3B8" font-size="10.5">POST /api/recordings/upload</text>
+  <line x1="727" y1="803" x2="747" y2="803" stroke="#A78BFA" stroke-width="2" marker-end="url(#arrowPurple)"/>
+
+  <rect x="751" y="780" width="225" height="46" rx="6" fill="#0F172A" stroke="#F472B6" stroke-width="1.2"/>
+  <text x="763" y="799" fill="#F472B6" font-size="11.5" font-weight="700">4. ElevenLabs Scribe v2</text>
+  <text x="763" y="816" fill="#94A3B8" font-size="10.5">POST /:id/transcribe (Speech-to-Text)</text>
+  <line x1="976" y1="803" x2="996" y2="803" stroke="#F472B6" stroke-width="2" marker-end="url(#arrowPink)"/>
+
+  <rect x="1000" y="780" width="195" height="46" rx="6" fill="#0F172A" stroke="#FBBF24" stroke-width="1.2"/>
+  <text x="1012" y="799" fill="#FBBF24" font-size="11.5" font-weight="700">5. AI Summary &amp; Moments</text>
+  <text x="1012" y="816" fill="#94A3B8" font-size="10.5">POST /:id/summary &amp; /:id/key-moments</text>
+  <line x1="1195" y1="803" x2="1215" y2="803" stroke="#FBBF24" stroke-width="2" marker-end="url(#arrowAmber)"/>
+
+  <rect x="1219" y="780" width="177" height="46" rx="6" fill="#0F172A" stroke="#38BDF8" stroke-width="1.2"/>
+  <text x="1231" y="799" fill="#38BDF8" font-size="11.5" font-weight="700">6. Rich Export &amp; Share</text>
+  <text x="1231" y="816" fill="#94A3B8" font-size="10.5">TXT / Markdown / Audio Stream</text>
+
+  <!-- ==================== VISUAL LEGEND ==================== -->
+  <rect x="24" y="856" width="1392" height="100" rx="10" fill="#0F172A" stroke="#334155" stroke-width="1.5"/>
+  <text x="44" y="882" fill="#F8FAFC" font-size="13" font-weight="700" letter-spacing="0.6">ARCHITECTURE DIAGRAM LEGEND &amp; NOTATION KEY</text>
+
+  <rect x="44" y="896" width="18" height="18" rx="4" fill="url(#clientGrad)" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <text x="70" y="909" fill="#CBD5E1" font-size="11.5">Client Presentation Boundary (React 18 / Vite :3000)</text>
+
+  <rect x="355" y="896" width="18" height="18" rx="4" fill="url(#gatewayGrad)" stroke="#10B981" stroke-width="1.5"/>
+  <text x="381" y="909" fill="#CBD5E1" font-size="11.5">Express Gateway &amp; Security Middleware (:3001)</text>
+
+  <rect x="655" y="896" width="18" height="18" rx="4" fill="url(#serviceGrad)" stroke="#8B5CF6" stroke-width="1.5"/>
+  <text x="681" y="909" fill="#CBD5E1" font-size="11.5">Domain Controllers &amp; AI Services</text>
+
+  <rect x="915" y="896" width="18" height="18" rx="4" fill="url(#storageGrad)" stroke="#F59E0B" stroke-width="1.5"/>
+  <text x="941" y="909" fill="#CBD5E1" font-size="11.5">Storage &amp; Session Revocation Tier</text>
+
+  <rect x="1185" y="896" width="18" height="18" rx="4" fill="url(#extGrad)" stroke="#EC4899" stroke-width="1.5"/>
+  <text x="1211" y="909" fill="#CBD5E1" font-size="11.5">External OAuth &amp; Speech APIs</text>
+
+  <line x1="44" y1="935" x2="80" y2="935" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrowBlue)"/>
+  <text x="88" y="939" fill="#94A3B8" font-size="11">Authenticated REST JSON Request (Bearer JWT)</text>
+
+  <line x1="355" y1="935" x2="391" y2="935" stroke="#34D399" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowGreen)"/>
+  <text x="399" y="939" fill="#94A3B8" font-size="11">Multipart Media Stream / Validated Request Context</text>
+
+  <line x1="695" y1="935" x2="731" y2="935" stroke="#A78BFA" stroke-width="2" marker-end="url(#arrowPurple)"/>
+  <text x="739" y="939" fill="#94A3B8" font-size="11">Internal Service &amp; Multer File Dispatch</text>
+
+  <line x1="965" y1="935" x2="1001" y2="935" stroke="#FBBF24" stroke-width="2" marker-end="url(#arrowAmber)"/>
+  <text x="1009" y="939" fill="#94A3B8" font-size="11">Filesystem Blob / Metadata JSON / Session Map I/O</text>
+
+  <line x1="1260" y1="935" x2="1296" y2="935" stroke="#F472B6" stroke-width="2" marker-end="url(#arrowPink)"/>
+  <text x="1304" y="939" fill="#94A3B8" font-size="11">Outbound HTTPS API</text>
+</svg>

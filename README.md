@@ -1,202 +1,154 @@
-# VNotes: Enterprise Voice & Multimedia Knowledge Platform
+# VNotes — Intelligent Voice & Video Knowledge Hub
 
-[![React](https://img.shields.io/badge/React-18%2B%20%7C%20TypeScript-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
-[![Express](https://img.shields.io/badge/Express-4.18%20%7C%20TypeScript-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
-[![Google OAuth](https://img.shields.io/badge/Auth-Google_OAuth_2.0-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://developers.google.com/identity/protocols/oauth2)
-[![ElevenLabs](https://img.shields.io/badge/Audio-ElevenLabs%20%7C%20Whisper-000000?style=for-the-badge)](https://elevenlabs.io/)
-[![Vitest](https://img.shields.io/badge/Testing-Vitest%20%7C%20Fast--Check-FCC72B?style=for-the-badge&logo=vitest&logoColor=black)](https://vitest.dev/)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
+[![Version](https://img.shields.io/badge/version-1.1.0-6366f1.svg)](CHANGELOG.md)
+[![Node](https://img.shields.io/badge/Node.js-18%2B-339933.svg?logo=node.js)](backend/package.json)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178c6.svg?logo=typescript)](backend/tsconfig.json)
+[![React](https://img.shields.io/badge/React-18.2-61dafb.svg?logo=react)](frontend/package.json)
+[![Express](https://img.shields.io/badge/Express-4.18-000000.svg?logo=express)](backend/package.json)
+[![Tests](https://img.shields.io/badge/Tests-Vitest%20%2B%20fast--check-10b981.svg)](DEVELOPMENT.md)
 
-> **Enterprise multimedia voice recording and intelligence platform delivering high-fidelity audio capture, automated speech transcription pipelines, user-isolated storage partitions, and federated Google OAuth 2.0 identity.**
-
----
-
-## Architecture & Data Flow Diagram
-
-```mermaid
-graph TD
-    subgraph BrowserClient ["Browser Workspace & Client Presentation"]
-        MediaRecorder["Browser MediaRecorder API & AudioContext"]
-        Waveform["Live Audio Waveform Visualizer Engine"]
-        ReactUI["React 18 + TypeScript 3-Panel Obsidian Workspace"]
-        AuthHook["useAuth & Google OAuth Callback Handler"]
-    end
-
-    subgraph IngressGateway ["API Ingress & Security Layer (Port 3001)"]
-        Express["Express.js Server Gateway"]
-        RateLimit["Express-Rate-Limit (OAuth & Logout Throttling)"]
-        JWTMiddleware["HMAC-SHA256 JWT & Revocation Registry"]
-        CorsHeaders["CORS & HTTP Security Headers (nosniff, DENY, XSS)"]
-    end
-
-    subgraph ServiceOrchestration ["Application Domain Services"]
-        AuthService["Google OAuth 2.0 Token Exchange & Session Manager"]
-        MediaService["Multipart Media Intake & Stream Parser (Multer)"]
-        LibraryService["User-Scoped Recording Indexing & Metadata Store"]
-        SpeechService["ElevenLabs & Whisper Transcription Service"]
-        PricingService["Subscription Tier & Plan Configuration"]
-    end
-
-    subgraph PersistenceLayer ["Storage & Tenant Isolation Tier"]
-        MetadataStore[("JSON Document Metadata Store (backend/src/data/recordings.json)")]
-        FileBlob[("Media Storage (backend/uploads/)")]
-        SessionCache[("In-Memory Session Revocation Store")]
-    end
-
-    MediaRecorder --> Waveform
-    Waveform --> ReactUI
-    ReactUI --> AuthHook
-    ReactUI -->|REST API Requests| Express
-    AuthHook -.->|OAuth Authorization Code| Express
-
-    Express --> CorsHeaders
-    CorsHeaders --> RateLimit
-    RateLimit --> JWTMiddleware
-
-    JWTMiddleware --> AuthService
-    JWTMiddleware --> MediaService
-    JWTMiddleware --> LibraryService
-    JWTMiddleware --> SpeechService
-    Express --> PricingService
-
-    AuthService <--> SessionCache
-    MediaService --> FileBlob
-    LibraryService <--> MetadataStore
-    SpeechService -.->|External API| MetadataStore
-```
+**VNotes** is a full-stack voice and video intelligence platform that captures browser-based audio/video recordings or multi-format media uploads (up to 500 MB), generates high-accuracy speech-to-text transcriptions via the **ElevenLabs Scribe v2 API**, and synthesizes structured executive summaries, key takeaways, action items, and timestamped key moments. Secured by **Google OAuth 2.0** (OIDC ID token verification against Google JWKS), stateless **HS256 JWT sessions** with instant JTI/token revocation, and strict per-user tenant isolation, VNotes transforms unstructured spoken meetings and voice notes into searchable, actionable knowledge.
 
 ---
 
-## Core Features
+## System Architecture Summary
 
-- **High-Fidelity Audio & Video Intake**: Browser-native capture utilizing the Web Audio API with real-time dynamic frequency waveform canvas visualization supporting multi-format inputs (`.wav`, `.mp3`, `.m4a`, `.flac`, `.mp4`, `.webm`, up to 500MB).
-- **Federated Google OAuth 2.0 & JWT Security**: Complete OAuth 2.0 authorization code exchange pipeline with cryptographic signature validation, per-user JWT sessions with `jti` replay prevention, and in-memory session revocation.
-- **Strict Multi-Tenant Isolation**: Structural user-scoped filesystem boundaries ensuring recordings and metadata indexes are strictly locked to the originating user claims.
-- **Asynchronous AI Transcription Engine**: Modular speech-to-text pipeline integrating ElevenLabs and Whisper APIs to produce timestamped transcripts and automated summary notes.
-- **Obsidian 3-Panel Design System**: High-performance dark-mode interface featuring glassmorphic accents, customizable playback speeds (0.5x to 2.0x), waveform seeking, and dynamic modal overlays.
-- **Comprehensive Verification Suite**: Complete test coverage across frontend components (Vitest, React Testing Library) and backend services (Vitest, Supertest, Fast-Check Property-Based Testing).
+![VNotes System Architecture](docs/assets/system-overview.svg)
+
+VNotes employs a decoupled TypeScript client-server architecture:
+- **React 18 + Vite 5 SPA (`frontend/`)**: Implements the browser `MediaRecorder` capture flow, Google OAuth 2.0 popup/redirect initiation, protected route guards (`ProtectedRoute`), and interactive playback with synchronized transcripts, AI summaries, and timestamped bookmarks.
+- **Express 4 + TypeScript API (`backend/`)**: Enforces endpoint-specific rate limiting (`oauthLimiter`, `logoutLimiter`), verifies Google OAuth authorization codes and OIDC ID tokens via `google-auth-library`, issues and revokes HS256 session JWTs, handles 500 MB `multer` media streams, orchestrates ElevenLabs Scribe v2 transcription (`transcriptionService.ts`) and NLP summarization (`summaryService.ts`), and reconciles local disk uploads (`backend/uploads/`) with persistent recording metadata (`backend/src/data/recordings.json`) on startup.
+
+For a comprehensive breakdown of component boundaries, authentication sequences, storage reconciliation, and design decisions, see **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** (also available at **[ARCHITECTURE.md](ARCHITECTURE.md)**).
 
 ---
 
-## Tech Stack Directory
+## Documentation Index
 
-| Layer | Technologies |
+| Document | Description |
 | :--- | :--- |
-| **Frontend Platform** | React 18, TypeScript 5.2, Vite 5, TailwindCSS 3.3, Lucide React, Vitest |
-| **Backend & Ingress** | Express 4.18, TypeScript 5.3, Node.js (v18+), Multer, Express-Rate-Limit |
-| **Identity & Security**| Google Auth Library 9.3, JSONWebToken (JWT) 9.0, Node.js Crypto |
-| **Media & Audio** | Browser MediaStream & AudioContext API, Axios, ElevenLabs Speech API |
-| **DevOps & Verification** | Vitest, Fast-Check (Property-Based Testing), Supertest, Concurrently |
+| **[ARCHITECTURE.md](ARCHITECTURE.md)** / **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** | System design patterns, tech stack justifications, directory structure, component breakdowns, and data flows |
+| **[API.md](API.md)** / **[docs/API.md](docs/API.md)** | Complete REST API reference, authentication headers, rate limits, request/response schemas, and error codes |
+| **[DEVELOPMENT.md](DEVELOPMENT.md)** / **[docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)** | Local setup, `preflightCheck.js`, upload-metadata sync, Vitest + `fast-check` property-based testing, and linting |
+| **[CONTRIBUTING.md](CONTRIBUTING.md)** | Branching strategy, Conventional Commits specification, pull request checklist, and quality gates |
+| **[SECURITY.md](SECURITY.md)** | Supported versions, OAuth/JWT security controls, tenant isolation, and vulnerability disclosure policy |
+| **[SUPPORT.md](SUPPORT.md)** | Support channels, issue labels, and troubleshooting FAQs |
+| **[ROADMAP.md](ROADMAP.md)** & **[VISION.md](VISION.md)** | Short-term engineering milestones and long-term architectural vision |
+| **[CHANGELOG.md](CHANGELOG.md)** | Release history adhering to Keep a Changelog and Semantic Versioning |
 
 ---
 
-## Quickstart & Verification
+## Prerequisites
 
-### Prerequisites
-- **Node.js**: `v18.0.0` or higher
-- **Package Manager**: `npm`
-- **Google Cloud Console**: OAuth 2.0 Client Credentials (for Google Authentication)
+- **Node.js**: `>= 18.0.0` (LTS recommended) and **npm** `>= 9.0.0`
+- **Docker & Docker Compose** *(Optional)*: For containerized full-stack execution
+- **Google Cloud Console OAuth 2.0 Credentials**: Client ID and Client Secret configured with `http://localhost:3000/auth/callback` as an Authorized Redirect URI
+- **ElevenLabs API Key** *(Optional in dev)*: For live `scribe_v2` speech-to-text transcription (gracefully falls back to deterministic development transcripts when omitted)
 
-### Environment Configuration
-Copy `.env.example` to `.env` in the project root:
+---
 
-```env
-# Server Configuration
-PORT=3001
-NODE_ENV=development
+## Step-by-Step Local Setup
 
-# CORS Configuration
-CORS_ORIGIN=http://localhost:3000
+### 1. Clone the Repository & Install Dependencies
 
-# File Upload Configuration
-UPLOADS_DIR=uploads
-MAX_FILE_SIZE=524288000
-
-# Google OAuth Credentials
-GOOGLE_OAUTH_CLIENT_ID=your-google-oauth-client-id-here.apps.googleusercontent.com
-GOOGLE_OAUTH_CLIENT_SECRET=your-google-oauth-client-secret-here
-GOOGLE_OAUTH_CALLBACK_URI=http://localhost:3001/auth/oauth/callback
-
-# JWT Configuration (min 32 characters for HMAC-SHA256)
-JWT_SECRET=your-256-bit-jwt-secret-here-minimum-32-chars
-JWT_EXPIRATION=86400
-
-# Supabase Configuration (Optional for cloud DB sync)
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_ANON_KEY=your-anon-key-here
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
-
-# ElevenLabs Speech-to-Text (Optional)
-ELEVENLABS_API_KEY=your_elevenlabs_api_key_here
-```
-
-### Installation & Execution
 ```bash
-# 1. Install root, backend, and frontend dependencies
+git clone https://github.com/your-org/Vnotes.git
+cd Vnotes
+
+# Install root orchestration dependencies (concurrently)
 npm install
+
+# Install backend dependencies
 npm --prefix backend install
+
+# Install frontend dependencies
 npm --prefix frontend install
-
-# 2. Run system preflight validation
-npm run predev
-
-# 3. Launch full-stack development environment (Backend + Frontend)
-npm run dev
-
-# 4. Production build
-npm run build
 ```
 
-### Running Test Suites
+### 2. Configure Environment Variables
+
+Copy the example environment files at the root, backend, and frontend levels:
+
 ```bash
-# Frontend component and integration tests (17 test files, 111 tests)
-npm --prefix frontend test
-
-# Backend unit and in-memory integration test suites (197 tests)
-npm --prefix backend test
-
-# Backend live HTTP API endpoint tests (requires backend running on port 3001)
-npm --prefix backend run test:api
-
-# Backend JWT property-based verification
-npm --prefix backend run test:auth
+cp .env.example .env
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
 ```
+
+Populate `backend/.env` and `frontend/.env` with your Google OAuth Client ID, Client Secret, and a minimum 32-character `JWT_SECRET` (see [Environment Configuration Mapping](#environment-configuration-mapping) below).
+
+### 3. Run the Preflight Environment Check
+
+VNotes includes an automated preflight verifier (`scripts/preflightCheck.js`) that validates Node installation, dependency trees (`node_modules`), `.env` presence, and `GOOGLE_CLIENT_ID` alignment between `frontend/.env` and `backend/.env`:
+
+```bash
+npm run predev
+```
+
+### 4. Start the Development Servers
+
+```bash
+npm run dev
+```
+
+This runs `preflightCheck.js` and concurrently launches both services:
+- **Frontend SPA**: `http://localhost:3000`
+- **Backend API**: `http://localhost:3001`
+- **Health Check**: `http://localhost:3001/health`
 
 ---
 
-## API & Route Specification
+## Build, Test & Execution Commands
 
-### Authentication Endpoints
+| Scope | Command | Description |
+| :--- | :--- | :--- |
+| **Root** | `npm run predev` | Executes `node scripts/preflightCheck.js` to validate local setup and OAuth Client ID parity |
+| **Root** | `npm run dev` | Runs `predev` then concurrently starts backend (`:3001`) and frontend (`:3000`) in watch mode |
+| **Root** | `npm run build` | Compiles both backend TypeScript (`backend/dist`) and frontend Vite bundle (`frontend/dist`) |
+| **Root** | `npm start` | Runs compiled production backend (`node backend/dist/server.js`) |
+| **Backend** | `npm --prefix backend run dev` | Starts Express server with `ts-node-dev --respawn --transpile-only src/server.ts` |
+| **Backend** | `npm --prefix backend test` | Runs core Vitest unit & integration suites (`pricing`, `services`, `jwt`, `oauth`, `sessionStore`) |
+| **Backend** | `npm --prefix backend run test:vitest` | Runs all Vitest suites including `fast-check` property-based tests (`*.pbt.test.ts`) |
+| **Backend** | `npm --prefix backend run lint` | Lints backend TypeScript source files (`eslint src --ext .ts`) |
+| **Frontend** | `npm --prefix frontend test` | Runs frontend React Testing Library + Vitest suites (`vitest run`) |
+| **Frontend** | `npm --prefix frontend run lint` | Runs strict ESLint checks (`--max-warnings 0`) across `ts,tsx` files |
+| **Docker** | `docker-compose up --build` | Builds and starts containerized `backend` (`:3001`) and `frontend` (`:3000`) services |
 
-| HTTP Method | Route | Authorization | Parameters / Payload | Expected Response | Description |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| `POST` | `/auth/oauth` | Public (Rate-limited: 5/5min) | `{ code: string }` | `200 OK` + `{ success: true, sessionToken, user, expiresIn }` | Exchange Google OAuth code for JWT session |
-| `POST` | `/auth/logout` | Bearer Token (Rate-limited: 10/hr) | None | `200 OK` + `{ success: true, message: 'Logged out successfully' }` | Revoke session and blacklist session token |
-| `GET` | `/api/user/profile`| Bearer Token | None | `200 OK` + `{ success: true, user }` | Retrieve current authenticated user profile |
+---
 
-### Recording Management Endpoints
+## Environment Configuration Mapping
 
-| HTTP Method | Route | Authorization | Parameters / Payload | Expected Response | Description |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| `GET` | `/api/recordings` | Bearer Token | Query: `?q=searchterm` (optional) | `200 OK` + `{ success: true, data: Recording[] }` | Fetch user-scoped library catalog |
-| `POST` | `/api/recordings/upload`| Bearer Token | Multipart Form: `file` (Media) | `201 Created` + `{ success: true, data: Recording }` | Upload and persist user recording file |
-| `GET` | `/api/recordings/:id`| Bearer Token | Route: `id` | `200 OK` + `{ success: true, data: Recording }` | Retrieve metadata for specific recording |
-| `DELETE`| `/api/recordings/:id`| Bearer Token | Route: `id` | `200 OK` + `{ success: true, message: string }` | Delete recording file and metadata record |
+VNotes uses environment files across three scopes: root (`.env.example` for Docker Compose), `backend/.env.example`, and `frontend/.env.example`.
 
-### AI & Media Enhancement Endpoints
+### Backend Configuration (`backend/.env.example`)
 
-| HTTP Method | Route | Authorization | Parameters / Payload | Expected Response | Description |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| `POST` | `/api/recordings/:id/summary` | Bearer Token | Route: `id` | `200 OK` + `{ success: true, summary, keyPoints, actionItems }` | Generate AI summary and action items |
-| `POST` | `/api/recordings/:id/transcribe` | Bearer Token | Route: `id` | `200 OK` + `{ success: true, transcription }` | Run speech-to-text transcription pipeline |
-| `POST` | `/api/recordings/:id/key-moments`| Bearer Token | `{ time: string, label: string }` | `200 OK` + Updated Recording | Add timestamped key moment |
-| `DELETE`| `/api/recordings/:id/key-moments`| Bearer Token | `{ time: string }` | `200 OK` + Updated Recording | Remove key moment |
+| Variable | Required | Default | Description |
+| :--- | :---: | :--- | :--- |
+| `PORT` | No | `3001` | HTTP port bound by the Express server |
+| `NODE_ENV` | No | `development` | Runtime environment (`development`, `production`, `test`) |
+| `FRONTEND_URL` | No | `http://localhost:3000` | Allowed CORS origin for browser requests |
+| `GOOGLE_CLIENT_ID` | **Yes** | — | Google OAuth 2.0 Client ID (must match `VITE_GOOGLE_CLIENT_ID`) |
+| `GOOGLE_CLIENT_SECRET` | **Yes** | — | Google OAuth 2.0 Client Secret used for authorization code exchange |
+| `GOOGLE_REDIRECT_URI` | **Yes** | `http://localhost:3000/auth/callback` | Registered OAuth 2.0 redirect URI |
+| `JWT_SECRET` | **Yes** | — | Secret key (`>= 32` chars) used to sign and verify HS256 session tokens |
+| `JWT_EXPIRATION` | No | `86400` | Session JWT time-to-live in seconds (default 24 hours; range `60`–`604800`) |
+| `ELEVENLABS_API_KEY` | No* | — | ElevenLabs API key (`xi-api-key`) for `scribe_v2` transcription (*falls back to mock in dev) |
+| `SUPABASE_URL` | No | — | Optional Supabase project URL for cloud persistence extensions |
+| `SUPABASE_ANON_KEY` | No | — | Optional Supabase anonymous/service key |
+| `UPLOAD_DIR` | No | `./uploads` | Local directory for storing uploaded audio/video files |
 
-### Pricing & System Endpoints
+### Frontend Configuration (`frontend/.env.example`)
 
-| HTTP Method | Route | Authorization | Parameters / Payload | Expected Response | Description |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| `GET` | `/api/pricing/plans` | Public | None | `200 OK` + Subscription Tier Plans | Retrieve available pricing models |
-| `GET` | `/health` | Public | None | `200 OK` + `{ status: 'ok', timestamp }` | Service health status check |
-| `GET` | `/` | Public | None | `200 OK` + API status & version | API root gateway status |
-| `GET` | `/uploads/:filename` | Public | Route: `filename` | Raw Media Stream | Serve uploaded audio/video files |
+| Variable | Required | Default | Description |
+| :--- | :---: | :--- | :--- |
+| `VITE_API_URL` | **Yes** | `http://localhost:3001` | Base URL for backend REST API requests and media streaming |
+| `VITE_GOOGLE_CLIENT_ID` | **Yes** | — | Google OAuth 2.0 Client ID (verified by `preflightCheck.js` to match backend) |
+| `VITE_GOOGLE_REDIRECT_URI` | No | `http://localhost:3000/auth/callback` | Frontend callback URL for Google OAuth redirect |
+| `VITE_SUPABASE_URL` | No | — | Optional Supabase project URL |
+| `VITE_SUPABASE_ANON_KEY` | No | — | Optional Supabase public anon key |
+
+---
+
+## License
+
+Released under the **MIT License**.
