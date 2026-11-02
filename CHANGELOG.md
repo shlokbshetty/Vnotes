@@ -16,7 +16,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - **Preflight Environment Verifier (`scripts/preflightCheck.js`)**: Added automated `predev` script checking Node/npm, `node_modules`, `.env` files, and `GOOGLE_CLIENT_ID` parity between frontend and backend.
 - **Subscription Pricing API & UI (`pricingController.ts`, `PricingPage.tsx`)**: Added `GET /api/pricing` serving structured tier cards (`Free`, `Professional`) and a categorized feature comparison table.
 - **Property-Based Testing Suite (`fast-check`)**: Added comprehensive `*.pbt.test.ts` suites across backend (`jwt`, `oauth`, `authMiddleware`, `session`, `env`, `pricingController`) and frontend (`auth`, `protectedRoutes`, `PricingPage`).
-- **Production Documentation Suite & Vector Architecture Diagram**: Added `docs/assets/system-overview.svg`, `ARCHITECTURE.md`, `API.md`, `DEVELOPMENT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md`, `ROADMAP.md`, `VISION.md`, and GitHub governance templates.
+- **Production Documentation Suite & Vector Architecture Diagram**: Added `ARCHITECTURE.md`, `API.md`, `DEVELOPMENT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md`, `ROADMAP.md`, `VISION.md`, and GitHub governance templates.
 
 ### Changed
 

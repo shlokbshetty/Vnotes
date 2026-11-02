@@ -6,7 +6,52 @@ This document provides a comprehensive architectural reference for **VNotes**, d
 
 ## 1. Visual Architecture Overview
 
-![VNotes System Architecture](assets/system-overview.svg)
+```mermaid
+flowchart TD
+    subgraph ClientTier ["1. Audio Capture & Web Client (:3000)"]
+        VoiceRecorder["React 18 Voice Notes SPA<br/>(Vite 5 + Waveform Visualizer)"]
+        MediaStreamer["HTML5 MediaRecorder API<br/>(Opus / WebM 48kHz Stream Capture)"]
+        GoogleIdentity["Google Identity Services<br/>(OAuth 2.0 Web Popup / Redirect Client)"]
+    end
+
+    subgraph GatewayTier ["2. API Gateway & Session Security (:3001)"]
+        ExpressServer["Express 4 + TypeScript Gateway<br/>(REST Endpoints + CORS Preflight)"]
+        RateLimiters["Rate Limiter Middleware<br/>(oauthLimiter & logoutLimiter)"]
+        OAuthValidator["Google OAuth & JWKS Service<br/>(oauthService.ts Public Key Validator)"]
+        JWTSession["JWT Session & JTI Revocation<br/>(authMiddleware.ts + sessionStore.ts)"]
+    end
+
+    subgraph ProcessingTier ["3. Audio Ingestion & AI Summarization"]
+        MulterIngest["Multer Multipart Audio Handler<br/>(recordingService.ts Disk Buffer)"]
+        ElevenLabsService["ElevenLabs Scribe v2 STT<br/>(transcriptionService.ts POST /v1/speech-to-text)"]
+        SummaryEngine["Executive Summary Engine<br/>(summaryService.ts Key Moments & Action Items)"]
+    end
+
+    subgraph StorageTier ["4. Local Files, JSON Stores & External Cloud"]
+        DiskUploads[("Local Audio Storage Volume<br/>(backend/uploads/ Raw Audio Blobs)")]
+        JSONDb[("Metadata JSON Stores<br/>(recordings.json & pricing.json)")]
+        CloudAPIs["External Cloud APIs<br/>(Google OAuth 2.0 JWKS & ElevenLabs API)"]
+    end
+
+    VoiceRecorder --> MediaStreamer
+    VoiceRecorder --> GoogleIdentity
+    GoogleIdentity -->|JWT Credential| ExpressServer
+    MediaStreamer -->|Audio Blob| ExpressServer
+
+    ExpressServer --> RateLimiters
+    RateLimiters --> OAuthValidator
+    OAuthValidator --> JWTSession
+
+    JWTSession --> MulterIngest
+    MulterIngest --> ElevenLabsService
+    ElevenLabsService --> SummaryEngine
+
+    MulterIngest --> DiskUploads
+    SummaryEngine --> JSONDb
+    OAuthValidator -.->|JWKS Query| CloudAPIs
+    ElevenLabsService -.->|STT Query| CloudAPIs
+
+```
 
 ### Diagram Legend & Color Key
 
@@ -71,9 +116,6 @@ Vnotes/
 ├── .github/                        # GitHub governance templates (PR, Issue templates, Code of Conduct)
 
 ├── docs/                           # Documentation suite and SVG architecture diagrams
-
-│   ├── assets/
-│   │   └── system-overview.svg     # Vector architecture diagram
 
 │   ├── ARCHITECTURE.md             # Detailed architecture specification
 

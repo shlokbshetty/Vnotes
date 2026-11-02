@@ -60,8 +60,6 @@ flowchart TD
 
 ```
 
-> **Visual Asset**: A standalone vector version is also available at [`docs/assets/system-overview.svg`](docs/assets/system-overview.svg).
-
 VNotes employs a decoupled TypeScript client-server architecture:
 - **React 18 + Vite 5 SPA (`frontend/`)**: Implements the browser `MediaRecorder` capture flow, Google OAuth 2.0 popup/redirect initiation, protected route guards (`ProtectedRoute`), and interactive playback with synchronized transcripts, AI summaries, and timestamped bookmarks.
 - **Express 4 + TypeScript API (`backend/`)**: Enforces endpoint-specific rate limiting (`oauthLimiter`, `logoutLimiter`), verifies Google OAuth authorization codes and OIDC ID tokens via `google-auth-library`, issues and revokes HS256 session JWTs, handles 500 MB `multer` media streams, orchestrates ElevenLabs Scribe v2 transcription (`transcriptionService.ts`) and NLP summarization (`summaryService.ts`), and reconciles local disk uploads (`backend/uploads/`) with persistent recording metadata (`backend/src/data/recordings.json`) on startup.
