@@ -42,6 +42,7 @@ Instead, report suspected vulnerabilities privately via:
 - **GitHub Private Vulnerability Reporting**: Use the **Security -> Report a vulnerability** tab in the repository.
 
 ### What to Include
+
 - Description of the vulnerability and affected component (`backend/src/services/oauthService.ts`, `authMiddleware.ts`, etc.).
 - Step-by-step proof-of-concept (PoC) or HTTP request reproduction.
 - Potential impact (e.g., cross-tenant recording access, JWT forgery, arbitrary file upload).

@@ -23,7 +23,9 @@ Node.js 16+, npm or yarn, Google Cloud Console account
 ### Step 2: Configure Backend (.env)
 
 Create or update `backend/.env`:
+
 ```
+
 GOOGLE_OAUTH_CLIENT_ID=your_client_id
 GOOGLE_OAUTH_CLIENT_SECRET=your_client_secret
 GOOGLE_OAUTH_CALLBACK_URI=http://localhost:3000/auth/callback
@@ -32,6 +34,7 @@ JWT_EXPIRATION=86400
 CORS_ORIGIN=http://localhost:3000
 PORT=3001
 NODE_ENV=development
+
 ```
 
 Note: For production, use HTTPS URLs and a cryptographically secure JWT_SECRET.
@@ -39,9 +42,12 @@ Note: For production, use HTTPS URLs and a cryptographically secure JWT_SECRET.
 ### Step 3: Configure Frontend (.env)
 
 Create or update `frontend/.env`:
+
 ```
+
 VITE_GOOGLE_OAUTH_CLIENT_ID=your_client_id
 VITE_API_URL=http://localhost:3001/api
+
 ```
 
 ## Step 4: Install Dependencies
@@ -49,6 +55,7 @@ VITE_API_URL=http://localhost:3001/api
 ```bash
 cd backend && npm install
 cd frontend && npm install
+
 ```
 
 ## Step 5: Run Tests
@@ -56,6 +63,7 @@ cd frontend && npm install
 ```bash
 cd backend
 npm test
+
 ```
 
 All tests should pass.
@@ -64,6 +72,7 @@ All tests should pass.
 
 ```bash
 npm run dev
+
 ```
 
 Services:
@@ -104,15 +113,21 @@ JWT_EXPIRATION=86400
 CORS_ORIGIN=https://yourdomain.com
 PORT=3001
 NODE_ENV=production
+
 ```
 
 Generate secure JWT_SECRET:
+
 ```bash
+
 # Linux/Mac
+
 openssl rand -base64 32
 
 # Windows PowerShell
+
 [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes((1..32 | % {[char](Get-Random -Minimum 33 -Maximum 127))} | Join-String)))
+
 ```
 
 ## OAuth Flow
@@ -132,14 +147,19 @@ openssl rand -base64 32
 ## Testing Commands
 
 ```bash
+
 # Run all tests
+
 npm test
 
 # Run backend tests only
+
 cd backend && npm test
 
 # Run with coverage
+
 npm test -- --coverage
+
 ```
 
 ## Troubleshooting

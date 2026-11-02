@@ -31,6 +31,7 @@ Paste relevant console output, network tab responses, or backend stack traces he
 
 ```text
 Paste logs here
+
 ```
 
 ## Environment Information

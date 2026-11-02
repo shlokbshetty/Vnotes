@@ -29,9 +29,11 @@ All commit messages must follow the [Conventional Commits v1.0.0](https://www.co
 [optional body explaining why the change was made]
 
 [optional footer(s) such as BREAKING CHANGE: or Closes #123]
+
 ```
 
 ### Allowed Commit Types
+
 - `feat`: Introduces a new feature (`feat(backend): add WebVTT subtitle export endpoint`)
 - `fix`: Patches a bug (`fix(auth): revoke jti claim on logout`)
 - `docs`: Documentation-only changes (`docs: add comprehensive production documentation suite and architecture diagrams`)
@@ -65,5 +67,6 @@ All commit messages must follow the [Conventional Commits v1.0.0](https://www.co
    # 4. Verify production TypeScript & Vite build
    npm run build
    ```
+
 4. **Submit Pull Request**: Fill out `.github/PULL_REQUEST_TEMPLATE.md` completely, linking related issues and confirming test coverage.
 5. **Code Review & Merge**: Once approved by a maintainer and all CI checks pass, PRs are squash-merged into `main`.

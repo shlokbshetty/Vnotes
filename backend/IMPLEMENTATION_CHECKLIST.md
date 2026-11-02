@@ -137,14 +137,19 @@ Implement rate limiting middleware for authentication endpoints and comprehensiv
 ## Validation Commands
 
 ```bash
+
 # Build project
+
 npm run build
 
 # Run rate limiter tests
+
 npx vitest tests/rateLimiter.test.ts
 
 # Check TypeScript types
+
 npm run build -- --noEmit
+
 ```
 
 ## Deployment Preparation

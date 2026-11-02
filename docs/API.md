@@ -19,9 +19,11 @@ Protected endpoints require an **HS256 JSON Web Token (JWT)** issued by `POST /a
 
 ```http
 Authorization: Bearer <sessionToken>
+
 ```
 
 ### JWT Claims Structure (`JWTPayload`)
+
 ```json
 {
   "user_id": "109876543210987654321",
@@ -31,9 +33,11 @@ Authorization: Bearer <sessionToken>
   "iss": "vnotes-backend",
   "jti": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d"
 }
+
 ```
 
 ### Authentication Middleware Checks (`authMiddleware.ts`)
+
 1. Verifies presence of `Authorization` header (`401 MISSING_AUTH_HEADER` if absent).
 2. Verifies `Bearer <token>` format (`401 MALFORMED_AUTH_HEADER` if invalid).
 3. Checks `sessionStore.isTokenRevoked(token)` (`401 TOKEN_REVOKED` if logged out).
@@ -79,26 +83,32 @@ Authorization: Bearer <sessionToken>
 ### 5.1 System & Health Endpoints
 
 #### `GET /`
+
 Returns API banner and version.
 
 **Response (`200 OK`)**:
+
 ```json
 {
   "message": "VNotes Backend API",
   "version": "1.0.0",
   "status": "running"
 }
+
 ```
 
 #### `GET /health`
+
 Returns service health check status.
 
 **Response (`200 OK`)**:
+
 ```json
 {
   "status": "ok",
   "timestamp": "2026-10-28T17:20:00.000Z"
 }
+
 ```
 
 ---
@@ -106,16 +116,20 @@ Returns service health check status.
 ### 5.2 Authentication Endpoints
 
 #### `POST /auth/oauth`
+
 Exchanges a Google OAuth 2.0 authorization code for Google OIDC tokens, verifies the ID token against Google JWKS, and issues a signed VNotes HS256 JWT.
 
 **Request Body (`application/json`)**:
+
 ```json
 {
   "code": "4/0AVG7fiQ_example_google_oauth_code"
 }
+
 ```
 
 **Success Response (`200 OK`)**:
+
 ```json
 {
   "success": true,
@@ -128,6 +142,7 @@ Exchanges a Google OAuth 2.0 authorization code for Google OIDC tokens, verifies
   },
   "expiresIn": 86400
 }
+
 ```
 
 **Error Responses**:
@@ -139,26 +154,31 @@ Exchanges a Google OAuth 2.0 authorization code for Google OIDC tokens, verifies
 ---
 
 #### `POST /auth/logout`
+
 Revokes the caller's active Bearer JWT and its `jti` identifier in `sessionStore`.
 
 **Headers**: `Authorization: Bearer <sessionToken>`
 
 **Success Response (`200 OK`)**:
+
 ```json
 {
   "success": true,
   "message": "Logged out successfully"
 }
+
 ```
 
 ---
 
 #### `GET /api/user/profile`
+
 Returns the authenticated user's profile derived from their verified JWT claims.
 
 **Headers**: `Authorization: Bearer <sessionToken>`
 
 **Success Response (`200 OK`)**:
+
 ```json
 {
   "success": true,
@@ -171,6 +191,7 @@ Returns the authenticated user's profile derived from their verified JWT claims.
     "last_login_timestamp": null
   }
 }
+
 ```
 
 ---
@@ -178,9 +199,11 @@ Returns the authenticated user's profile derived from their verified JWT claims.
 ### 5.3 Pricing Endpoint
 
 #### `GET /api/pricing`
+
 Returns the structured subscription tiers (`free`, `pro`) and feature comparison matrix from `backend/src/data/pricing.json`.
 
 **Success Response (`200 OK`)**:
+
 ```json
 {
   "tiers": [
@@ -237,6 +260,7 @@ Returns the structured subscription tiers (`free`, `pro`) and feature comparison
     }
   }
 }
+
 ```
 
 ---
@@ -244,6 +268,7 @@ Returns the structured subscription tiers (`free`, `pro`) and feature comparison
 ### 5.4 Recordings & AI Processing Endpoints
 
 #### `POST /api/recordings/upload`
+
 Uploads a single audio or video file up to **500 MB** and creates a metadata entry scoped to `req.userId`.
 
 - **Headers**: `Authorization: Bearer <sessionToken>`
@@ -253,6 +278,7 @@ Uploads a single audio or video file up to **500 MB** and creates a metadata ent
 - **Allowed Video MIME Types**: `video/mp4`, `video/x-matroska`, `video/mkv`, `video/webm`, `video/avi`, `video/quicktime`
 
 **Success Response (`201 Created`)**:
+
 ```json
 {
   "success": true,
@@ -268,18 +294,21 @@ Uploads a single audio or video file up to **500 MB** and creates a metadata ent
     "user_id": "109876543210987654321"
   }
 }
+
 ```
 
 ---
 
 #### `GET /api/recordings`
+
 Lists all recordings belonging to the authenticated user. Supports optional case-insensitive full-text search across `originalName`, `transcription`, and `summary`.
 
 - **Headers**: `Authorization: Bearer <sessionToken>`
 - **Query Parameters**:
-  - `q` *(optional, string)*: Search filter query (e.g., `/api/recordings?q=roadmap`)
+  - `q` *(optional, string)*: Search filter query (e.g., `/api/recordings — q=roadmap`)
 
 **Success Response (`200 OK`)**:
+
 ```json
 {
   "success": true,
@@ -304,11 +333,13 @@ Lists all recordings belonging to the authenticated user. Supports optional case
     }
   ]
 }
+
 ```
 
 ---
 
 #### `GET /api/recordings/:id`
+
 Retrieves a single recording by ID. Enforces tenant isolation (`recording.user_id === req.userId`).
 
 - **Headers**: `Authorization: Bearer <sessionToken>`
@@ -320,9 +351,11 @@ Retrieves a single recording by ID. Enforces tenant isolation (`recording.user_i
 ---
 
 #### `DELETE /api/recordings/:id`
+
 Deletes both the physical media file in `backend/uploads/` and its metadata entry in `recordings.json`. Enforces tenant ownership (`403 FORBIDDEN` if `recording.user_id !== req.userId`).
 
 **Success Response (`200 OK`)**:
+
 ```json
 {
   "success": true,
@@ -330,19 +363,23 @@ Deletes both the physical media file in `backend/uploads/` and its metadata entr
     "message": "Recording deleted successfully"
   }
 }
+
 ```
 
 ---
 
 #### `POST /api/recordings/:id/key-moments`
+
 Adds a timestamped bookmark to the recording's `keyMoments` array.
 
 **Request Body (`application/json`)**:
+
 ```json
 {
   "time": "04:32",
   "label": "Q4 Budget Approval"
 }
+
 ```
 
 **Success Response (`200 OK`)**: Returns `{ "success": true, "data": { ...Recording } }` with updated `keyMoments`.
@@ -350,13 +387,16 @@ Adds a timestamped bookmark to the recording's `keyMoments` array.
 ---
 
 #### `DELETE /api/recordings/:id/key-moments`
+
 Removes a timestamped bookmark matching `time` from the recording's `keyMoments` array.
 
 **Request Body (`application/json`)**:
+
 ```json
 {
   "time": "04:32"
 }
+
 ```
 
 **Success Response (`200 OK`)**: Returns `{ "success": true, "data": { ...Recording } }` with the matching key moment removed.
@@ -364,6 +404,7 @@ Removes a timestamped bookmark matching `time` from the recording's `keyMoments`
 ---
 
 #### `POST /api/recordings/:id/transcribe`
+
 Streams the recording's media file to the ElevenLabs Speech-to-Text API (`model_id: 'scribe_v2'`) and saves the resulting text to `recording.transcription`.
 
 - **Headers**: `Authorization: Bearer <sessionToken>`
@@ -373,6 +414,7 @@ Streams the recording's media file to the ElevenLabs Speech-to-Text API (`model_
 ---
 
 #### `POST /api/recordings/:id/summary`
+
 Analyzes `recording.transcription` to generate `summary`, `keyPoints`, and `actionItems`.
 
 - **Headers**: `Authorization: Bearer <sessionToken>`

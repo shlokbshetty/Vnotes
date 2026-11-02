@@ -71,6 +71,7 @@ router.post('/oauth', oauthLimiter, async (req: Request, res: Response) => { ...
 
 // Logout endpoint with 10 attempts per hour limit
 router.post('/logout', logoutLimiter, authMiddleware, async (req: Request, res: Response) => { ... });
+
 ```
 
 Note: The `logoutLimiter` is applied **before** the `authMiddleware`. This provides rate limiting even for requests with invalid tokens, preventing attackers from using logout attempts as a way to consume resources.
@@ -84,21 +85,31 @@ The .env.example file has been updated with comprehensive documentation for all 
 ### Rate Limiting Configuration Variables
 
 ```env
+
 # RATE_LIMIT_OAUTH_WINDOW: Time window for OAuth rate limiting in milliseconds
+
 # Default: 300000 (5 minutes)
+
 RATE_LIMIT_OAUTH_WINDOW=300000
 
 # RATE_LIMIT_OAUTH_MAX: Maximum OAuth attempts allowed per IP within the window
+
 # Default: 5
+
 RATE_LIMIT_OAUTH_MAX=5
 
 # RATE_LIMIT_LOGOUT_WINDOW: Time window for logout rate limiting in milliseconds
+
 # Default: 3600000 (1 hour)
+
 RATE_LIMIT_LOGOUT_WINDOW=3600000
 
 # RATE_LIMIT_LOGOUT_MAX: Maximum logout attempts allowed per IP within the window
+
 # Default: 10
+
 RATE_LIMIT_LOGOUT_MAX=10
+
 ```
 
 ### Other Environment Variables Documented
@@ -129,18 +140,21 @@ Each variable includes:
 Comprehensive test suite for rate limiting middleware including:
 
 ### OAuth Rate Limiter Tests
+
 - Allows 5 requests within limit
 - Returns 429 when limit exceeded
 - Includes `retryAfter` in response
 - Includes `RateLimit-*` headers in response
 
 ### Logout Rate Limiter Tests
+
 - Allows 10 requests within limit
 - Returns 429 when limit exceeded
 - Returns appropriate message for logout
 - Includes `retryAfter` in response
 
 ### Configuration Tests
+
 - Verifies OAuth limiter max is 5
 - Verifies logout limiter max is 10
 
@@ -159,6 +173,7 @@ The following packages were added to support rate limiting:
     "@types/supertest": "^2.0.12"
   }
 }
+
 ```
 
 ## Security Considerations

@@ -24,16 +24,20 @@ VNotes includes automatic speech-to-text transcription powered by ElevenLabs. Au
 ### Step 2: Configure Backend
 
 Edit `backend/.env`:
+
 ```env
 ELEVENLABS_API_KEY=your_api_key_here
+
 ```
 
 ### Step 3: Configure Frontend
 
 Edit `frontend/.env`:
+
 ```env
 VITE_ENABLE_TRANSCRIPTION=true
 VITE_API_URL=http://localhost:3001/api
+
 ```
 
 ### Step 4: Install and Run
@@ -41,6 +45,7 @@ VITE_API_URL=http://localhost:3001/api
 ```bash
 npm install
 npm run dev
+
 ```
 
 ### Step 5: Test Transcription
@@ -62,6 +67,7 @@ POST /api/recordings/:id/transcribe
 Transcribes an uploaded audio file.
 
 Response:
+
 ```json
 {
   "data": {
@@ -70,6 +76,7 @@ Response:
     "originalName": "audio.wav"
   }
 }
+
 ```
 
 ## Troubleshooting

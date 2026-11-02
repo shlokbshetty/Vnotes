@@ -69,58 +69,100 @@ This document provides a comprehensive architectural reference for **VNotes**, d
 ```text
 Vnotes/
 ├── .github/                        # GitHub governance templates (PR, Issue templates, Code of Conduct)
+
 ├── docs/                           # Documentation suite and SVG architecture diagrams
+
 │   ├── assets/
 │   │   └── system-overview.svg     # Vector architecture diagram
+
 │   ├── ARCHITECTURE.md             # Detailed architecture specification
+
 │   ├── API.md                      # Complete REST API reference
+
 │   └── DEVELOPMENT.md              # Developer setup & testing guide
+
 ├── scripts/
 │   └── preflightCheck.js           # Pre-dev environment and Google Client ID parity validator
+
 ├── backend/                        # Express 4 + TypeScript API Server (:3001)
+
 │   ├── src/
 │   │   ├── config/
 │   │   │   ├── env.ts              # Fail-fast environment variable loader & validator
+
 │   │   │   ├── oauth.ts            # Google OAuth2Client initialization
+
 │   │   │   └── supabase.ts         # Optional Supabase client configuration
+
 │   │   ├── controllers/
 │   │   │   ├── pricingController.ts    # Tier & feature comparison controller
+
 │   │   │   └── recordingController.ts  # Upload, CRUD, key-moments, transcribe & summary handlers
+
 │   │   ├── data/
 │   │   │   ├── pricing.json        # Static pricing tiers and feature matrix
+
 │   │   │   └── recordings.json     # Persistent JSON metadata store for recordings
+
 │   │   ├── middlewares/
 │   │   │   ├── authMiddleware.ts   # Bearer JWT extraction, revocation check, & signature verification
+
 │   │   │   └── rateLimiter.ts      # IP rate limiters (oauthLimiter, logoutLimiter)
+
 │   │   ├── routes/
 │   │   │   ├── authRoutes.ts       # POST /auth/oauth, POST /auth/logout
+
 │   │   │   ├── pricingRoutes.ts    # GET /api/pricing
+
 │   │   │   ├── recordingRoutes.ts  # /api/recordings/* + Multer 500MB file filter
+
 │   │   │   └── userRoutes.ts       # GET /api/user/profile
+
 │   │   ├── services/
 │   │   │   ├── authService.ts      # HS256 JWT generation & verification
+
 │   │   │   ├── oauthService.ts     # Google code exchange & ID token JWKS verification
+
 │   │   │   ├── recordingService.ts # Recording metadata CRUD, user filtering, & search
+
 │   │   │   ├── summaryService.ts   # NLP sentence scoring, key points, & action item extraction
+
 │   │   │   └── transcriptionService.ts # ElevenLabs Scribe v2 multipart streaming client
+
 │   │   ├── utils/
 │   │   │   ├── sessionStore.ts     # In-memory token & JTI revocation store with TTL cleanup
+
 │   │   │   └── syncUploads.ts      # Startup disk-to-metadata reconciliation utility
+
 │   │   └── server.ts               # Express app entry point, CORS, static /uploads, error handler
+
 │   ├── tests/                      # Vitest unit, integration, and fast-check property-based tests (*.pbt.test.ts)
+
 │   └── uploads/                    # Local disk storage for uploaded audio/video files
+
 ├── frontend/                       # React 18 + Vite 5 + Tailwind CSS SPA (:3000)
+
 │   ├── src/
 │   │   ├── components/             # Layout, Navbar, ProtectedRoute, RecordingPlayer, UploadModal, etc.
+
 │   │   ├── context/                # AuthContext (session token, user profile, login/logout helpers)
+
 │   │   ├── pages/                  # HomePage, LoginPage, OAuthCallbackPage, RecordingsPage, RecordingDetailPage, PricingPage
+
 │   │   ├── services/               # Typed API client wrapper (api.ts)
+
 │   │   ├── test/                   # Frontend Vitest + React Testing Library & PBT suites
+
 │   │   ├── App.tsx                 # Route definitions & AuthProvider wrapper
+
 │   │   └── main.tsx                # React DOM mounting entry point
+
 │   └── vite.config.ts              # Vite dev server (:3000) and build configuration
+
 ├── docker-compose.yml              # Multi-container orchestration for backend (:3001) and frontend (:3000)
+
 └── package.json                    # Root workspace scripts (predev, dev, build, start)
+
 ```
 
 ---
@@ -128,6 +170,7 @@ Vnotes/
 ## 5. End-to-End Data Flows
 
 ### 5.1 Google OAuth 2.0 & Session JWT Lifecycle
+
 1. **Initiation**: The user clicks "Sign in with Google" on `LoginPage.tsx`. The browser redirects to Google's OAuth 2.0 consent screen using `VITE_GOOGLE_CLIENT_ID` and `VITE_GOOGLE_REDIRECT_URI` (`http://localhost:3000/auth/callback`).
 2. **Callback Capture**: Google redirects back to `OAuthCallbackPage.tsx` with `?code=<auth_code>`. The frontend posts `{ code }` to `POST /auth/oauth`.
 3. **Code Exchange & OIDC Verification**:
@@ -138,6 +181,7 @@ Vnotes/
 5. **Authenticated Requests & Logout**: The SPA includes `Authorization: Bearer <sessionToken>` on `/api/*` requests. When logging out via `POST /auth/logout`, `authMiddleware` validates the token and `sessionStore.revokeSession()` blacklists both the token string and its `jti`.
 
 ### 5.2 Media Upload, Transcription & Summarization Pipeline
+
 1. **Upload (`POST /api/recordings/upload`)**:
    - `authMiddleware` authenticates the user and attaches `req.userId`.
    - Multer validates the MIME type against allowed audio (`wav`, `mpeg`, `mp3`, `m4a`, `aac`, `flac`) and video (`mp4`, `x-matroska`, `mkv`, `webm`, `avi`, `quicktime`) formats, enforces a 500 MB cap, and writes the file to `backend/uploads/<timestamp>-<random>.<ext>`.

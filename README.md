@@ -1,10 +1,10 @@
 # VNotes — Intelligent Voice & Video Knowledge Hub
 
 [![Version](https://img.shields.io/badge/version-1.1.0-6366f1.svg)](CHANGELOG.md)
-[![Node](https://img.shields.io/badge/Node.js-18%2B-339933.svg?logo=node.js)](backend/package.json)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178c6.svg?logo=typescript)](backend/tsconfig.json)
-[![React](https://img.shields.io/badge/React-18.2-61dafb.svg?logo=react)](frontend/package.json)
-[![Express](https://img.shields.io/badge/Express-4.18-000000.svg?logo=express)](backend/package.json)
+[![Node](https://img.shields.io/badge/Node.js-18%2B-339933.svg — logo=node.js)](backend/package.json)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178c6.svg — logo=typescript)](backend/tsconfig.json)
+[![React](https://img.shields.io/badge/React-18.2-61dafb.svg — logo=react)](frontend/package.json)
+[![Express](https://img.shields.io/badge/Express-4.18-000000.svg — logo=express)](backend/package.json)
 [![Tests](https://img.shields.io/badge/Tests-Vitest%20%2B%20fast--check-10b981.svg)](DEVELOPMENT.md)
 
 **VNotes** is a full-stack voice and video intelligence platform that captures browser-based audio/video recordings or multi-format media uploads (up to 500 MB), generates high-accuracy speech-to-text transcriptions via the **ElevenLabs Scribe v2 API**, and synthesizes structured executive summaries, key takeaways, action items, and timestamped key moments. Secured by **Google OAuth 2.0** (OIDC ID token verification against Google JWKS), stateless **HS256 JWT sessions** with instant JTI/token revocation, and strict per-user tenant isolation, VNotes transforms unstructured spoken meetings and voice notes into searchable, actionable knowledge.
@@ -13,7 +13,54 @@
 
 ## System Architecture Summary
 
-![VNotes System Architecture](docs/assets/system-overview.svg)
+```mermaid
+flowchart TD
+    subgraph ClientTier ["1. Audio Capture & Web Client (:3000)"]
+        VoiceRecorder["React 18 Voice Notes SPA<br/>(Vite 5 + Waveform Visualizer)"]
+        MediaStreamer["HTML5 MediaRecorder API<br/>(Opus / WebM 48kHz Stream Capture)"]
+        GoogleIdentity["Google Identity Services<br/>(OAuth 2.0 Web Popup / Redirect Client)"]
+    end
+
+    subgraph GatewayTier ["2. API Gateway & Session Security (:3001)"]
+        ExpressServer["Express 4 + TypeScript Gateway<br/>(REST Endpoints + CORS Preflight)"]
+        RateLimiters["Rate Limiter Middleware<br/>(oauthLimiter & logoutLimiter)"]
+        OAuthValidator["Google OAuth & JWKS Service<br/>(oauthService.ts Public Key Validator)"]
+        JWTSession["JWT Session & JTI Revocation<br/>(authMiddleware.ts + sessionStore.ts)"]
+    end
+
+    subgraph ProcessingTier ["3. Audio Ingestion & AI Summarization"]
+        MulterIngest["Multer Multipart Audio Handler<br/>(recordingService.ts Disk Buffer)"]
+        ElevenLabsService["ElevenLabs Scribe v2 STT<br/>(transcriptionService.ts POST /v1/speech-to-text)"]
+        SummaryEngine["Executive Summary Engine<br/>(summaryService.ts Key Moments & Action Items)"]
+    end
+
+    subgraph StorageTier ["4. Local Files, JSON Stores & External Cloud"]
+        DiskUploads[("Local Audio Storage Volume<br/>(backend/uploads/ Raw Audio Blobs)")]
+        JSONDb[("Metadata JSON Stores<br/>(recordings.json & pricing.json)")]
+        CloudAPIs["External Cloud APIs<br/>(Google OAuth 2.0 JWKS & ElevenLabs API)"]
+    end
+
+    VoiceRecorder --> MediaStreamer
+    VoiceRecorder --> GoogleIdentity
+    GoogleIdentity -->|JWT Credential| ExpressServer
+    MediaStreamer -->|Audio Blob| ExpressServer
+
+    ExpressServer --> RateLimiters
+    RateLimiters --> OAuthValidator
+    OAuthValidator --> JWTSession
+
+    JWTSession --> MulterIngest
+    MulterIngest --> ElevenLabsService
+    ElevenLabsService --> SummaryEngine
+
+    MulterIngest --> DiskUploads
+    SummaryEngine --> JSONDb
+    OAuthValidator -.->|JWKS Query| CloudAPIs
+    ElevenLabsService -.->|STT Query| CloudAPIs
+
+```
+
+> **Visual Asset**: A standalone vector version is also available at [`docs/assets/system-overview.svg`](docs/assets/system-overview.svg).
 
 VNotes employs a decoupled TypeScript client-server architecture:
 - **React 18 + Vite 5 SPA (`frontend/`)**: Implements the browser `MediaRecorder` capture flow, Google OAuth 2.0 popup/redirect initiation, protected route guards (`ProtectedRoute`), and interactive playback with synchronized transcripts, AI summaries, and timestamped bookmarks.
@@ -56,13 +103,17 @@ git clone https://github.com/your-org/Vnotes.git
 cd Vnotes
 
 # Install root orchestration dependencies (concurrently)
+
 npm install
 
 # Install backend dependencies
+
 npm --prefix backend install
 
 # Install frontend dependencies
+
 npm --prefix frontend install
+
 ```
 
 ### 2. Configure Environment Variables
@@ -73,6 +124,7 @@ Copy the example environment files at the root, backend, and frontend levels:
 cp .env.example .env
 cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env
+
 ```
 
 Populate `backend/.env` and `frontend/.env` with your Google OAuth Client ID, Client Secret, and a minimum 32-character `JWT_SECRET` (see [Environment Configuration Mapping](#environment-configuration-mapping) below).
@@ -83,12 +135,14 @@ VNotes includes an automated preflight verifier (`scripts/preflightCheck.js`) th
 
 ```bash
 npm run predev
+
 ```
 
 ### 4. Start the Development Servers
 
 ```bash
 npm run dev
+
 ```
 
 This runs `preflightCheck.js` and concurrently launches both services:

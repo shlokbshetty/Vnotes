@@ -103,7 +103,7 @@ spacing:
 
 ## Brand & Style
 
-This design system is built for high-focus productivity and technical precision. It targets power users who value information density and professional-grade tools. The aesthetic is a fusion of **Minimalism** and **Modern Corporate**, utilizing a deep "Obsidian" dark mode that minimizes eye strain during long working sessions. 
+This design system is built for high-focus productivity and technical precision. It targets power users who value information density and professional-grade tools. The aesthetic is a fusion of **Minimalism** and **Modern Corporate**, utilizing a deep "Obsidian" dark mode that minimizes eye strain during long working sessions.
 
 The visual narrative centers on "The Waveform" — vibrant, high-contrast pulses of energy against a dead-silent, dark backdrop. This creates a psychological environment that feels both sophisticated and high-tech, evoking the precision of a recording studio and the clarity of a streamlined digital workspace.
 
@@ -121,7 +121,7 @@ The palette is anchored in a true-dark foundation. Surfaces are tiered through s
 
 The typography system relies on two distinct families to separate content from metadata.
 
-**Hanken Grotesk** serves as the primary engine for content and navigation. Its clean, sharp geometry provides high readability in low-light environments. 
+**Hanken Grotesk** serves as the primary engine for content and navigation. Its clean, sharp geometry provides high readability in low-light environments.
 
 **JetBrains Mono** is used for technical metadata, timestamps, file sizes, and status labels. This monospaced choice reinforces the "technical tool" identity and ensures that numerical data (like audio durations) remains visually stable during real-time updates.
 
@@ -149,7 +149,7 @@ Depth is further defined by `1px` solid borders using low-opacity white (`rgba(2
 
 ## Shapes
 
-The shape language is **Soft (0.25rem)**. This slight rounding provides a modern touch while maintaining the serious, structured feel of a technical application. 
+The shape language is **Soft (0.25rem)**. This slight rounding provides a modern touch while maintaining the serious, structured feel of a technical application.
 
 Buttons and input fields should strictly adhere to the `0.25rem` radius. Floating Action Buttons (FABs) or the primary "Record" button may use a larger `rounded-xl` radius to signify their primary status in the hierarchy.
 

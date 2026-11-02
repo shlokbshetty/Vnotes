@@ -18,13 +18,16 @@ The authentication system uses:
 Exchange Google authorization code for session token.
 
 **Request:**
+
 ```json
 {
   "code": "4/0AX4XfWh..."  // Google authorization code from OAuth callback
 }
+
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -36,6 +39,7 @@ Exchange Google authorization code for session token.
     "profile_picture_url": "https://..."
   }
 }
+
 ```
 
 **Error Responses:**
@@ -49,10 +53,12 @@ Exchange Google authorization code for session token.
 | 500 | Server error | Database or internal error |
 
 **Example:**
+
 ```bash
 curl -X POST http://localhost:3001/auth/oauth \
   -H "Content-Type: application/json" \
   -d '{"code": "4/0AX4XfWh..."}'
+
 ```
 
 ---
@@ -62,18 +68,22 @@ curl -X POST http://localhost:3001/auth/oauth \
 Revoke current session token (logout).
 
 **Request:**
+
 ```json
 {
   "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 }
+
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
   "message": "Logged out successfully"
 }
+
 ```
 
 **Error Responses:**
@@ -86,9 +96,11 @@ Revoke current session token (logout).
 | 500 | Server error | Session revocation failed |
 
 **Example:**
+
 ```bash
 curl -X POST http://localhost:3001/auth/logout \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+
 ```
 
 ---
@@ -98,11 +110,15 @@ curl -X POST http://localhost:3001/auth/logout \
 Retrieve authenticated user's profile.
 
 **Request:**
+
 ```
+
 Authorization: Bearer <session_token>
+
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -115,6 +131,7 @@ Authorization: Bearer <session_token>
     "last_login_at": "2024-01-20T14:22:00Z"
   }
 }
+
 ```
 
 **Error Responses:**
@@ -128,9 +145,11 @@ Authorization: Bearer <session_token>
 | 500 | Server error | Database retrieval failed |
 
 **Example:**
+
 ```bash
 curl -X GET http://localhost:3001/api/user/profile \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+
 ```
 
 ---
@@ -145,8 +164,11 @@ The following endpoints require a valid session token in the Authorization heade
 - `DELETE /api/recordings/:id` - Delete recording
 
 **Authorization Header Format:**
+
 ```
+
 Authorization: Bearer <session_token>
+
 ```
 
 **Error Handling:**
@@ -172,6 +194,7 @@ JWT tokens include the following claims:
   "exp": 1705510800,                 // Expiration (24 hours later)
   "iss": "vnotes-backend"            // Issuer
 }
+
 ```
 
 **Token Expiration:** 24 hours (configurable via JWT_EXPIRATION env var)
@@ -183,16 +206,22 @@ JWT tokens include the following claims:
 The API supports CORS with the following headers:
 
 **Request:**
+
 ```
+
 Origin: https://frontend.example.com
+
 ```
 
 **Response Headers:**
+
 ```
+
 Access-Control-Allow-Origin: https://frontend.example.com
 Access-Control-Allow-Credentials: true
 Access-Control-Allow-Headers: Content-Type, Authorization
 Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS
+
 ```
 
 **Preflight (OPTIONS):**
@@ -205,9 +234,11 @@ All endpoints respond to preflight OPTIONS requests with proper CORS headers.
 All responses include security headers:
 
 ```
+
 X-Content-Type-Options: nosniff
 X-Frame-Options: DENY
 X-XSS-Protection: 1; mode=block
+
 ```
 
 ---
@@ -223,6 +254,7 @@ All error responses follow this format:
   "error": "ERROR_CODE",
   "timestamp": "2024-01-20T15:30:45Z"
 }
+
 ```
 
 **Note:** Error messages do not expose:
@@ -243,10 +275,13 @@ Rate limiting is enforced on authentication endpoints:
 | POST /auth/logout | 10 attempts | 1 hour per IP |
 
 **Rate Limit Headers:**
+
 ```
+
 RateLimit-Limit: 5
 RateLimit-Remaining: 3
 RateLimit-Reset: 1705424700
+
 ```
 
 When rate limit exceeded:
@@ -260,21 +295,27 @@ When rate limit exceeded:
 Required environment variables:
 
 ```bash
+
 # Google OAuth
+
 GOOGLE_OAUTH_CLIENT_ID=your_client_id
 GOOGLE_OAUTH_CLIENT_SECRET=your_client_secret
 GOOGLE_OAUTH_CALLBACK_URI=https://yourdomain.com/api/auth/callback
 
 # Session Management
+
 JWT_SECRET=your_secret_key_min_32_chars
 JWT_EXPIRATION=86400  # 24 hours in seconds
 
 # CORS
+
 CORS_ORIGIN=https://yourdomain.com
 
 # Server
+
 PORT=3001
 NODE_ENV=production
+
 ```
 
 ---
@@ -282,6 +323,7 @@ NODE_ENV=production
 ## Development Setup
 
 ### Prerequisites
+
 - Node.js 16+
 - npm or yarn
 - Google OAuth app credentials
@@ -289,27 +331,36 @@ NODE_ENV=production
 ### Installation
 
 1. Clone repository and install dependencies:
+
 ```bash
 cd backend
 npm install
+
 ```
 
 2. Create `.env` file with configuration (see Environment Configuration above)
 
 3. Run migrations (if using Supabase):
+
 ```bash
 npx supabase migration up
+
 ```
 
 4. Start development server:
+
 ```bash
 npm run dev
+
 ```
 
 5. Run tests:
+
 ```bash
 npm test          # Run all tests
+
 npm run test:auth # Run auth tests only
+
 ```
 
 ---
@@ -333,29 +384,40 @@ Pre-deployment verification:
 ## Testing
 
 ### Run All Tests
+
 ```bash
 npm test
+
 ```
 
 ### Run Specific Test Suite
+
 ```bash
 npm run test -- tests/authService.test.ts
 npx vitest run tests/oauthService.test.ts
+
 ```
 
 ### Run Property-Based Tests
+
 ```bash
 npx vitest run tests/property6-sessionRevocation.pbt.test.ts
 npx vitest run tests/recordingOwnership.pbt.test.ts
+
 ```
 
 ### Integration Testing
+
 ```bash
+
 # Start backend server
+
 npm run dev
 
 # In another terminal, run integration tests
+
 npx vitest run tests/securityCheckpoint.pbt.test.ts
+
 ```
 
 ---

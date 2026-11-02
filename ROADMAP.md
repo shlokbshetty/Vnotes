@@ -32,6 +32,6 @@ This document tracks planned short-term milestones, medium-term platform enhance
 - [ ] **Real-Time WebSocket Live Transcription**:
   - Stream live `MediaRecorder` audio chunks over WebSockets during active recording sessions for real-time captioning and instant bookmarking.
 - [ ] **Semantic Vector Search (pgvector)**:
-  - Generate embeddings for recording transcripts and summaries, enabling natural-language cross-recording queries (e.g., *"What did we decide about Q4 pricing in last month's sync?"*).
+  - Generate embeddings for recording transcripts and summaries, enabling natural-language cross-recording queries (e.g., *"What did we decide about Q4 pricing in last month's sync — *).
 - [ ] **Workspace Collaboration & Shared Folders**:
   - Introduce team workspaces, role-based access control (`owner`, `editor`, `viewer`), and time-coded inline comment threads.
