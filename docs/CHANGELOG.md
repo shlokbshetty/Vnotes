@@ -6,6 +6,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [v1.2.0] - 2026-11-15
+
+### Added
+- **Centralized Documentation Hub (`docs/README.md`)**: Consolidated all project documentation, backend technical specs, frontend verification summaries, and design specifications into `docs/` with structured navigation.
+- **Root NPM Orchestration Scripts**: Added root-level `npm test`, `npm run test:backend`, `npm run test:frontend`, `npm run lint`, `npm run lint:backend`, `npm run lint:frontend`, and `npm run typecheck` scripts.
+- **Windows Automation Batch Script (`commit_changes.bat`)**: Added Windows batch script for automated preflight checks, testing, file staging, and git commits.
+
+### Changed
+- **Documentation Migration**: Migrated all markdown files from root and submodules into categorized `docs/`, `docs/backend/`, `docs/frontend/`, and `docs/design/` directories.
+- **Root README Modernization**: Streamlined root `README.md` to serve as a focused project portal linking directly to the `docs/` documentation suite.
+- **Git Ignore Cleanup**: Enhanced `.gitignore` to properly ignore `.agent/` and `.agents/` configuration trees.
+
+### Fixed
+- **Backend Linting**: Resolved `@typescript-eslint/no-namespace` declaration in `backend/src/middlewares/authMiddleware.ts`.
+- **Frontend Linting**: Fixed `@typescript-eslint/ban-ts-comment` error (`@ts-expect-error`) in `frontend/src/test/tailwind-colors.test.ts` and normalized lint command.
+
+---
+
 ## [v1.1.0] - 2026-10-28
 
 ### Added

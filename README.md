@@ -1,11 +1,11 @@
 # VNotes — Intelligent Voice & Video Knowledge Hub
 
-[![Version](https://img.shields.io/badge/version-1.1.0-6366f1.svg)](CHANGELOG.md)
-[![Node](https://img.shields.io/badge/Node.js-18%2B-339933.svg — logo=node.js)](backend/package.json)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178c6.svg — logo=typescript)](backend/tsconfig.json)
-[![React](https://img.shields.io/badge/React-18.2-61dafb.svg — logo=react)](frontend/package.json)
-[![Express](https://img.shields.io/badge/Express-4.18-000000.svg — logo=express)](backend/package.json)
-[![Tests](https://img.shields.io/badge/Tests-Vitest%20%2B%20fast--check-10b981.svg)](DEVELOPMENT.md)
+[![Version](https://img.shields.io/badge/version-1.1.0-6366f1.svg)](docs/CHANGELOG.md)
+[![Node](https://img.shields.io/badge/Node.js-18%2B-339933.svg?logo=node.js)](backend/package.json)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178c6.svg?logo=typescript)](backend/tsconfig.json)
+[![React](https://img.shields.io/badge/React-18.2-61dafb.svg?logo=react)](frontend/package.json)
+[![Express](https://img.shields.io/badge/Express-4.18-000000.svg?logo=express)](backend/package.json)
+[![Tests](https://img.shields.io/badge/Tests-Vitest%20%2B%20fast--check-10b981.svg)](docs/DEVELOPMENT.md)
 
 **VNotes** is a full-stack voice and video intelligence platform that captures browser-based audio/video recordings or multi-format media uploads (up to 500 MB), generates high-accuracy speech-to-text transcriptions via the **ElevenLabs Scribe v2 API**, and synthesizes structured executive summaries, key takeaways, action items, and timestamped key moments. Secured by **Google OAuth 2.0** (OIDC ID token verification against Google JWKS), stateless **HS256 JWT sessions** with instant JTI/token revocation, and strict per-user tenant isolation, VNotes transforms unstructured spoken meetings and voice notes into searchable, actionable knowledge.
 
@@ -64,22 +64,28 @@ VNotes employs a decoupled TypeScript client-server architecture:
 - **React 18 + Vite 5 SPA (`frontend/`)**: Implements the browser `MediaRecorder` capture flow, Google OAuth 2.0 popup/redirect initiation, protected route guards (`ProtectedRoute`), and interactive playback with synchronized transcripts, AI summaries, and timestamped bookmarks.
 - **Express 4 + TypeScript API (`backend/`)**: Enforces endpoint-specific rate limiting (`oauthLimiter`, `logoutLimiter`), verifies Google OAuth authorization codes and OIDC ID tokens via `google-auth-library`, issues and revokes HS256 session JWTs, handles 500 MB `multer` media streams, orchestrates ElevenLabs Scribe v2 transcription (`transcriptionService.ts`) and NLP summarization (`summaryService.ts`), and reconciles local disk uploads (`backend/uploads/`) with persistent recording metadata (`backend/src/data/recordings.json`) on startup.
 
-For a comprehensive breakdown of component boundaries, authentication sequences, storage reconciliation, and design decisions, see **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** (also available at **[ARCHITECTURE.md](ARCHITECTURE.md)**).
+For a comprehensive breakdown of component boundaries, authentication sequences, storage reconciliation, and design decisions, see **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**.
 
 ---
 
 ## Documentation Index
 
+Explore the consolidated **[Documentation Hub](docs/README.md)** for detailed guides and technical specifications:
+
 | Document | Description |
 | :--- | :--- |
-| **[ARCHITECTURE.md](ARCHITECTURE.md)** / **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** | System design patterns, tech stack justifications, directory structure, component breakdowns, and data flows |
-| **[API.md](API.md)** / **[docs/API.md](docs/API.md)** | Complete REST API reference, authentication headers, rate limits, request/response schemas, and error codes |
-| **[DEVELOPMENT.md](DEVELOPMENT.md)** / **[docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)** | Local setup, `preflightCheck.js`, upload-metadata sync, Vitest + `fast-check` property-based testing, and linting |
-| **[CONTRIBUTING.md](CONTRIBUTING.md)** | Branching strategy, Conventional Commits specification, pull request checklist, and quality gates |
-| **[SECURITY.md](SECURITY.md)** | Supported versions, OAuth/JWT security controls, tenant isolation, and vulnerability disclosure policy |
-| **[SUPPORT.md](SUPPORT.md)** | Support channels, issue labels, and troubleshooting FAQs |
-| **[ROADMAP.md](ROADMAP.md)** & **[VISION.md](VISION.md)** | Short-term engineering milestones and long-term architectural vision |
-| **[CHANGELOG.md](CHANGELOG.md)** | Release history adhering to Keep a Changelog and Semantic Versioning |
+| **[Documentation Hub](docs/README.md)** | Master index and technical document catalog |
+| **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** | System design patterns, tech stack justifications, directory structure, and Mermaid sequence flows |
+| **[docs/API.md](docs/API.md)** | Complete REST API reference, authentication headers, rate limits, request/response schemas, and error codes |
+| **[docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)** | Local setup, `preflightCheck.js`, upload-metadata sync, Vitest + `fast-check` testing, and linting |
+| **[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)** | Production deployment, Docker Compose, systemd, and reverse proxy configuration |
+| **[docs/GOOGLE_AUTH_SETUP.md](docs/GOOGLE_AUTH_SETUP.md)** | Google Cloud OAuth 2.0 & OIDC setup guide and credentials configuration |
+| **[docs/SETUP_ELEVENLABS.md](docs/SETUP_ELEVENLABS.md)** | Speech-to-text API key setup, audio formats, and offline fallback behavior |
+| **[docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)** | Branching strategy, Conventional Commits specification, pull request checklist, and quality gates |
+| **[docs/SECURITY.md](docs/SECURITY.md)** | Supported versions, OAuth/JWT security controls, tenant isolation, and vulnerability disclosure policy |
+| **[docs/SUPPORT.md](docs/SUPPORT.md)** | Support channels, issue labels, and troubleshooting FAQs |
+| **[docs/ROADMAP.md](docs/ROADMAP.md)** & **[docs/VISION.md](docs/VISION.md)** | Short-term engineering milestones and long-term architectural vision |
+| **[docs/CHANGELOG.md](docs/CHANGELOG.md)** | Release history adhering to Keep a Changelog and Semantic Versioning |
 
 ---
 
@@ -158,12 +164,16 @@ This runs `preflightCheck.js` and concurrently launches both services:
 | **Root** | `npm run dev` | Runs `predev` then concurrently starts backend (`:3001`) and frontend (`:3000`) in watch mode |
 | **Root** | `npm run build` | Compiles both backend TypeScript (`backend/dist`) and frontend Vite bundle (`frontend/dist`) |
 | **Root** | `npm start` | Runs compiled production backend (`node backend/dist/server.js`) |
+| **Root** | `npm test` | Concurrently runs both backend Vitest test suites and frontend React test suites |
+| **Root** | `npm run lint` | Concurrently lints both backend and frontend TypeScript codebases |
+| **Root** | `npm run typecheck` | Typechecks both backend and frontend projects with `tsc --noEmit` |
+| **Windows Script**| `.\commit_changes.bat` | Automates preflight, test execution, file staging, and git commit |
 | **Backend** | `npm --prefix backend run dev` | Starts Express server with `ts-node-dev --respawn --transpile-only src/server.ts` |
 | **Backend** | `npm --prefix backend test` | Runs core Vitest unit & integration suites (`pricing`, `services`, `jwt`, `oauth`, `sessionStore`) |
 | **Backend** | `npm --prefix backend run test:vitest` | Runs all Vitest suites including `fast-check` property-based tests (`*.pbt.test.ts`) |
 | **Backend** | `npm --prefix backend run lint` | Lints backend TypeScript source files (`eslint src --ext .ts`) |
 | **Frontend** | `npm --prefix frontend test` | Runs frontend React Testing Library + Vitest suites (`vitest run`) |
-| **Frontend** | `npm --prefix frontend run lint` | Runs strict ESLint checks (`--max-warnings 0`) across `ts,tsx` files |
+| **Frontend** | `npm --prefix frontend run lint` | Runs ESLint checks across frontend `ts,tsx` files |
 | **Docker** | `docker-compose up --build` | Builds and starts containerized `backend` (`:3001`) and `frontend` (`:3000`) services |
 
 ---

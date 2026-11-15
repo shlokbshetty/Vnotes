@@ -143,18 +143,26 @@ Frontend suites use **Vitest + JSDOM + `@testing-library/react`** to test:
 
 ## 5. Linting, Type-Checking & Production Builds
 
+You can run quality gates from the project root or within individual workspaces:
+
 ```bash
+# Run all tests across backend and frontend concurrently
+npm test
 
-# Lint backend TypeScript sources
+# Run tests for specific workspace
+npm run test:backend
+npm run test:frontend
 
-npm --prefix backend run lint
+# Lint both backend and frontend TypeScript sources
+npm run lint
 
-# Lint frontend TypeScript/React sources (zero warnings enforced)
+# Lint specific workspace
+npm run lint:backend
+npm run lint:frontend
 
-npm --prefix frontend run lint
+# Typecheck both backend and frontend without emitting files
+npm run typecheck
 
 # Build both backend (dist/) and frontend (dist/) production bundles
-
 npm run build
-
 ```

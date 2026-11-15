@@ -115,13 +115,25 @@ flowchart TD
 Vnotes/
 ├── .github/                        # GitHub governance templates (PR, Issue templates, Code of Conduct)
 
-├── docs/                           # Documentation suite and SVG architecture diagrams
-
+├── docs/                           # Consolidated documentation suite
+│   ├── README.md                   # Documentation index & navigation hub
 │   ├── ARCHITECTURE.md             # Detailed architecture specification
-
 │   ├── API.md                      # Complete REST API reference
-
-│   └── DEVELOPMENT.md              # Developer setup & testing guide
+│   ├── DEVELOPMENT.md              # Developer setup & testing guide
+│   ├── DEPLOYMENT.md               # Production deployment manual
+│   ├── CONTRIBUTING.md             # Contribution guidelines & coding standards
+│   ├── SECURITY.md                 # Security policies & vulnerability reporting
+│   ├── CHANGELOG.md                # Version release history
+│   ├── ROADMAP.md                  # Engineering milestones
+│   ├── VISION.md                   # Project product vision
+│   ├── SUPPORT.md                  # Support channels & FAQs
+│   ├── CODE_OF_CONDUCT.md          # Community guidelines
+│   ├── GOOGLE_AUTH_SETUP.md        # Google OAuth 2.0 configuration guide
+│   ├── GOOGLE_AUTH_DEPLOYMENT_CHECKLIST.md # OAuth pre-launch checklist
+│   ├── SETUP_ELEVENLABS.md         # Speech-to-text API setup
+│   ├── backend/                    # Backend architecture & testing reports
+│   ├── frontend/                   # Frontend design & hook verification specs
+│   └── design/                     # Obsidian Echo design system documentation
 
 ├── scripts/
 │   └── preflightCheck.js           # Pre-dev environment and Google Client ID parity validator

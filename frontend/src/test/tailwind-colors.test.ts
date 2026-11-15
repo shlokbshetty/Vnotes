@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-// @ts-ignore - tailwind.config.js doesn't have type definitions
+// @ts-expect-error - tailwind.config.js doesn't have type definitions
 import tailwindConfig from '../../tailwind.config.js';
 
 /**

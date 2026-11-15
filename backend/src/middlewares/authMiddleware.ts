@@ -17,6 +17,7 @@ import { logger } from '../utils/logger';
  * Extended Express Request interface with auth context
  */
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
     interface Request {
       userId?: string;

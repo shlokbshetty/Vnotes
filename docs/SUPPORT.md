@@ -8,7 +8,7 @@ Need help running, configuring, or debugging **VNotes**? This document lists our
 
 | Channel | Best For | Link / Contact |
 | :--- | :--- | :--- |
-| **Documentation Suite** | Architecture, REST API payloads, and local development setup | [README.md](README.md), [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), [docs/API.md](docs/API.md), [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) |
+| **Documentation Suite** | Architecture, REST API payloads, and local development setup | [README.md](../README.md), [ARCHITECTURE.md](ARCHITECTURE.md), [API.md](API.md), [DEVELOPMENT.md](DEVELOPMENT.md) |
 | **GitHub Issues** | Reproducible bug reports and feature proposals | `.github/ISSUE_TEMPLATE/` |
 | **Security Reports** | Private disclosure of security vulnerabilities | See [SECURITY.md](SECURITY.md) (`security@vnotes.dev`) |
 

@@ -57,7 +57,8 @@ backend/uploads/*
 backend/src/data/*
 !backend/src/data/.gitkeep
 
-#agents
-.agents
+# Agents and AI tool configurations
+.agent/
+.agents/
 
 

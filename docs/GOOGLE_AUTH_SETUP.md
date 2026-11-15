@@ -194,12 +194,12 @@ Rate Limit (429):
 
 ## API Documentation
 
-For detailed API documentation, see: backend/API_AUTH_DOCUMENTATION.md
+For detailed API documentation, see: [backend/API_AUTH_DOCUMENTATION.md](backend/API_AUTH_DOCUMENTATION.md)
 
 ## Support
 
 For issues:
-- Check SETUP_ELEVENLABS.md for transcription setup
+- Check [SETUP_ELEVENLABS.md](SETUP_ELEVENLABS.md) for transcription setup
 - Review backend logs
 - Check browser console for frontend errors
 - Verify API key and credentials
