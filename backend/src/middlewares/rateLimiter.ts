@@ -38,6 +38,7 @@ export const oauthLimiter: RateLimitRequestHandler = rateLimit({
       message: 'Too many OAuth attempts from this IP, please try again after 5 minutes',
       code: 'RATE_LIMIT_EXCEEDED',
       retryAfter,
+      timestamp: new Date().toISOString(),
     });
   },
 });
@@ -71,6 +72,7 @@ export const logoutLimiter: RateLimitRequestHandler = rateLimit({
       message: 'Too many logout attempts from this IP, please try again after 1 hour',
       code: 'RATE_LIMIT_EXCEEDED',
       retryAfter,
+      timestamp: new Date().toISOString(),
     });
   },
 });

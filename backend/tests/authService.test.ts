@@ -272,6 +272,18 @@ if (require.main === module) {
   runAllPropertyTests();
 }
 
+import { describe, it } from 'vitest';
+
+describe('Auth Service Property Tests', () => {
+  it('validates JWT token structure', () => {
+    testPropertyJWTTokenStructure();
+  });
+
+  it('validates JWT token validation', () => {
+    testPropertyJWTTokenValidation();
+  });
+});
+
 export {
   testPropertyJWTTokenStructure,
   testPropertyJWTTokenValidation,

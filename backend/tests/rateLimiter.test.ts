@@ -14,6 +14,12 @@ describe('Rate Limiter Middleware', () => {
   let app: Express;
 
   beforeEach(() => {
+    const ips = ['::ffff:127.0.0.1', '127.0.0.1', '::1'];
+    ips.forEach(ip => {
+      (oauthLimiter as any).resetKey?.(ip);
+      (logoutLimiter as any).resetKey?.(ip);
+    });
+
     app = express();
     app.use(express.json());
 

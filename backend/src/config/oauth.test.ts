@@ -6,6 +6,7 @@
  */
 
 import { oauthConfig, initializeGoogleAuthClient, getGoogleAuthClient } from './oauth';
+import { describe, it } from 'vitest';
 
 /**
  * Test OAuth configuration validation
@@ -143,5 +144,11 @@ function runAllTests(): void {
 if (require.main === module) {
   runAllTests();
 }
+
+describe('OAuth Configuration Module Tests', () => {
+  it('runs all oauth configuration checks', () => {
+    runAllTests();
+  });
+});
 
 export { testOAuthConfigValidation, testExportedFunctions, testEnvironmentVariables, testOAuthEndpoints, testOAuthScopes };

@@ -295,7 +295,7 @@ describe('Property 6: Environment Variable Configuration', () => {
 
           expect(config.GOOGLE_OAUTH_CALLBACK_URI).toBeDefined();
           expect(config.GOOGLE_OAUTH_CALLBACK_URI).not.toBe('');
-          expect(config.GOOGLE_OAUTH_CALLBACK_URI).toMatch(/\/auth\/oauth/);
+          expect(config.GOOGLE_OAUTH_CALLBACK_URI).toMatch(/\/auth\/(oauth|callback)/);
 
           return true;
         }

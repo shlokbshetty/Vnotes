@@ -67,8 +67,8 @@ describe('Property 6: Session Token Revocation on Logout', () => {
             return;
           });
 
-          // Mock isTokenRevoked to return true after revocation
-          vi.mocked(sessionStore.isTokenRevoked).mockImplementation(
+          // Mock isSessionRevoked to return true after revocation
+          vi.mocked(sessionStore.isSessionRevoked).mockImplementation(
             (tokenId: string) => {
               // If this is our revoked token, return true
               if (tokenId === tokenJti) {
@@ -80,11 +80,11 @@ describe('Property 6: Session Token Revocation on Logout', () => {
 
           // Perform revocation
           expect(() => {
-            sessionStore.revokeSession(tokenJti);
+            sessionStore.revokeSession(tokenJti, userId, new Date().toISOString());
           }).not.toThrow();
 
           // Assert 3: After revocation, token is in revoked store
-          const isRevoked = sessionStore.isTokenRevoked(tokenJti);
+          const isRevoked = sessionStore.isSessionRevoked(tokenJti);
           expect(isRevoked).toBe(true);
 
           // Assert 4: Revoked token cannot be used for API calls
@@ -92,7 +92,7 @@ describe('Property 6: Session Token Revocation on Logout', () => {
           // We simulate that the auth middleware would reject it with 401
           expect(() => {
             // This would be called in middleware - should fail for revoked token
-            const isTokenRevoked = sessionStore.isTokenRevoked(tokenJti);
+            const isTokenRevoked = sessionStore.isSessionRevoked(tokenJti);
             if (isTokenRevoked) {
               throw new Error('Token has been revoked (401)');
             }
@@ -103,7 +103,7 @@ describe('Property 6: Session Token Revocation on Logout', () => {
           const newUserId = userId + '_v2';
           const newGoogleId = googleId + '_v2';
           
-          vi.mocked(sessionStore.isTokenRevoked).mockImplementation(() => {
+          vi.mocked(sessionStore.isSessionRevoked).mockImplementation(() => {
             // All new tokens are not revoked
             return false;
           });
@@ -131,7 +131,7 @@ describe('Property 6: Session Token Revocation on Logout', () => {
 
           // Assert 7: New token is not in revoked store
           const newTokenJti = 'jti_' + Math.random().toString(36).substring(7);
-          const isNewTokenRevoked = sessionStore.isTokenRevoked(newTokenJti);
+          const isNewTokenRevoked = sessionStore.isSessionRevoked(newTokenJti);
           expect(isNewTokenRevoked).toBe(false);
 
           // SUCCESS: Property verified for this test case
@@ -176,7 +176,7 @@ describe('Property 6: Session Token Revocation on Logout', () => {
             }
           );
 
-          vi.mocked(sessionStore.isTokenRevoked).mockImplementation(
+          vi.mocked(sessionStore.isSessionRevoked).mockImplementation(
             (tokenId: string) => {
               return revokedTokens.has(tokenId);
             }
@@ -195,26 +195,26 @@ describe('Property 6: Session Token Revocation on Logout', () => {
           // Revoke all tokens
           expect(() => {
             tokenIds.forEach((t) => {
-              sessionStore.revokeSession(t.tokenId);
+              sessionStore.revokeSession(t.tokenId, 'mock_user', new Date().toISOString());
             });
           }).not.toThrow();
 
           // Assert: All tokens are revoked
           tokenIds.forEach((t) => {
-            const isRevoked = sessionStore.isTokenRevoked(t.tokenId);
+            const isRevoked = sessionStore.isSessionRevoked(t.tokenId);
             expect(isRevoked).toBe(true);
           });
 
           // Assert: Revoking again (idempotent) succeeds
           expect(() => {
             tokenIds.forEach((t) => {
-              sessionStore.revokeSession(t.tokenId);
+              sessionStore.revokeSession(t.tokenId, 'mock_user', new Date().toISOString());
             });
           }).not.toThrow();
 
           // Assert: Still revoked after idempotent revocation
           tokenIds.forEach((t) => {
-            const isRevoked = sessionStore.isTokenRevoked(t.tokenId);
+            const isRevoked = sessionStore.isSessionRevoked(t.tokenId);
             expect(isRevoked).toBe(true);
           });
 
@@ -261,7 +261,7 @@ describe('Property 6: Session Token Revocation on Logout', () => {
         (callsData) => {
           const revokedTokens = new Set<string>();
 
-          vi.mocked(sessionStore.isTokenRevoked).mockImplementation(
+          vi.mocked(sessionStore.isSessionRevoked).mockImplementation(
             (tokenId: string) => {
               return revokedTokens.has(tokenId);
             }
@@ -283,7 +283,7 @@ describe('Property 6: Session Token Revocation on Logout', () => {
             );
 
             // Before revocation: token is valid
-            let isRevoked = sessionStore.isTokenRevoked(tokenId);
+            let isRevoked = sessionStore.isSessionRevoked(tokenId);
             expect(isRevoked).toBe(false);
 
             // Simulate API call with valid token - should succeed
@@ -292,15 +292,15 @@ describe('Property 6: Session Token Revocation on Logout', () => {
             expect(authService.extractUserId(payload!)).toBe(callData[1]);
 
             // Now revoke the token (logout)
-            sessionStore.revokeSession(tokenId);
+            sessionStore.revokeSession(tokenId, callData[1], new Date().toISOString());
 
             // After revocation: token is revoked
-            isRevoked = sessionStore.isTokenRevoked(tokenId);
+            isRevoked = sessionStore.isSessionRevoked(tokenId);
             expect(isRevoked).toBe(true);
 
             // Attempt API call with revoked token should fail (401)
             const checkAccess = () => {
-              const revokedCheck = sessionStore.isTokenRevoked(tokenId);
+              const revokedCheck = sessionStore.isSessionRevoked(tokenId);
               if (revokedCheck) {
                 throw new Error('Unauthorized: Token has been revoked');
               }

@@ -4,7 +4,7 @@
  */
 
 export const config = {
-  PORT: process.env.PORT || 3001,
+  PORT: parseInt(String(process.env.PORT || 3001), 10),
   NODE_ENV: process.env.NODE_ENV || 'development',
   ELEVENLABS_API_KEY: process.env.ELEVENLABS_API_KEY || '',
   UPLOADS_DIR: process.env.UPLOADS_DIR || 'uploads',

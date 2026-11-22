@@ -416,6 +416,14 @@ if (require.main === module) {
   });
 }
 
+import { describe, it } from 'vitest';
+
+describe('OAuth Service Token Exchange Tests', () => {
+  it('runs all available oauth service tests', async () => {
+    await runAllTests();
+  });
+});
+
 export {
   testExchangeValidAuthCode,
   testExchangeWithMissingCode,

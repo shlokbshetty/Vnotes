@@ -257,4 +257,14 @@ if (require.main === module) {
   runTests().catch(console.error);
 }
 
+import { describe, it, expect } from 'vitest';
+
+describe('API Integration Smoke Tests', () => {
+  it('executes api smoke test suite', async () => {
+    await runTests();
+    const failed = results.filter(r => !r.passed);
+    expect(failed.length).toBe(0);
+  });
+});
+
 export { runTests };

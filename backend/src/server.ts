@@ -83,8 +83,18 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   });
 });
 
+// Export app
+export { app };
+export default app;
+
 // Start server
 const PORT = config.PORT;
-app.listen(PORT, () => {
-  logger.info(`Server running on port ${PORT}`, { environment: config.NODE_ENV });
-});
+let serverInstance: any = null;
+
+if (process.env.NODE_ENV !== 'test') {
+  serverInstance = app.listen(PORT, () => {
+    logger.info(`Server running on port ${PORT}`, { environment: config.NODE_ENV });
+  });
+}
+
+export { serverInstance };

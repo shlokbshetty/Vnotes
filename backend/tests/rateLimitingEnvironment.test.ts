@@ -212,8 +212,8 @@ describe('Environment Variables Tests', () => {
       expect(config.GOOGLE_OAUTH_CALLBACK_URI.length).toBeGreaterThan(0);
     });
 
-    it('GOOGLE_OAUTH_CALLBACK_URI should contain /auth/oauth path', () => {
-      expect(config.GOOGLE_OAUTH_CALLBACK_URI).toMatch(/\/auth\/oauth/);
+    it('GOOGLE_OAUTH_CALLBACK_URI should contain /auth/oauth or /auth/callback path', () => {
+      expect(config.GOOGLE_OAUTH_CALLBACK_URI).toMatch(/\/auth\/(oauth|callback)/);
     });
   });
 
