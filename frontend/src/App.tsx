@@ -15,7 +15,7 @@ import './styles/motion.css';
 function App() {
   return (
     <ThemeProvider>
-      <Router>
+      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         {/* Phase 1: Premium Dark Theme - Matte pitch-black background */}
         <div className="flex h-screen overflow-hidden bg-surface font-sans text-neutral-100">
           <Routes>

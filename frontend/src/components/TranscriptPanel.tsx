@@ -4,7 +4,7 @@
  */
 
 import { Recording } from '../types';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { apiService } from '../services/api';
 
 interface TranscriptPanelProps {
@@ -16,29 +16,31 @@ const TranscriptPanel = ({ recording }: TranscriptPanelProps) => {
   const [transcriptionError, setTranscriptionError] = useState<string | null>(null);
   const [currentRecording, setCurrentRecording] = useState<Recording | null>(recording || null);
 
-  useEffect(() => {
-    setCurrentRecording(recording || null);
-    setTranscriptionError(null);
-    
-    if (recording && !recording.transcription) {
-      handleTranscribe();
-    }
-  }, [recording?.id]);
-
-  const handleTranscribe = async () => {
-    if (!currentRecording) return;
+  const handleTranscribe = useCallback(async (target?: Recording | null) => {
+    const rec = target !== undefined ? target : currentRecording;
+    if (!rec) return;
 
     try {
       setIsTranscribing(true);
       setTranscriptionError(null);
-      const updated = await apiService.transcribeRecording(currentRecording.id);
+      const updated = await apiService.transcribeRecording(rec.id);
       setCurrentRecording(updated);
     } catch (error: any) {
       setTranscriptionError(error.message || 'Failed to transcribe recording');
     } finally {
       setIsTranscribing(false);
     }
-  };
+  }, [currentRecording]);
+
+  useEffect(() => {
+    setCurrentRecording(recording || null);
+    setTranscriptionError(null);
+    
+    if (recording && !recording.transcription) {
+      handleTranscribe(recording);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [recording?.id, recording?.transcription]);
 
   const hasTranscription = currentRecording?.transcription && currentRecording.transcription.trim().length > 0;
   const hasSummary = currentRecording?.summary && currentRecording.summary.trim().length > 0;
@@ -91,7 +93,7 @@ const TranscriptPanel = ({ recording }: TranscriptPanelProps) => {
             </h3>
             {!hasTranscription && !isTranscribing && (
               <button
-                onClick={handleTranscribe}
+                onClick={() => handleTranscribe()}
                 className="px-md py-xs bg-accent-600 text-neutral-50 rounded text-xs font-medium hover:bg-accent-700 transition-smooth"
               >
                 Transcribe
